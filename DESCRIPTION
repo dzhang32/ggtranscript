@@ -17,7 +17,6 @@ Suggests:
     BiocStyle,
     covr,
     knitr,
-    RefManageR,
     rmarkdown,
     sessioninfo,
     testthat (>= 3.0.0)
