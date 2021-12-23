@@ -1,6 +1,4 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # ggtranscript
 
 <!-- badges: start -->
@@ -20,21 +18,6 @@ The goal of `ggtranscript` is to …
 
 ## Installation instructions
 
-Get the latest stable `R` release from
-[CRAN](http://cran.r-project.org/). Then install `ggtranscript` from
-[Bioconductor](http://bioconductor.org/) using the following code:
-
-``` r
-if (!requireNamespace("BiocManager", quietly = TRUE)) {
-    install.packages("BiocManager")
-}
-
-BiocManager::install("ggtranscript")
-```
-
-And the development version from
-[GitHub](https://github.com/dzhang32/ggtranscript) with:
-
 ``` r
 BiocManager::install("dzhang32/ggtranscript")
 ```
@@ -47,60 +30,6 @@ This is a basic example which shows you how to solve a common problem:
 library("ggtranscript")
 ## basic example code
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub!
-
-## Citation
-
-Below is the citation output from using `citation('ggtranscript')` in R.
-Please run this yourself to check for any updates on how to cite
-**ggtranscript**.
-
-``` r
-print(citation('ggtranscript'), bibtex = TRUE)
-#> 
-#> To cite package 'ggtranscript' in publications use:
-#> 
-#>   David Zhang (2021). ggtranscript: What the Package Does (One Line,
-#>   Title Case). R package version 0.99.0.
-#>   https://github.com/dzhang32/ggtranscript
-#> 
-#> A BibTeX entry for LaTeX users is
-#> 
-#>   @Manual{,
-#>     title = {ggtranscript: What the Package Does (One Line, Title Case)},
-#>     author = {David Zhang},
-#>     year = {2021},
-#>     note = {R package version 0.99.0},
-#>     url = {https://github.com/dzhang32/ggtranscript},
-#>   }
-```
-
-Please note that the `ggtranscript` was only made possible thanks to
-many other R and bioinformatics software authors, which are cited either
-in the vignettes and/or the paper(s) describing this package.
 
 ## Code of Conduct
 
@@ -130,8 +59,6 @@ contributing to this project, you agree to abide by its terms.
 -   The documentation is formatted thanks to
     *[devtools](https://CRAN.R-project.org/package=devtools)* and
     *[roxygen2](https://CRAN.R-project.org/package=roxygen2)*.
-
-For more details, check the `dev` directory.
 
 This package was developed using
 *[biocthis](https://bioconductor.org/packages/3.14/biocthis)*.
