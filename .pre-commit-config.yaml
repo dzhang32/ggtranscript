@@ -1,0 +1,47 @@
+repos:
+-   repo: https://github.com/lorenzwalthert/precommit
+    rev: v0.1.3.9133
+    hooks:
+    -   id: readme-rmd-rendered # make sure README.Rmd is rendered to README.md
+    -   id: parsable-R
+        exclude: >
+          (?x)^(
+          tests/testthat/in/style-files-fail-parse\.R|
+          tests/testthat/in/parsable-R-fail\.R|
+          )$
+    -   id: style-files # style code in the tidyverse style
+        args: [--indent_by=4]
+        exclude: >
+          (?x)^(
+          tests/testthat/in/.*\.R|
+          renv/.*
+          )$
+    -   id: deps-in-desc # all dependencies pkg::func are in listed in dec
+        args: [--allow_private_imports]
+        exclude: >
+          (?x)^(
+          tests/testthat/in/.*|
+          inst/renv-update\.R|
+          renv/activate.R|
+          vignettes/FAQ\.Rmd|
+          )$
+    -   id: roxygenize # create .Rd files
+        # roxygen requires loading pkg -> add dependencies from DESCRIPTION
+        additional_dependencies:
+        - Bioconductor/BiocStyle
+        - lcolladotor/biocthis
+        - covr
+        - knitr
+        - rmarkdown
+        - sessioninfo
+        - testthat
+    -   id: lintr
+        args: [--warn_only]
+        verbose: true
+
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+    -   id: check-added-large-files # make sure no large files commited
+    -   id: end-of-file-fixer
+        exclude: '\.Rd'

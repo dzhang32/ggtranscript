@@ -34,7 +34,6 @@ BiocManager::install("dzhang32/ggtranscript")
 This is a basic example which shows you how to solve a common problem:
 
 ```{r example, eval = requireNamespace('ggtranscript')}
-library("ggtranscript")
 ## basic example code
 ```
 
@@ -51,5 +50,3 @@ Please note that the `ggtranscript` project is released with a [Contributor Code
 * The documentation is formatted thanks to `r BiocStyle::CRANpkg('devtools')` and `r BiocStyle::CRANpkg('roxygen2')`.
 
 This package was developed using `r BiocStyle::Biocpkg('biocthis')`.
-
-

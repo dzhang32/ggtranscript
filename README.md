@@ -27,7 +27,6 @@ BiocManager::install("dzhang32/ggtranscript")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library("ggtranscript")
 ## basic example code
 ```
 

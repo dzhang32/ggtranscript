@@ -24,7 +24,7 @@ vignette: >
 knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>",
-    crop = NULL ## Related to https://stat.ethz.ch/pipermail/bioc-devel/2020-April/016656.html
+    crop = NULL
 )
 ```
 
@@ -36,14 +36,11 @@ knitr::opts_chunk$set(
 
 ```{r "install", eval = FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
-      install.packages("BiocManager")
-  }
+    install.packages("BiocManager")
+}
 
 BiocManager::install("ggtranscript")
 
 ## Check that you have a valid Bioconductor installation
 BiocManager::valid()
 ```
-
-
-
