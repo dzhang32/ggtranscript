@@ -5,3 +5,6 @@
 #' @docType package
 #' @name ggtranscript
 NULL
+
+#' @importFrom magrittr %>%
+NULL

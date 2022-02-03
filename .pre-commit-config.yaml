@@ -36,6 +36,8 @@ repos:
         - sessioninfo
         - testthat
         - ggplot2
+        - dplyr
+        - magrittr
     -   id: lintr
         args: [--warn_only]
         verbose: true
