@@ -1,4 +1,8 @@
-to_introns <- function(x, group_var = NULL, start_var = start, end_var = end) {
+
+
+
+#' @noRd
+to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
 
     # grouping by NULL (default) does nothing
     x <- x %>%

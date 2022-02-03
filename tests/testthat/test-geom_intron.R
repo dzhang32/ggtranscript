@@ -1,4 +1,4 @@
-##### to_introns #####
+##### to_intron #####
 
 # create dummy exons for testing
 test_exons <-
@@ -16,23 +16,23 @@ test_introns <-
         intron_end = c(9, 19)
     )
 
-testthat::test_that("to_introns() obtains introns correctly", {
+testthat::test_that("to_intron() obtains introns correctly", {
     # with group_var
     expect_equal(
         test_introns,
-        test_exons %>% to_introns(group_var = tx)
+        test_exons %>% to_intron(group_var = tx)
     )
     # without group_var
     expect_equal(
         test_introns %>% dplyr::filter(tx != "B"),
         test_exons %>%
             dplyr::filter(tx != "B") %>%
-            to_introns()
+            to_intron()
     )
 })
 
 testthat::test_that(
-    "to_introns() obtains introns correctly, regardless of exon order",
+    "to_intron() obtains introns correctly, regardless of exon order",
     {
         set.seed(32)
 
@@ -40,7 +40,7 @@ testthat::test_that(
             test_introns,
             test_exons %>%
                 .[sample(seq_len(nrow(test_exons))), ] %>%
-                to_introns(group_var = tx)
+                to_intron(group_var = tx)
         )
     }
 )
