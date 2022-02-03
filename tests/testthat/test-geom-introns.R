@@ -17,23 +17,19 @@ test_introns <-
     )
 
 testthat::test_that("to_introns() obtains introns correctly", {
+    # with group_var
     expect_equal(
         test_introns,
         test_exons %>% to_introns(group_var = tx)
     )
+    # without group_var
+    expect_equal(
+        test_introns %>% dplyr::filter(tx != "B"),
+        test_exons %>%
+            dplyr::filter(tx != "B") %>%
+            to_introns()
+    )
 })
-
-testthat::test_that(
-    "to_introns() obtains introns correctly, regardless of exon order",
-    {
-        expect_equal(
-            test_introns,
-            test_exons %>%
-                dplyr::arrange(dplyr::desc(start)) %>%
-                to_introns(group_var = tx)
-        )
-    }
-)
 
 testthat::test_that(
     "to_introns() obtains introns correctly, regardless of exon order",
