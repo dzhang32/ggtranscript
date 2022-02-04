@@ -1,3 +1,4 @@
+#' @noRd
 geom_intron <- function(mapping = NULL, data = NULL,
                         stat = "identity", position = "identity",
                         ...,
@@ -27,9 +28,12 @@ geom_intron <- function(mapping = NULL, data = NULL,
     )
 }
 
+#' @noRd
 GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
     required_aes = c("xstart", "xend", "y"),
-    default_aes = ggplot2::aes(colour = "black", size = 0.5, linetype = 1, alpha = NA),
+    default_aes = ggplot2::aes(
+        colour = "black", size = 0.5, linetype = 1, alpha = NA
+    ),
     setup_params = function(data, params) {
         # check that strand is scalar and one of "+" or "-"
         strand_len_1 <- length(params$strand) != 1
@@ -52,7 +56,9 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
         params
     },
     setup_data = function(data, params) {
-        transform(data,
+        # needed to permit usage of xstart/xend
+        transform(
+            data,
             x = xstart,
             xend = xend,
             y = y,
@@ -60,7 +66,16 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
             xstart = NULL
         )
     },
-    draw_panel = function(data, panel_params, coord, lineend = "butt", linejoin = "round", na.rm = FALSE, strand = "+", arrow.min.intron.length = 0) {
+    draw_panel = function(data,
+                          panel_params,
+                          coord,
+                          lineend = "butt",
+                          linejoin = "round",
+                          na.rm = FALSE,
+                          strand = "+",
+                          arrow.min.intron.length = 0) {
+
+        # first, create the intron grob, which is just a pure line (no arrow)
         intron_grob <- ggplot2::GeomSegment$draw_panel(
             data = data,
             panel_params = panel_params,
@@ -71,6 +86,11 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
             linejoin = linejoin,
             na.rm = na.rm
         )
+
+        # then, create the arrow grobs
+        # this involves making a line that ends in the middle of the intron
+        # as the arrow can only be placed at either end of a geom_segment/path
+        # the strand changes the x/xends around, shifting the arround direction
         if (strand == "+") {
             arrow_data <- transform(
                 data,
@@ -92,7 +112,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
         ab_min <- abs(arrow_data$x - arrow_data$xend) > arrow.min.intron.length
         arrow_data <- arrow_data[ab_min, ]
 
-        # if there are no arrows to plot
+        # if there are no arrows to plot, use a nullGrob() to add nothing
         if (nrow(arrow_data) > 0) {
             arrow_grob <- ggplot2::GeomSegment$draw_panel(
                 data = arrow_data,
@@ -107,6 +127,9 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
             arrow_grob <- grid::nullGrob()
         }
 
+        # draw_panel expects return of a grob
+        # here, as we build multiple grobs (i.e. intron lines + arrows)
+        # we use a grobTree to combine the two
         grid::grobTree(
             intron_grob,
             arrow_grob
@@ -114,8 +137,39 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
     }
 )
 
-#' @noRd
+#' Convert exon co-ordinates to introns
+#'
+#' Taking a set of exons, `to_intron` will return the corresponding introns.
+#' `to_intron` expects inputted exons to either 1. originate from a single
+#' transcript or 2. be grouped via `group_var` such that each group corresponds
+#' to a single transcript. In other words, `to_intron` assumes that exons (from
+#' each group) do not overlap one another.
+#'
+#' @param x `data.frame` containing exons co-ordinates (and possibly associated
+#'   transcript)
+#' @param group_var variable name (not in quotes) specifying the column with the
+#'   group, most often the transcript id/name.
+#' @param start_var variable name (not in quotes) specifying the column with the
+#'   start co-ordinate(s).
+#' @param end_var variable name (not in quotes) specifying the column with the
+#'   end co-ordinate(s).
+#'
+#' @examples
+#'
+#' example_exons <-
+#'     dplyr::tibble(
+#'         start = c(5, 10, 15, 20),
+#'         end = c(7, 12, 17, 22),
+#'         tx = c("A", "A", "B", "B")
+#'     )
+#'
+#' to_intron(example_exons, tx)
+#' @export
 to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
+
+    # TODO - add functionality to check warn if exons overlap
+    # as this should could break the function
+    # which expects exons in each group_var to originate from a single tx
 
     # grouping by NULL (default) does nothing
     x <- x %>%
