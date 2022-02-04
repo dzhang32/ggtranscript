@@ -1,30 +1,78 @@
-
-
-
-#' @noRd
-to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
-
-    # grouping by NULL (default) does nothing
-    x <- x %>%
-        dplyr::group_by({{ group_var }})
-
-    # make sure exons are arranged by coord, so that dplyr::lag works correctly
-    x <- x %>%
-        dplyr::arrange({{ start_var }}, {{ end_var }})
-
-    # obtain intron start and ends
-    x <- x %>%
-        dplyr::mutate(
-            intron_start := dplyr::lag({{ end_var }}) + 1,
-            intron_end := {{ start_var }} - 1
-        ) %>%
-        dplyr::select(-{{ start_var }}, -{{ end_var }})
-
-    # for each group, output N of introns should be N - 1 the inputted exons
-    # remove the introduced artifact NAs
-    x <- x %>%
-        dplyr::ungroup() %>%
-        dplyr::filter(!is.na(intron_start) & !is.na(intron_end))
-
-    return(x)
+geom_intron <- function(mapping = NULL, data = NULL,
+                        stat = "identity", position = "identity",
+                        ...,
+                        arrow = NULL,
+                        arrow.fill = NULL,
+                        lineend = "butt",
+                        linejoin = "round",
+                        na.rm = FALSE,
+                        show.legend = NA,
+                        inherit.aes = TRUE) {
+    ggplot2::layer(
+        data = data,
+        mapping = mapping,
+        stat = stat,
+        geom = GeomIntron,
+        position = position,
+        show.legend = show.legend,
+        inherit.aes = inherit.aes,
+        params = list(
+            arrow = arrow,
+            arrow.fill = arrow.fill,
+            lineend = lineend,
+            linejoin = linejoin,
+            na.rm = na.rm,
+            ...
+        )
+    )
 }
+
+GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
+    required_aes = c("x_start", "x_end", "y"),
+    setup_data = function(data, params) {
+        transform(data,
+            x = x_start,
+            xend = x_end,
+            y = y,
+            yend = y,
+            x_start = NULL,
+            x_end = NULL
+        )
+    },
+    draw_panel = function(data, panel_params, coord, arrow = NULL, arrow.fill = NULL,
+                          lineend = "butt", linejoin = "round", na.rm = FALSE) {
+        browser()
+
+        intron_grob <- ggplot2::GeomSegment$draw_panel(
+            data = data,
+            panel_params = panel_params,
+            coord = coord,
+            arrow = NULL,
+            arrow.fill = NULL,
+            lineend = lineend,
+            linejoin = linejoin,
+            na.rm = na.rm
+        )
+
+        arrow_data <- transform(
+            data,
+            xend = (xend + x) / 2
+        )
+
+        arrow_grob <- ggplot2::GeomSegment$draw_panel(
+            data = arrow_data,
+            panel_params = panel_params,
+            coord = coord,
+            arrow = arrow,
+            arrow.fill = arrow.fill,
+            lineend = lineend,
+            linejoin = linejoin,
+            na.rm = na.rm
+        )
+
+        grid::grobTree(
+            intron_grob,
+            arrow_grob
+        )
+    }
+)
