@@ -44,3 +44,45 @@ testthat::test_that(
         )
     }
 )
+
+##### geom_intron #####
+
+testthat::test_that(
+    "geom_intron() catches strand input errors",
+    {
+        na_strand <- test_introns %>%
+            ggplot2::ggplot() +
+            geom_intron(ggplot2::aes(
+                x_start = intron_start, x_end = intron_end,
+                y = tx
+            ),
+            strand = NA
+            )
+        a_strand <- test_introns %>%
+            ggplot2::ggplot() +
+            geom_intron(ggplot2::aes(
+                x_start = intron_start, x_end = intron_end,
+                y = tx
+            ),
+            strand = "a"
+            )
+        # seems to require print to catch error
+        expect_error(
+            print(na_strand),
+            "strand values must be one of"
+        )
+        expect_error(
+            print(a_strand),
+            "strand values must be one of"
+        )
+    }
+)
+
+# test_introns %>%
+#   ggplot2::ggplot() +
+#   geom_intron(ggplot2::aes(
+#     x_start = intron_start, x_end = intron_end,
+#     y = tx
+#   ),
+#   strand = "+"
+#   )
