@@ -10,6 +10,9 @@
 #'   \item{end}{`integer()` end position.}
 #'   \item{strand}{`factor()` strand.}
 #'   \item{type}{`factor()` type of data, one of gene, transcript, exon or CDS.}
+#'   \item{gene_name}{`character()` name of gene (GBA).}
+#'   \item{transcript_name}{`character()` name of transcript.}
+#'   \item{transcript_biotype}{`character()` biotype of transcript.}
 #' }
 #'
 #' @source generated using `ggtranscript/data-raw/gba_ens_105.R`

@@ -32,9 +32,7 @@ gba_ens_105 <-
     gtf[!is.na(gtf$gene_name) & gtf$gene_name == "GBA"] %>%
     as.data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::select(seqnames, start, end, strand, type)
-
-
+    dplyr::select(seqnames, start, end, strand, type, gene_name, transcript_name, transcript_biotype)
 
 # Save data ---------------------------------------------------------------
 
