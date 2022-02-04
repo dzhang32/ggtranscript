@@ -12,6 +12,9 @@ A \code{tibble::tibble()} with 26 rows and 4 columns:
 \item{end}{\code{integer()} end position.}
 \item{strand}{\code{factor()} strand.}
 \item{type}{\code{factor()} type of data, one of gene, transcript, exon or CDS.}
+\item{gene_name}{\code{character()} name of gene (GBA).}
+\item{transcript_name}{\code{character()} name of transcript.}
+\item{transcript_biotype}{\code{character()} biotype of transcript.}
 }
 }
 \source{
