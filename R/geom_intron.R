@@ -1,8 +1,6 @@
 geom_intron <- function(mapping = NULL, data = NULL,
                         stat = "identity", position = "identity",
                         ...,
-                        arrow = NULL,
-                        arrow.fill = NULL,
                         lineend = "butt",
                         linejoin = "round",
                         na.rm = FALSE,
@@ -17,8 +15,6 @@ geom_intron <- function(mapping = NULL, data = NULL,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
         params = list(
-            arrow = arrow,
-            arrow.fill = arrow.fill,
             lineend = lineend,
             linejoin = linejoin,
             na.rm = na.rm,
@@ -29,6 +25,17 @@ geom_intron <- function(mapping = NULL, data = NULL,
 
 GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
     required_aes = c("x_start", "x_end", "y"),
+    default_aes = ggplot2::aes(colour = "black", size = 0.5, linetype = 1, alpha = NA, strand = "+"),
+    setup_params = function(data, params) {
+        strand_any_na <- any(is.na(data$strand))
+        strand_chr <- !is.character(data$strand)
+        strand_plus_minus <- !all(data$strand %in% c("+", "-"))
+
+        if (strand_any_na | strand_chr | strand_plus_minus) {
+            stop("strand values must be one of '+' and '-'")
+        }
+        params
+    },
     setup_data = function(data, params) {
         transform(data,
             x = x_start,
@@ -39,10 +46,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
             x_end = NULL
         )
     },
-    draw_panel = function(data, panel_params, coord, arrow = NULL, arrow.fill = NULL,
-                          lineend = "butt", linejoin = "round", na.rm = FALSE) {
-        browser()
-
+    draw_panel = function(data, panel_params, coord, lineend = "butt", linejoin = "round", na.rm = FALSE) {
         intron_grob <- ggplot2::GeomSegment$draw_panel(
             data = data,
             panel_params = panel_params,
@@ -63,8 +67,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
             data = arrow_data,
             panel_params = panel_params,
             coord = coord,
-            arrow = arrow,
-            arrow.fill = arrow.fill,
+            arrow = grid::arrow(ends = "last", length = grid::unit(0.1, "inches")),
             lineend = lineend,
             linejoin = linejoin,
             na.rm = na.rm
