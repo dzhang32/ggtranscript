@@ -28,4 +28,5 @@ LazyData: true
 Imports: 
     magrittr,
     dplyr,
-    ggplot2
+    ggplot2,
+    rlang

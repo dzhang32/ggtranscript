@@ -6,5 +6,6 @@
 #' @name ggtranscript
 NULL
 
+#' @importFrom rlang %||%
 #' @importFrom magrittr %>%
 NULL
