@@ -78,11 +78,43 @@ testthat::test_that(
     }
 )
 
+testthat::test_that(
+    "geom_intron() catches arrow.min.intron.length input errors",
+    {
+        neg_arrow.min <- test_introns %>%
+            ggplot2::ggplot() +
+            geom_intron(ggplot2::aes(
+                xstart = intron_start, xend = intron_end,
+                y = tx
+            ),
+            arrow.min.intron.length = -1
+            )
+        chr_arrow.min <- test_introns %>%
+            ggplot2::ggplot() +
+            geom_intron(ggplot2::aes(
+                xstart = intron_start, xend = intron_end,
+                y = tx
+            ),
+            arrow.min.intron.length = "1"
+            )
+        # seems to require print to catch error
+        expect_error(
+            print(neg_arrow.min),
+            "arrow.min.intron.length must be "
+        )
+        expect_error(
+            print(chr_arrow.min),
+            "arrow.min.intron.length must be "
+        )
+    }
+)
+
 # test_introns %>%
 #   ggplot2::ggplot() +
 #   geom_intron(ggplot2::aes(
 #     xstart = intron_start, xend = intron_end,
 #     y = tx
 #   ),
-#   strand = "+"
+#   strand = "+",
+#   arrow.min.intron.length = 0
 #   )

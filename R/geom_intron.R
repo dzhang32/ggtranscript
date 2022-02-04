@@ -5,6 +5,7 @@ geom_intron <- function(mapping = NULL, data = NULL,
                         linejoin = "round",
                         na.rm = FALSE,
                         strand = "+",
+                        arrow.min.intron.length = 0,
                         show.legend = NA,
                         inherit.aes = TRUE) {
     ggplot2::layer(
@@ -20,6 +21,7 @@ geom_intron <- function(mapping = NULL, data = NULL,
             linejoin = linejoin,
             na.rm = na.rm,
             strand = strand,
+            arrow.min.intron.length = arrow.min.intron.length,
             ...
         )
     )
@@ -29,6 +31,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
     required_aes = c("xstart", "xend", "y"),
     default_aes = ggplot2::aes(colour = "black", size = 0.5, linetype = 1, alpha = NA),
     setup_params = function(data, params) {
+        # check that strand is scalar and one of "+" or "-"
         strand_len_1 <- length(params$strand) != 1
         strand_any_na <- any(is.na(params$strand))
         strand_chr <- !is.character(params$strand)
@@ -37,6 +40,15 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
         if (strand_len_1 | strand_any_na | strand_chr | strand_plus_minus) {
             stop("strand values must be one of '+' and '-'")
         }
+
+        # check that arrow.min.intron.length numeric is >= 0
+        arrow.min_numeric <- is.numeric(params$arrow.min.intron.length)
+        arrow.min_neg <- params$arrow.min.intron.length < 0
+
+        if (!arrow.min_numeric | arrow.min_neg) {
+            stop("arrow.min.intron.length must be a numeric > 0")
+        }
+
         params
     },
     setup_data = function(data, params) {
@@ -48,7 +60,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
             xstart = NULL
         )
     },
-    draw_panel = function(data, panel_params, coord, lineend = "butt", linejoin = "round", na.rm = FALSE, strand = "+") {
+    draw_panel = function(data, panel_params, coord, lineend = "butt", linejoin = "round", na.rm = FALSE, strand = "+", arrow.min.intron.length = 0) {
         intron_grob <- ggplot2::GeomSegment$draw_panel(
             data = data,
             panel_params = panel_params,
@@ -76,15 +88,24 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
             )
         }
 
-        arrow_grob <- ggplot2::GeomSegment$draw_panel(
-            data = arrow_data,
-            panel_params = panel_params,
-            coord = coord,
-            arrow = grid::arrow(ends = "last", length = grid::unit(0.1, "inches")),
-            lineend = lineend,
-            linejoin = linejoin,
-            na.rm = na.rm
-        )
+        # only plot arrows for intron above arrow.min.intron.length
+        ab_min <- abs(arrow_data$x - arrow_data$xend) > arrow.min.intron.length
+        arrow_data <- arrow_data[ab_min, ]
+
+        # if there are no arrows to plot
+        if (nrow(arrow_data) > 0) {
+            arrow_grob <- ggplot2::GeomSegment$draw_panel(
+                data = arrow_data,
+                panel_params = panel_params,
+                coord = coord,
+                arrow = grid::arrow(ends = "last", length = grid::unit(0.1, "inches")),
+                lineend = lineend,
+                linejoin = linejoin,
+                na.rm = na.rm
+            )
+        } else {
+            arrow_grob <- grid::nullGrob()
+        }
 
         grid::grobTree(
             intron_grob,
