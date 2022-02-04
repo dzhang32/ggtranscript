@@ -27,8 +27,8 @@ GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
         data$height <- data$height %||% params$height %||% 0.5
 
         transform(data,
-            xmin = x_start,
-            xmax = x_end,
+            xmin = xstart,
+            xmax = xend,
             ymin = y - height / 2,
             ymax = y + height / 2,
             height = NULL
@@ -39,5 +39,5 @@ GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
         size = 0.1, linetype = 1,
         alpha = NA, height = NA
     ),
-    required_aes = c("x_start", "x_end", "y")
+    required_aes = c("xstart", "xend", "y")
 )

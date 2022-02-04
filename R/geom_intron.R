@@ -26,7 +26,7 @@ geom_intron <- function(mapping = NULL, data = NULL,
 }
 
 GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
-    required_aes = c("x_start", "x_end", "y"),
+    required_aes = c("xstart", "xend", "y"),
     default_aes = ggplot2::aes(colour = "black", size = 0.5, linetype = 1, alpha = NA),
     setup_params = function(data, params) {
         strand_len_1 <- length(params$strand) != 1
@@ -41,12 +41,11 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
     },
     setup_data = function(data, params) {
         transform(data,
-            x = x_start,
-            xend = x_end,
+            x = xstart,
+            xend = xend,
             y = y,
             yend = y,
-            x_start = NULL,
-            x_end = NULL
+            xstart = NULL
         )
     },
     draw_panel = function(data, panel_params, coord, lineend = "butt", linejoin = "round", na.rm = FALSE, strand = "+") {

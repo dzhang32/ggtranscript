@@ -53,7 +53,7 @@ testthat::test_that(
         na_strand <- test_introns %>%
             ggplot2::ggplot() +
             geom_intron(ggplot2::aes(
-                x_start = intron_start, x_end = intron_end,
+                xstart = intron_start, xend = intron_end,
                 y = tx
             ),
             strand = NA
@@ -61,7 +61,7 @@ testthat::test_that(
         a_strand <- test_introns %>%
             ggplot2::ggplot() +
             geom_intron(ggplot2::aes(
-                x_start = intron_start, x_end = intron_end,
+                xstart = intron_start, xend = intron_end,
                 y = tx
             ),
             strand = "a"
@@ -81,7 +81,7 @@ testthat::test_that(
 # test_introns %>%
 #   ggplot2::ggplot() +
 #   geom_intron(ggplot2::aes(
-#     x_start = intron_start, x_end = intron_end,
+#     xstart = intron_start, xend = intron_end,
 #     y = tx
 #   ),
 #   strand = "+"
