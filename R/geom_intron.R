@@ -1,4 +1,54 @@
-#' @noRd
+#' Intron lines with strand arrow
+#'
+#' `geom_intron()` draws a horizontal line specifying introns between two points
+#' (xstart, xend) for each e.g. transcript (y). The `strand` option (one of "+"
+#' or "-") enables arrows to be plotted at the centre of the introns to indicate
+#' the direction of transcription.
+#'
+#' @inheritParams ggplot2::layer
+#' @inheritParams ggplot2::geom_point
+#' @inheritParams ggplot2::geom_segment
+#' @param arrow.min.intron.length `integer` the minimum required length of an
+#'   intron for an arrow to be drawn. Depending on the length of the overall
+#'   transcript, this can be useful to remove cluttering of arrows on short
+#'   introns.
+#'
+#' @export
+#' @examples
+#'
+#' example_introns <-
+#'     dplyr::tibble(
+#'         strand = c("+", "-"),
+#'         tx = c("A", "B"),
+#'         intron_start = c(201, 601),
+#'         intron_end = c(299, 649)
+#'     )
+#'
+#' example_introns
+#'
+#' base <-
+#'     ggplot2::ggplot(
+#'         example_introns,
+#'         ggplot2::aes(
+#'             xstart = intron_start,
+#'             xend = intron_end,
+#'             y = tx
+#'         )
+#'     )
+#'
+#' base + geom_intron()
+#' base + geom_intron(strand = "-")
+#'
+#' # strand can also be mapped as an aesthetic
+#' base + geom_intron(ggplot2::aes(strand = strand))
+#'
+#' base + geom_intron(ggplot2::aes(colour = tx, strand = strand))
+#' base + geom_intron(ggplot2::aes(
+#'     colour = tx,
+#'     strand = strand
+#' ),
+#' arrow.min.intron.length = 50
+#' )
 geom_intron <- function(mapping = NULL, data = NULL,
                         stat = "identity", position = "identity",
                         ...,
@@ -30,6 +80,10 @@ geom_intron <- function(mapping = NULL, data = NULL,
     )
 }
 
+#' `GeomIntron` is pretty much `ggplot2::GeomSegment` with the `required_aes`
+#' changed to `xstart`/`xend` to match genetic nomenclature and the added arrows
+#' to indicate direction of transcription (configured with `strand` and
+#' `arrow.min.intron.length`)
 #' @noRd
 GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
     required_aes = c("xstart", "xend", "y"),
@@ -56,8 +110,6 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
         transform(
             data,
             x = xstart,
-            xend = xend,
-            y = y,
             yend = y,
             xstart = NULL
         )
