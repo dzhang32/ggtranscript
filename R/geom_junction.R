@@ -45,22 +45,5 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
             yend = y,
             xstart = NULL
         )
-    },
-
-    # default_aes = aes(colour = "black", size = 0.5, linetype = 1, alpha = NA),
-    draw_panel = function(data, panel_params, coord, curvature = -0.5, angle = 90,
-                          ncp = 5, arrow = NULL, arrow.fill = NULL, lineend = "butt", na.rm = FALSE) {
-        ggplot2::GeomCurve$draw_panel(
-            data = data,
-            panel_params = panel_params,
-            coord = coord,
-            curvature = curvature,
-            angle = angle,
-            ncp = ncp,
-            arrow = arrow,
-            arrow.fill = arrow.fill,
-            lineend = lineend,
-            na.rm = na.rm
-        )
     }
 )
