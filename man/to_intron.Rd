@@ -35,5 +35,7 @@ example_exons <-
         tx = c("A", "A", "B", "B")
     )
 
-to_intron(example_exons, tx)
+example_exons
+
+to_intron(example_exons, group_var = tx)
 }

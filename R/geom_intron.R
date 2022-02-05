@@ -152,7 +152,9 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
 #'         tx = c("A", "A", "B", "B")
 #'     )
 #'
-#' to_intron(example_exons, tx)
+#' example_exons
+#'
+#' to_intron(example_exons, group_var = tx)
 #' @export
 to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
 
