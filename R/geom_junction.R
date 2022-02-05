@@ -40,8 +40,6 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
         transform(
             data,
             x = xstart,
-            xend = xend,
-            y = y,
             yend = y,
             xstart = NULL
         )
