@@ -1,5 +1,3 @@
-##### to_intron #####
-
 # create dummy exons for testing
 test_exons <-
     dplyr::tibble(
@@ -25,6 +23,8 @@ test_introns_plot <- test_introns %>%
         xend = intron_end,
         y = tx
     ))
+
+##### to_intron #####
 
 testthat::test_that("to_intron() obtains introns correctly", {
     # with group_var
