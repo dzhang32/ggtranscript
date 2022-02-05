@@ -66,6 +66,9 @@ testthat::test_that(
             geom_intron(colour = "blue", size = 2)
         w_aes_geom_intron <- test_introns_plot +
             geom_intron(aes(colour = tx, size = c(1L, 2L)))
+        w_facet_geom_intron <- test_introns_plot +
+            geom_intron() +
+            ggplot2::facet_wrap(~tx)
 
         vdiffr::expect_doppelganger(
             "Base geom_intron plot",
@@ -78,6 +81,48 @@ testthat::test_that(
         vdiffr::expect_doppelganger(
             "With aes geom_intron plot",
             w_aes_geom_intron
+        )
+        vdiffr::expect_doppelganger(
+            "With facet geom_intron plot",
+            w_facet_geom_intron
+        )
+    }
+)
+
+testthat::test_that(
+    "geom_intron(strand = x) works correctly",
+    {
+        minus_strand <- test_introns_plot +
+            geom_intron(strand = "-")
+        as_aes_strand <- test_introns_plot +
+            geom_intron(aes(strand = strand))
+
+        vdiffr::expect_doppelganger(
+            "Minus strand plot",
+            minus_strand
+        )
+        vdiffr::expect_doppelganger(
+            "As aes strand plot",
+            as_aes_strand
+        )
+    }
+)
+
+testthat::test_that(
+    "geom_intron(arrow.min.intron.length = x) works correctly",
+    {
+        base_arrow.min <- test_introns_plot +
+            geom_intron(arrow.min.intron.length = 50)
+        w_strand_arrow_min <- test_introns_plot +
+            geom_intron(arrow.min.intron.length = 50, strand = "-")
+
+        vdiffr::expect_doppelganger(
+            "base arrow.min plot",
+            base_arrow.min
+        )
+        vdiffr::expect_doppelganger(
+            "with strand arrow.min plot",
+            w_strand_arrow_min
         )
     }
 )
@@ -125,7 +170,3 @@ testthat::test_that(
         )
     }
 )
-
-
-# test_introns_plot +
-#   geom_intron(aes(colour = tx, strand = strand))
