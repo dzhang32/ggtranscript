@@ -17,7 +17,7 @@ coverage](https://codecov.io/gh/dzhang32/ggtranscript/branch/main/graph/badge.sv
 `ggtranscript` is a `ggplot2` extension that makes it easy visualize
 transcript structure and annotation.
 
-## Installation instructions
+## Installation
 
 ``` r
 devtools::install_github("dzhang32/ggtranscript")

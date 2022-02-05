@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 `ggtranscript` is a `ggplot2` extension that makes it easy visualize transcript structure and annotation. 
 
-## Installation instructions
+## Installation
 
 ```{r 'install_dev', eval = FALSE}
 devtools::install_github("dzhang32/ggtranscript")
