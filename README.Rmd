@@ -21,20 +21,47 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/dzhang32/ggtranscript/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dzhang32/ggtranscript?branch=main)
 <!-- badges: end -->
 
-The goal of `ggtranscript` is to ...
+`ggtranscript` is a `ggplot2` extension that makes it easy visualize transcript structure and annotation. 
 
 ## Installation instructions
 
 ```{r 'install_dev', eval = FALSE}
-BiocManager::install("dzhang32/ggtranscript")
+devtools::install_github("dzhang32/ggtranscript")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+`ggtranscript` introduces 3 new `geom`s designed to make visualising transcript structures easier. `geom_range()` for exons (and genomic range based annotations), `geom_intron()` for introns and `geom_junction()` for overlaying junction data with transcript structures. 
 
-```{r example, eval = requireNamespace('ggtranscript')}
-## basic example code
+```{r example}
+
+library(magrittr)
+library(ggplot2)
+library(ggtranscript)
+
+# gene annotation for the an example gene (GBA)
+gba_ens_105
+
+# obtain exons
+gba_ens_105_exons <- gba_ens_105 %>%
+    dplyr::filter(type == "exon")
+
+gba_ens_105_exons %>%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range(aes(fill = transcript_biotype)) +
+    geom_intron(
+        data = to_intron(gba_ens_105_exons, transcript_name),
+        aes(
+            xstart = intron_start,
+            xend = intron_end,
+            strand = as.character(strand)
+        ),
+        arrow.min.intron.length = 500,
+    )
 ```
 
 ## Code of Conduct
