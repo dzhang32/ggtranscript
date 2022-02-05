@@ -1,4 +1,13 @@
-#' @noRd
+#' Placeholder
+#'
+#' `geom_range()` ...
+#'
+#' @inheritParams ggplot2::layer
+#' @inheritParams ggplot2::geom_point
+#' @inheritParams ggplot2::geom_tile
+#' @inheritParams ggplot2::geom_segment
+#'
+#' @export
 geom_range <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
                        ...,
