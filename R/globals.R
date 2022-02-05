@@ -5,5 +5,8 @@ utils::globalVariables(c(
     "end",
     ":=",
     "intron_start",
-    "intron_end"
+    "intron_end",
+    "x",
+    "xend",
+    "mid"
 ))
