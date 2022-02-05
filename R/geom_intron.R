@@ -33,7 +33,7 @@ geom_intron <- function(mapping = NULL, data = NULL,
 #' @noRd
 GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
     required_aes = c("xstart", "xend", "y"),
-    default_aes = ggplot2::aes(
+    default_aes = aes(
         colour = "black",
         size = 0.5,
         linetype = 1,

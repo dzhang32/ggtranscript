@@ -34,7 +34,7 @@ GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
             height = NULL
         )
     },
-    default_aes = ggplot2::aes(
+    default_aes = aes(
         fill = "grey20", colour = NA,
         size = 0.1, linetype = 1,
         alpha = NA, height = NA
