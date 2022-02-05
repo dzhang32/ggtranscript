@@ -1,3 +1,4 @@
+#' @noRd
 geom_range <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
                        ...,
@@ -24,9 +25,14 @@ geom_range <- function(mapping = NULL, data = NULL,
 #' @noRd
 GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
     setup_data = function(data, params) {
+        # i think, height has to be created here (rather than in default_aes)
+        # as default_aes takes effect AFTER setup_data
+        # alternatively, I think we could move the data processing to draw_panel
+        # but this would be more complex
         data$height <- data$height %||% params$height %||% 0.5
 
-        transform(data,
+        transform(
+            data,
             xmin = xstart,
             xmax = xend,
             ymin = y - height / 2,
@@ -35,9 +41,12 @@ GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
         )
     },
     default_aes = aes(
-        fill = "grey20", colour = NA,
-        size = 0.1, linetype = 1,
-        alpha = NA, height = NA
+        fill = "grey",
+        colour = "black",
+        size = 0.25,
+        linetype = 1,
+        alpha = NA,
+        height = NA
     ),
     required_aes = c("xstart", "xend", "y")
 )
