@@ -66,7 +66,7 @@ gba_ens_105_exons %>%
     geom_range(aes(fill = transcript_biotype)) +
     geom_intron(
         data = to_intron(gba_ens_105_exons, transcript_name),
-        aes(strand = as.character(strand)),
+        aes(strand = strand),
         arrow.min.intron.length = 500,
     )
 ```

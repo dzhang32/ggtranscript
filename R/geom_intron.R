@@ -248,10 +248,9 @@ to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
 #' @noRd
 .check_strand <- function(strand) {
     strand_any_na <- any(is.na(strand))
-    strand_chr <- !is.character(strand)
     strand_plus_minus <- !(all(strand %in% c("+", "-")))
 
-    if (strand_any_na | strand_chr | strand_plus_minus) {
+    if (strand_any_na | strand_plus_minus) {
         stop("strand values must be one of '+' and '-'")
     }
 

@@ -95,12 +95,18 @@ testthat::test_that(
     {
         minus_strand <- test_introns_plot +
             geom_intron(strand = "-")
+        factor_strand <- test_introns_plot +
+            geom_intron(strand = factor("-"))
         as_aes_strand <- test_introns_plot +
             geom_intron(aes(strand = strand))
 
         vdiffr::expect_doppelganger(
             "Minus strand plot",
             minus_strand
+        )
+        vdiffr::expect_doppelganger(
+            "factor strand plot",
+            factor_strand
         )
         vdiffr::expect_doppelganger(
             "As aes strand plot",
