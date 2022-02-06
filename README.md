@@ -23,35 +23,40 @@ transcript structure and annotation.
 devtools::install_github("dzhang32/ggtranscript")
 ```
 
-## Example
+## Examples
 
-`ggtranscript` introduces 3 new `geom`s designed to make visualising
-transcript structures easier. `geom_range()` for exons (and genomic
-range based annotations), `geom_intron()` for introns and
-`geom_junction()` for overlaying junction data with transcript
-structures.
+`ggtranscript` introduces 3 new `geom`s designed to visualise transcript
+annotation; `geom_range()`, `geom_intron()` and `geom_junction()`.
+
+`geom_range()` and `geom_intron()` enable the plotting of exons and
+introns. `ggtranscript` also provides a useful helpful function
+`to_intron` to convert exon co-ordinates to the corresponding introns.
 
 ``` r
 library(magrittr)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 library(ggplot2)
 library(ggtranscript)
 
 # gene annotation for the an example gene (GBA)
-gba_ens_105
-#> # A tibble: 165 × 8
-#>    seqnames     start       end strand type        gene_name transcript_name
-#>    <fct>        <int>     <int> <fct>  <fct>       <chr>     <chr>          
-#>  1 1        155234452 155244699 -      gene        GBA       <NA>           
-#>  2 1        155234452 155241249 -      transcript  GBA       GBA-202        
-#>  3 1        155241086 155241249 -      exon        GBA       GBA-202        
-#>  4 1        155241086 155241112 -      CDS         GBA       GBA-202        
-#>  5 1        155241110 155241112 -      start_codon GBA       GBA-202        
-#>  6 1        155240630 155240717 -      exon        GBA       GBA-202        
-#>  7 1        155240630 155240717 -      CDS         GBA       GBA-202        
-#>  8 1        155239886 155240077 -      exon        GBA       GBA-202        
-#>  9 1        155239886 155240077 -      CDS         GBA       GBA-202        
-#> 10 1        155239616 155239762 -      exon        GBA       GBA-202        
-#> # … with 155 more rows, and 1 more variable: transcript_biotype <chr>
+gba_ens_105 %>% head()
+#> # A tibble: 6 × 8
+#>   seqnames  start    end strand type  gene_name transcript_name transcript_biot…
+#>   <fct>     <int>  <int> <fct>  <fct> <chr>     <chr>           <chr>           
+#> 1 1        1.55e8 1.55e8 -      gene  GBA       <NA>            <NA>            
+#> 2 1        1.55e8 1.55e8 -      tran… GBA       GBA-202         protein_coding  
+#> 3 1        1.55e8 1.55e8 -      exon  GBA       GBA-202         protein_coding  
+#> 4 1        1.55e8 1.55e8 -      CDS   GBA       GBA-202         protein_coding  
+#> 5 1        1.55e8 1.55e8 -      star… GBA       GBA-202         protein_coding  
+#> 6 1        1.55e8 1.55e8 -      exon  GBA       GBA-202         protein_coding
 
 # obtain exons
 gba_ens_105_exons <- gba_ens_105 %>%
@@ -63,7 +68,9 @@ gba_ens_105_exons %>%
         xend = end,
         y = transcript_name
     )) +
-    geom_range(aes(fill = transcript_biotype)) +
+    geom_range(
+        aes(fill = transcript_biotype)
+    ) +
     geom_intron(
         data = to_intron(gba_ens_105_exons, transcript_name),
         aes(strand = strand),
@@ -71,7 +78,89 @@ gba_ens_105_exons %>%
     )
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-tx-annot-base-1.png" width="100%" />
+
+`geom_range` can be used for any genomic range based annotation. For
+example, when plotting protein-coding transcripts, it can be useful to
+visually distinguish the coding segments from UTRs.
+
+``` r
+# keeping only the exons from protein coding transcripts
+gba_ens_105_exons_prot_cod <- gba_ens_105_exons %>%
+    dplyr::filter(transcript_biotype == "protein_coding")
+
+# obtain cds
+gba_ens_105_cds <- gba_ens_105 %>%
+    dplyr::filter(type == "CDS")
+
+gba_ens_105_exons_prot_cod %>%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range(
+        fill = "white",
+        height = 0.25
+    ) +
+    geom_range(
+        data = gba_ens_105_cds
+    ) +
+    geom_intron(
+        data = to_intron(gba_ens_105_exons_prot_cod, transcript_name),
+        aes(strand = strand),
+        arrow.min.intron.length = 500,
+    )
+```
+
+<img src="man/figures/README-tx-annot-w-cds-1.png" width="100%" />
+
+When working with short-read RNA-sequencing data, it can be useful to
+check whether a known transcript structure has junction support using
+`geom_junction()`.
+
+``` r
+# using two transcripts as an example
+gba_ens_105_201_exons <- gba_ens_105_exons %>%
+    dplyr::filter(transcript_name == c("GBA-201"))
+
+gba_ens_105_201_cds <- gba_ens_105_cds %>%
+    dplyr::filter(transcript_name == "GBA-201")
+
+# simulate junction data, randomly keeping half of the junctions
+gba_ens_105_201_introns <- gba_ens_105_201_exons %>%
+    to_intron(transcript_name)
+
+set.seed(32)
+
+gba_ens_105_201_junctions <-
+    gba_ens_105_201_introns[sample(seq_len(nrow(gba_ens_105_201_introns)), 6), ]
+
+gba_ens_105_201_exons %>%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range(
+        fill = "white",
+        height = 0.25
+    ) +
+    geom_range(
+        data = gba_ens_105_201_cds
+    ) +
+    geom_intron(
+        data = gba_ens_105_201_introns,
+        aes(strand = strand),
+        arrow.min.intron.length = 500,
+    ) +
+    geom_junction(
+        data = gba_ens_105_201_junctions,
+        colour = "red"
+    )
+```
+
+<img src="man/figures/README-tx-annot-w-junction-1.png" width="100%" />
 
 ## Code of Conduct
 
