@@ -3,6 +3,7 @@ geom_junction <- function(mapping = NULL, data = NULL,
                           stat = "identity", position = "identity",
                           ...,
                           junction.orientation = "alternating",
+                          curvature = 0.5,
                           angle = 90,
                           ncp = 5,
                           arrow = NULL,
@@ -23,6 +24,7 @@ geom_junction <- function(mapping = NULL, data = NULL,
             arrow = arrow,
             arrow.fill = arrow.fill,
             junction.orientation = junction.orientation,
+            curvature = curvature,
             angle = angle,
             ncp = ncp,
             lineend = lineend,
@@ -36,9 +38,12 @@ geom_junction <- function(mapping = NULL, data = NULL,
 GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
     required_aes = c("xstart", "xend", "y"),
     setup_data = function(data, params) {
-
         # check that junction.orientation is length 1 and one of possible options
         .check_junction.orientation(params)
+
+        if (params$curvature < 0) {
+            warning("Setting curvature of < 0 will flip junction.orientation")
+        }
 
         # needed to permit usage of xstart/xend
         transform(
@@ -52,6 +57,7 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
                           panel_params,
                           coord,
                           junction.orientation = "alternating",
+                          curvature = 0.5,
                           angle = 90,
                           ncp = 5,
                           arrow = NULL,
@@ -60,11 +66,20 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
                           na.rm = FALSE) {
         if (junction.orientation == "alternating") {
 
-            # to create alternating top/bottom junctions, we need to split the data
+            # to create alternating top/bottom junctions
+            # we need to split the data
             # and plot the alternating indexes with curvature -0.5/0.5
-            even_index <- seq_len(nrow(data)) %% 2
-            even_index_data <- data[even_index, ]
-            odd_index_data <- data[!even_index, ]
+            # we group_by y (e.g. tx) to ensure the alternating junctions
+            # occurs within the y groups
+            data <- data %>%
+                dplyr::group_by(y) %>%
+                dplyr::mutate(
+                    odd_index = as.logical(dplyr::row_number() %% 2)
+                ) %>%
+                dplyr::ungroup()
+
+            even_index_data <- data[!data$odd_index, ]
+            odd_index_data <- data[data$odd_index, ]
 
             # if there's 1 junction, even_index_data will have 0 rows
             # .create_junction_grob will return nullGrob in that case
@@ -72,7 +87,7 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
                 data = even_index_data,
                 panel_params = panel_params,
                 coord = coord,
-                curvature = 0.5,
+                curvature = curvature,
                 angle = angle,
                 ncp = ncp,
                 arrow = arrow,
@@ -85,7 +100,7 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
                 data = odd_index_data,
                 panel_params = panel_params,
                 coord = coord,
-                curvature = -0.5,
+                curvature = -curvature,
                 angle = angle,
                 ncp = ncp,
                 arrow = arrow,
@@ -99,7 +114,12 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
                 odd_top_junction_grob
             )
         } else {
-            curvature <- ifelse(junction.orientation == "top", -0.5, 0.5)
+            # if "top" we need to flip the orientation to -0.5
+            curvature <- ifelse(
+                junction.orientation == "top",
+                -curvature,
+                curvature
+            )
 
             .create_junction_grob(
                 data = data,
