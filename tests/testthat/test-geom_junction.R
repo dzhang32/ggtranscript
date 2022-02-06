@@ -49,3 +49,41 @@ testthat::test_that(
         )
     }
 )
+
+testthat::test_that(
+    "geom_junction(junction.orientation = x) works correctly",
+    {
+        top_junction.orientation <- test_introns_plot +
+            geom_junction(junction.orientation = "top")
+        bottom_junction.orientation <- test_introns_plot +
+            geom_junction(junction.orientation = "bottom")
+        w_aes_param_top_junction.orientation <- test_introns_plot +
+            geom_junction(aes(colour = tx), size = 1, junction.orientation = "top")
+
+        vdiffr::expect_doppelganger(
+            "top junction.orientation plot",
+            top_junction.orientation
+        )
+        vdiffr::expect_doppelganger(
+            "bottom junction.orientation plot",
+            bottom_junction.orientation
+        )
+        vdiffr::expect_doppelganger(
+            "with aes and param top junction.orientation plot",
+            w_aes_param_top_junction.orientation
+        )
+    }
+)
+
+testthat::test_that(
+    "geom_junction() catches junction_orientation input errors",
+    {
+        a_junction.orientation <- test_introns_plot +
+            geom_junction(junction.orientation = "a")
+
+        expect_error(
+            print(a_junction.orientation),
+            "junction.orientation must be one of"
+        )
+    }
+)
