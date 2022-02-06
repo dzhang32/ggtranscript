@@ -68,8 +68,8 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \code{geom_range()} draws blocks/tiles with a width specified by their \code{xstart}
 and \code{xend} position. The other required \code{aes}, \code{y}, is expected to be a
 \code{character} or \code{factor} (e.g. a transcript id/name). This \code{geom} is designed
-to represent genomic annotations that cover a genomic range (e.g. exons, CDS,
-reads).
+to represent genomic annotations that cover a genomic range (e.g. exons,
+CDS).
 }
 \examples{
 
