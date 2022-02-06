@@ -88,7 +88,7 @@ the direction of transcription.
 }
 \examples{
 
-test_introns <-
+example_introns <-
     dplyr::tibble(
         strand = c("+", "-"),
         tx = c("A", "B"),
@@ -103,8 +103,8 @@ base <-
     ggplot2::ggplot(
         example_introns,
         ggplot2::aes(
-            xstart = intron_start,
-            xend = intron_end,
+            xstart = start,
+            xend = end,
             y = tx
         )
     )
