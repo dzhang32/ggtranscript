@@ -1,10 +1,10 @@
 ---
 title: "Introduction to ggtranscript"
 author: 
-  - name: Your name
+  - name: David Zhang
     affiliation:
-    - Your institution
-    email: your.email@somewhere.com
+    - UCL
+    email: dyzhang32@gmail.com
 output: 
   BiocStyle::html_document:
     self_contained: yes
@@ -29,6 +29,8 @@ knitr::opts_chunk$set(
 ```
 
 # Basics
+
+To be completed...
 
 ## Install `ggtranscript`
 
