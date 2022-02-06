@@ -94,5 +94,5 @@ base <-
     )
 
 base + geom_range()
-base + geom_range(ggplot2::aes(colour = tx))
+base + geom_range(ggplot2::aes(fill = tx))
 }

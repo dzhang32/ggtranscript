@@ -35,7 +35,7 @@
 #'     )
 #'
 #' base + geom_range()
-#' base + geom_range(ggplot2::aes(colour = tx))
+#' base + geom_range(ggplot2::aes(fill = tx))
 geom_range <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
                        ...,
