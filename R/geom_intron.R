@@ -143,7 +143,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
         # then, create the arrow grobs, one per strand
         # need both as the direction of arrow (as far I can tell) is
         # is dependent on the orientation of the x/xend
-        strand_arrow_plus_grob <- .create_strand_arrow(
+        strand_arrow_plus_grob <- .create_strand_arrow_grob(
             target_strand = "+",
             arrow.min.intron.length = arrow.min.intron.length,
             data = data,
@@ -156,7 +156,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
             na.rm = na.rm
         )
 
-        strand_arrow_minus_grob <- .create_strand_arrow(
+        strand_arrow_minus_grob <- .create_strand_arrow_grob(
             target_strand = "-",
             arrow.min.intron.length = arrow.min.intron.length,
             data = data,
@@ -247,10 +247,10 @@ to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
 #' @keywords internal
 #' @noRd
 .check_strand <- function(strand) {
-    strand_any_na <- any(is.na(strand))
-    strand_plus_minus <- !(all(strand %in% c("+", "-")))
+    any_na <- any(is.na(strand))
+    plus_minus <- !(all(strand %in% c("+", "-")))
 
-    if (strand_any_na | strand_plus_minus) {
+    if (any_na | plus_minus) {
         stop("strand values must be one of '+' and '-'")
     }
 
@@ -259,16 +259,16 @@ to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
 
 #' @keywords internal
 #' @noRd
-.create_strand_arrow <- function(target_strand,
-                                 arrow.min.intron.length,
-                                 data,
-                                 panel_params,
-                                 coord,
-                                 arrow,
-                                 arrow.fill,
-                                 lineend,
-                                 linejoin,
-                                 na.rm) {
+.create_strand_arrow_grob <- function(target_strand,
+                                      arrow.min.intron.length,
+                                      data,
+                                      panel_params,
+                                      coord,
+                                      arrow,
+                                      arrow.fill,
+                                      lineend,
+                                      linejoin,
+                                      na.rm) {
 
     # filter for introns that match target strand
     # and have a length above arrow.min.intron.length
