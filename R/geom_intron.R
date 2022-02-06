@@ -16,12 +16,13 @@
 #' @export
 #' @examples
 #'
-#' example_introns <-
+#' test_introns <-
 #'     dplyr::tibble(
 #'         strand = c("+", "-"),
 #'         tx = c("A", "B"),
-#'         intron_start = c(201, 601),
-#'         intron_end = c(299, 649)
+#'         start = c(201, 601),
+#'         end = c(299, 649),
+#'         type = "intron"
 #'     )
 #'
 #' example_introns
@@ -227,15 +228,18 @@ to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
     x <- x %>%
         dplyr::mutate(
             intron_start := dplyr::lag({{ end_var }}) + 1,
-            intron_end := {{ start_var }} - 1
+            intron_end := {{ start_var }} - 1,
+            type = "intron"
         ) %>%
         dplyr::select(-{{ start_var }}, -{{ end_var }})
 
     # for each group, output N of introns should be N - 1 the inputted exons
     # remove the introduced artifact NAs
+    # rename intron_start/intron_end to
     x <- x %>%
         dplyr::ungroup() %>%
-        dplyr::filter(!is.na(intron_start) & !is.na(intron_end))
+        dplyr::filter(!is.na(intron_start) & !is.na(intron_end)) %>%
+        dplyr::rename(start = intron_start, end = intron_end)
 
     return(x)
 }

@@ -88,12 +88,13 @@ the direction of transcription.
 }
 \examples{
 
-example_introns <-
+test_introns <-
     dplyr::tibble(
         strand = c("+", "-"),
         tx = c("A", "B"),
-        intron_start = c(201, 601),
-        intron_end = c(299, 649)
+        start = c(201, 601),
+        end = c(299, 649),
+        type = "intron"
     )
 
 example_introns
