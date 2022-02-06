@@ -140,7 +140,8 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
         )
 
         # then, create the arrow grobs, one per strand
-        #
+        # need both as the direction of arrow (as far I can tell) is
+        # is dependent on the orientation of the x/xend
         strand_arrow_plus_grob <- .create_strand_arrow(
             target_strand = "+",
             arrow.min.intron.length = arrow.min.intron.length,
