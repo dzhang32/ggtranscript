@@ -192,10 +192,6 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
 #'   transcript)
 #' @param group_var variable name (not in quotes) specifying the column with the
 #'   group, most often the transcript id/name.
-#' @param start_var variable name (not in quotes) specifying the column with the
-#'   start co-ordinate(s).
-#' @param end_var variable name (not in quotes) specifying the column with the
-#'   end co-ordinate(s).
 #'
 #' @examples
 #'
@@ -210,7 +206,8 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
 #'
 #' to_intron(example_exons, group_var = tx)
 #' @export
-to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
+to_intron <- function(x, group_var = NULL) {
+    .check_coord_object(x)
 
     # TODO - add functionality to check warn if exons overlap
     # as this should could break the function
@@ -222,16 +219,16 @@ to_intron <- function(x, group_var = NULL, start_var = start, end_var = end) {
 
     # make sure exons are arranged by coord, so that dplyr::lag works correctly
     x <- x %>%
-        dplyr::arrange({{ start_var }}, {{ end_var }})
+        dplyr::arrange(start, end)
 
     # obtain intron start and ends
     x <- x %>%
         dplyr::mutate(
-            intron_start := dplyr::lag({{ end_var }}) + 1,
-            intron_end := {{ start_var }} - 1,
+            intron_start := dplyr::lag(end) + 1,
+            intron_end := start - 1,
             type = "intron"
         ) %>%
-        dplyr::select(-{{ start_var }}, -{{ end_var }})
+        dplyr::select(-start, -end)
 
     # for each group, output N of introns should be N - 1 the inputted exons
     # remove the introduced artifact NAs

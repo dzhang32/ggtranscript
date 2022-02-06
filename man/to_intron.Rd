@@ -4,7 +4,7 @@
 \alias{to_intron}
 \title{Convert exon co-ordinates to introns}
 \usage{
-to_intron(x, group_var = NULL, start_var = start, end_var = end)
+to_intron(x, group_var = NULL)
 }
 \arguments{
 \item{x}{\code{data.frame} containing exons co-ordinates (and possibly associated
@@ -12,12 +12,6 @@ transcript)}
 
 \item{group_var}{variable name (not in quotes) specifying the column with the
 group, most often the transcript id/name.}
-
-\item{start_var}{variable name (not in quotes) specifying the column with the
-start co-ordinate(s).}
-
-\item{end_var}{variable name (not in quotes) specifying the column with the
-end co-ordinate(s).}
 }
 \description{
 Taking a set of exons, \code{to_intron} will return the corresponding introns.
