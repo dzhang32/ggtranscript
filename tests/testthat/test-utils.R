@@ -30,3 +30,23 @@ testthat::test_that(".check_coord_object() catches user input errors", {
         "x must have the columns"
     )
 })
+
+##### .check_group_var #####
+
+testthat::test_that(".check_group_var() works correctly", {
+    expect_equal(
+        .check_group_var(test_exons, group_var = NULL),
+        NULL
+    )
+    expect_equal(
+        .check_group_var(test_exons, group_var = "tx"),
+        NULL
+    )
+})
+
+testthat::test_that(".check_group_var() catches user input errors", {
+    expect_error(
+        .check_group_var(test_exons, "not_a_col"),
+        "must be a column in x"
+    )
+})

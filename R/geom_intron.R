@@ -208,6 +208,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
 #' @export
 to_intron <- function(x, group_var = NULL) {
     .check_coord_object(x)
+    .check_group_var(x, group_var)
 
     # TODO - add functionality to check warn if exons overlap
     # as this should could break the function
