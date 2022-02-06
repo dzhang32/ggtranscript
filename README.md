@@ -72,7 +72,7 @@ gba_ens_105_exons %>%
         aes(fill = transcript_biotype)
     ) +
     geom_intron(
-        data = to_intron(gba_ens_105_exons, transcript_name),
+        data = to_intron(gba_ens_105_exons, "transcript_name"),
         aes(strand = strand),
         arrow.min.intron.length = 500,
     )
@@ -107,7 +107,7 @@ gba_ens_105_exons_prot_cod %>%
         data = gba_ens_105_cds
     ) +
     geom_intron(
-        data = to_intron(gba_ens_105_exons_prot_cod, transcript_name),
+        data = to_intron(gba_ens_105_exons_prot_cod, "transcript_name"),
         aes(strand = strand),
         arrow.min.intron.length = 500,
     )
@@ -129,7 +129,7 @@ gba_ens_105_201_cds <- gba_ens_105_cds %>%
 
 # simulate junction data, randomly keeping half of the junctions
 gba_ens_105_201_introns <- gba_ens_105_201_exons %>%
-    to_intron(transcript_name)
+    to_intron("transcript_name")
 
 set.seed(32)
 

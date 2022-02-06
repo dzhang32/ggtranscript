@@ -2,7 +2,7 @@
 test_introns <-
     gba_ens_105 %>%
     dplyr::filter(type == "exon") %>%
-    to_intron(group_var = transcript_name)
+    to_intron(group_var = "transcript_name")
 
 
 # create base plot to be used in downstream tests

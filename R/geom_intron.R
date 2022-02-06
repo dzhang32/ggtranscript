@@ -190,7 +190,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
 #'
 #' @param x `data.frame` containing exons co-ordinates (and possibly associated
 #'   transcript)
-#' @param group_var variable name (not in quotes) specifying the column with the
+#' @param group_var `character` specifying the column with the
 #'   group, most often the transcript id/name.
 #'
 #' @examples
@@ -204,7 +204,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
 #'
 #' example_exons
 #'
-#' to_intron(example_exons, group_var = tx)
+#' to_intron(example_exons, group_var = "tx")
 #' @export
 to_intron <- function(x, group_var = NULL) {
     .check_coord_object(x)
@@ -213,9 +213,9 @@ to_intron <- function(x, group_var = NULL) {
     # as this should could break the function
     # which expects exons in each group_var to originate from a single tx
 
-    # grouping by NULL (default) does nothing
-    x <- x %>%
-        dplyr::group_by({{ group_var }})
+    if (!is.null(group_var)) {
+        x <- x %>% dplyr::group_by_at(.vars = group_var)
+    }
 
     # make sure exons are arranged by coord, so that dplyr::lag works correctly
     x <- x %>%

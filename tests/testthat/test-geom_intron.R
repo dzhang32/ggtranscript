@@ -31,7 +31,7 @@ testthat::test_that("to_intron() obtains introns correctly", {
     # with group_var
     expect_equal(
         test_introns,
-        test_exons %>% to_intron(group_var = tx)
+        test_exons %>% to_intron(group_var = "tx")
     )
     # without group_var
     expect_equal(
@@ -51,7 +51,7 @@ testthat::test_that(
             test_introns,
             test_exons %>%
                 .[sample(seq_len(nrow(test_exons))), ] %>%
-                to_intron(group_var = tx)
+                to_intron(group_var = "tx")
         )
     }
 )

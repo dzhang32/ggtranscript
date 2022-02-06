@@ -20,19 +20,19 @@
 #' library(magrittr)
 #'
 #' example_introns <-
-#'   gba_ens_105 %>%
-#'   dplyr::filter(type == "exon") %>%
-#'   to_intron(group_var = transcript_name)
+#'     gba_ens_105 %>%
+#'     dplyr::filter(type == "exon") %>%
+#'     to_intron(group_var = "transcript_name")
 #'
 #' example_introns
 #'
 #' base <- example_introns %>%
-#'   dplyr::filter(transcript_name == "GBA-202") %>%
-#'   ggplot2::ggplot(ggplot2::aes(
-#'     xstart = start,
-#'     xend = end,
-#'     y = transcript_name
-#'   ))
+#'     dplyr::filter(transcript_name == "GBA-202") %>%
+#'     ggplot2::ggplot(ggplot2::aes(
+#'         xstart = start,
+#'         xend = end,
+#'         y = transcript_name
+#'     ))
 #'
 #' base + geom_junction()
 #' base + geom_junction(junction.orientation = "top")
@@ -40,11 +40,11 @@
 #'
 #' # for multiple transcripts, sometimes the junctions will overlap
 #' base_multi_transcript <- example_introns %>%
-#'   ggplot2::ggplot(ggplot2::aes(
-#'     xstart = start,
-#'     xend = end,
-#'     y = transcript_name
-#'   ))
+#'     ggplot2::ggplot(ggplot2::aes(
+#'         xstart = start,
+#'         xend = end,
+#'         y = transcript_name
+#'     ))
 #'
 #' base_multi_transcript + geom_junction()
 #'
@@ -52,9 +52,9 @@
 #' base_multi_transcript + geom_junction(curvature = 0.25)
 #'
 #' base_multi_transcript + geom_junction(
-#'   ggplot2::aes(colour = transcript_name),
-#'   curvature = 0.25
-#'   )
+#'     ggplot2::aes(colour = transcript_name),
+#'     curvature = 0.25
+#' )
 geom_junction <- function(mapping = NULL, data = NULL,
                           stat = "identity", position = "identity",
                           ...,

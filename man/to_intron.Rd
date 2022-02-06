@@ -10,7 +10,7 @@ to_intron(x, group_var = NULL)
 \item{x}{\code{data.frame} containing exons co-ordinates (and possibly associated
 transcript)}
 
-\item{group_var}{variable name (not in quotes) specifying the column with the
+\item{group_var}{\code{character} specifying the column with the
 group, most often the transcript id/name.}
 }
 \description{
@@ -31,5 +31,5 @@ example_exons <-
 
 example_exons
 
-to_intron(example_exons, group_var = tx)
+to_intron(example_exons, group_var = "tx")
 }
