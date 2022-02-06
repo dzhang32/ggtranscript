@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_intron.R
 \name{geom_intron}
 \alias{geom_intron}
-\title{Intron lines with strand arrow}
+\title{Plot intron lines with strand arrows}
 \usage{
 geom_intron(
   mapping = NULL,

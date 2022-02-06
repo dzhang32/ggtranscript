@@ -1,4 +1,4 @@
-#' Intron lines with strand arrow
+#' Plot intron lines with strand arrows
 #'
 #' `geom_intron()` draws a horizontal line specifying introns between two points
 #' (xstart, xend) for each e.g. transcript (y). The `strand` option (one of "+"
