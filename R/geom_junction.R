@@ -1,4 +1,60 @@
-#' @noRd
+#' Plot junction curves
+#'
+#' `geom_junction()` draws curves that are designed to represent junction reads
+#' from RNA-sequencing data. The curves can be modified using `curvature`,
+#' `angle` and `ncp` parameters. By default, the junctions will alternate
+#' between being plotted on the top and bottom of each `y` group, however this
+#' can be changed via `junction.orientation`.
+#'
+#' @inheritParams ggplot2::layer
+#' @inheritParams ggplot2::geom_point
+#' @inheritParams ggplot2::geom_segment
+#' @inheritParams grid::curveGrob
+#' @param junction.orientation `character` one of "alternating", "top" or
+#'   "bottom". Specifies where the junctions will be plotted with respect to
+#'   each `y` group.
+#'
+#' @export
+#' @examples
+#'
+#' library(magrittr)
+#'
+#' example_introns <-
+#'   gba_ens_105 %>%
+#'   dplyr::filter(type == "exon") %>%
+#'   to_intron(group_var = transcript_name)
+#'
+#' example_introns
+#'
+#' base <- example_introns %>%
+#'   dplyr::filter(transcript_name == "GBA-202") %>%
+#'   ggplot2::ggplot(ggplot2::aes(
+#'     xstart = start,
+#'     xend = end,
+#'     y = transcript_name
+#'   ))
+#'
+#' base + geom_junction()
+#' base + geom_junction(junction.orientation = "top")
+#' base + geom_junction(junction.orientation = "bottom")
+#'
+#' # for multiple transcripts, sometimes the junctions will overlap
+#' base_multi_transcript <- example_introns %>%
+#'   ggplot2::ggplot(ggplot2::aes(
+#'     xstart = start,
+#'     xend = end,
+#'     y = transcript_name
+#'   ))
+#'
+#' base_multi_transcript + geom_junction()
+#'
+#' # this can be corrected using the curvature parameter
+#' base_multi_transcript + geom_junction(curvature = 0.25)
+#'
+#' base_multi_transcript + geom_junction(
+#'   ggplot2::aes(colour = transcript_name),
+#'   curvature = 0.25
+#'   )
 geom_junction <- function(mapping = NULL, data = NULL,
                           stat = "identity", position = "identity",
                           ...,
