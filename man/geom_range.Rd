@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_range.R
 \name{geom_range}
 \alias{geom_range}
-\title{Placeholder}
+\title{Plot genomic ranges}
 \usage{
 geom_range(
   mapping = NULL,
@@ -65,5 +65,34 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
-\code{geom_range()} ...
+\code{geom_range()} draws blocks/tiles with a width specified by their \code{xstart}
+and \code{xend} position. The other required \code{aes}, \code{y}, is expected to be a
+\code{character} or \code{factor} (e.g. a transcript id/name). This \code{geom} is designed
+to represent genomic annotations that cover a genomic range (e.g. exons, CDS,
+reads).
+}
+\examples{
+
+example_exons <-
+    dplyr::tibble(
+        start = c(100, 300, 500, 650),
+        end = start + 100,
+        strand = c("+", "+", "-", "-"),
+        tx = c("A", "A", "B", "B")
+    )
+
+example_exons
+
+base <-
+    ggplot2::ggplot(
+        example_exons,
+        ggplot2::aes(
+            xstart = start,
+            xend = end,
+            y = tx
+        )
+    )
+
+base + geom_range()
+base + geom_range(ggplot2::aes(colour = tx))
 }
