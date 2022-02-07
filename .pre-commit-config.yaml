@@ -25,19 +25,6 @@ repos:
           renv/activate.R|
           vignettes/FAQ\.Rmd|
           )$
-    -   id: roxygenize # create .Rd files
-        # roxygen requires loading pkg -> add dependencies from DESCRIPTION
-        additional_dependencies:
-        - Bioconductor/BiocStyle
-        - lcolladotor/biocthis
-        - covr
-        - knitr
-        - rmarkdown
-        - sessioninfo
-        - testthat
-        - ggplot2
-        - dplyr
-        - magrittr
     -   id: lintr
         args: [--warn_only]
         verbose: true
