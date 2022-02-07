@@ -72,7 +72,7 @@ to_diff <- function(x, y, group_var = NULL) {
         diffs[[i]] <-
             diff_curr %>%
             dplyr::filter(diff_type != "both") %>%
-            dplyr::select(-in_x, -in_y)
+            dplyr::select(-in_x, -in_y, -index)
     }
 
     diffs <- diffs %>% do.call(dplyr::bind_rows, .)
