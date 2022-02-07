@@ -59,6 +59,8 @@ geom_range <- function(mapping = NULL, data = NULL,
     )
 }
 
+#' `GeomRange` is `ggplot2::GeomTile` with modified `aes` to match genetic
+#' nomenclature (`xstart`/`xend`)
 #' @noRd
 GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
     setup_data = function(data, params) {
