@@ -40,6 +40,9 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/to_diff.html</loc>
+  </url>
+  <url>
     <loc>/reference/to_intron.html</loc>
   </url>
 </urlset>
