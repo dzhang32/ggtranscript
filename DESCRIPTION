@@ -27,7 +27,9 @@ Depends:
     R (>= 2.10)
 LazyData: true
 Imports: 
+    GenomicRanges,
     dplyr,
     ggplot2,
     magrittr,
-    rlang
+    rlang,
+    S4Vectors
