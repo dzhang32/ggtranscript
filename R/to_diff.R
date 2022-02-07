@@ -1,5 +1,55 @@
-#' @keywords internal
-#' @noRd
+#' Obtain the differences between transcripts
+#'
+#' `to_diff` is a helper function intended to facilitate visualizing transcript
+#' differences. `to_diff` expects two sets of user inputted transcripts; 1. with
+#' a single transcript to compare against (`x`) and 2. any number of transcripts
+#' that will be compared to `x` (`y`).
+#'
+#' @param x `data.frame` containing ranges to compare against. `x` should
+#'   originate from a single transcript.
+#' @param y `data.frame` containing ranges to compare with `x`. `y` can
+#'   originate from multiple transcripts.
+#' @param group_var `character` if `y` contains more than 1 transcript,
+#'   `group_var` should specify the column that differentiates transcripts (e.g.
+#'   "transcript_id").
+#'
+#' @return a `data.frame` that details the differences of each `y` group to `x`.
+#'
+#' @export
+#' @examples
+#'
+#' library(magrittr)
+#'
+#' gba_ens_105_exons <- gba_ens_105 %>%
+#'     dplyr::filter(type == "exon")
+#'
+#' gba_ens_105_exons
+#'
+#' # for example, let's compare other transcript to the mane
+#' mane <- gba_ens_105_exons %>%
+#'     dplyr::filter(transcript_name == "GBA-202")
+#'
+#' single_tx <- gba_ens_105_exons %>%
+#'     dplyr::filter(transcript_name %in% c("GBA-203"))
+#'
+#' single_tx_diffs <- to_diff(
+#'     x = mane,
+#'     y = single_tx
+#' )
+#'
+#' single_tx_diffs
+#'
+#' # y can also contain multiple transcripts
+#' multi_tx <- gba_ens_105_exons %>%
+#'     dplyr::filter(transcript_name %in% c("GBA-203", "GBA-201", "GBA-204"))
+#'
+#' multi_tx_diffs <- to_diff(
+#'     x = mane,
+#'     y = multi_tx,
+#'     group_var = "transcript_name"
+#' )
+#'
+#' multi_tx_diffs
 to_diff <- function(x, y, group_var = NULL) {
     .check_coord_object(x)
     .check_coord_object(y)

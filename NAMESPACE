@@ -3,6 +3,7 @@
 export(geom_intron)
 export(geom_junction)
 export(geom_range)
+export(to_diff)
 export(to_intron)
 importFrom(ggplot2,aes)
 importFrom(magrittr,"%>%")
