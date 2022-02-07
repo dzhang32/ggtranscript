@@ -8,5 +8,10 @@ utils::globalVariables(c(
     "intron_end",
     "x",
     "xend",
-    "mid"
+    "mid",
+    "index",
+    "diff_type",
+    "in_x",
+    "in_y",
+    "."
 ))
