@@ -64,18 +64,18 @@ multi_tx_diffs
 
 # an example of visualising differences
 mane \%>\%
-  dplyr::bind_rows(multi_tx) \%>\%
-  ggplot2::ggplot(
-    ggplot2::aes(
-      xstart = start,
-      xend = end,
-      y = transcript_name
+    dplyr::bind_rows(multi_tx) \%>\%
+    ggplot2::ggplot(
+        ggplot2::aes(
+            xstart = start,
+            xend = end,
+            y = transcript_name
+        )
+    ) +
+    geom_range() +
+    geom_range(
+        data = multi_tx_diffs,
+        ggplot2::aes(fill = diff_type),
+        alpha = 0.2,
     )
-  ) +
-  geom_range() +
-  geom_range(
-    data = multi_tx_diffs,
-    ggplot2::aes(fill = diff_type),
-    alpha = 0.2,
-  )
 }
