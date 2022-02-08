@@ -1,13 +1,3 @@
-# create dummy exons for testing
-test_exons <-
-    dplyr::tibble(
-        start = c(100, 300, 500, 650),
-        end = start + 100,
-        strand = c("+", "+", "-", "-"),
-        tx = c("A", "A", "B", "B")
-    )
-
-# manually create the expected introns
 test_introns <-
     dplyr::tibble(
         strand = c("+", "-"),
@@ -24,37 +14,6 @@ test_introns_plot <- test_introns %>%
         xend = end,
         y = tx
     ))
-
-##### to_intron #####
-
-testthat::test_that("to_intron() obtains introns correctly", {
-    # with group_var
-    expect_equal(
-        test_introns,
-        test_exons %>% to_intron(group_var = "tx")
-    )
-    # without group_var
-    expect_equal(
-        test_introns %>% dplyr::filter(tx != "B"),
-        test_exons %>%
-            dplyr::filter(tx != "B") %>%
-            to_intron()
-    )
-})
-
-testthat::test_that(
-    "to_intron() obtains introns correctly, regardless of exon order",
-    {
-        set.seed(32)
-
-        expect_equal(
-            test_introns,
-            test_exons %>%
-                .[sample(seq_len(nrow(test_exons))), ] %>%
-                to_intron(group_var = "tx")
-        )
-    }
-)
 
 ##### geom_intron #####
 
