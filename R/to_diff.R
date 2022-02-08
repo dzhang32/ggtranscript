@@ -1,9 +1,10 @@
 #' Obtain the differences between transcripts
 #'
-#' `to_diff` is a helper function intended to facilitate visualizing transcript
-#' differences. `to_diff` expects two sets of user inputted transcripts; 1. with
-#' a single transcript to compare against (`x`) and 2. any number of transcripts
-#' that will be compared to `x` (`y`).
+#' `to_diff` is a helper function intended to facilitate visualizing the
+#' differences between transcript structure. `to_diff` expects two sets of user
+#' inputted exons; 1. `x` - exons from a single transcript which acts as the
+#' reference to compare to and 2. `y` exons from number of transcripts that will
+#' be compared to `x`.
 #'
 #' @param x `data.frame` containing ranges to compare against. `x` should
 #'   originate from a single transcript.
@@ -25,7 +26,7 @@
 #'
 #' gba_ens_105_exons
 #'
-#' # for example, let's compare other transcript to the mane
+#' # for example, let's compare other transcripts to the MANE-select transcript
 #' mane <- gba_ens_105_exons %>%
 #'     dplyr::filter(transcript_name == "GBA-202")
 #'
@@ -50,6 +51,23 @@
 #' )
 #'
 #' multi_tx_diffs
+#'
+#' # an example of visualising differences
+#' mane %>%
+#'     dplyr::bind_rows(multi_tx) %>%
+#'     ggplot2::ggplot(
+#'         ggplot2::aes(
+#'             xstart = start,
+#'             xend = end,
+#'             y = transcript_name
+#'         )
+#'     ) +
+#'     geom_range() +
+#'     geom_range(
+#'         data = multi_tx_diffs,
+#'         ggplot2::aes(fill = diff_type),
+#'         alpha = 0.2,
+#'     )
 to_diff <- function(x, y, group_var = NULL) {
     .check_coord_object(x)
     .check_coord_object(y)

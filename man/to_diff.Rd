@@ -21,43 +21,61 @@ originate from multiple transcripts.}
 a \code{data.frame} that details the differences of each \code{y} group to \code{x}.
 }
 \description{
-\code{to_diff} is a helper function intended to facilitate visualizing transcript
-differences. \code{to_diff} expects two sets of user inputted transcripts; 1. with
-a single transcript to compare against (\code{x}) and 2. any number of transcripts
-that will be compared to \code{x} (\code{y}).
+\code{to_diff} is a helper function intended to facilitate visualizing the
+differences between transcript structure. \code{to_diff} expects two sets of user
+inputted exons; 1. \code{x} - exons from a single transcript which acts as the
+reference to compare to and 2. \code{y} exons from number of transcripts that will
+be compared to \code{x}.
 }
 \examples{
 
 library(magrittr)
 
 gba_ens_105_exons <- gba_ens_105 \%>\%
-  dplyr::filter(type == "exon")
+    dplyr::filter(type == "exon")
 
 gba_ens_105_exons
 
-# for example, let's compare other transcript to the mane
+# for example, let's compare other transcripts to the MANE-select transcript
 mane <- gba_ens_105_exons \%>\%
-  dplyr::filter(transcript_name == "GBA-202")
+    dplyr::filter(transcript_name == "GBA-202")
 
 single_tx <- gba_ens_105_exons \%>\%
-  dplyr::filter(transcript_name \%in\% c("GBA-203"))
+    dplyr::filter(transcript_name \%in\% c("GBA-203"))
 
 single_tx_diffs <- to_diff(
-  x = mane,
-  y = single_tx
+    x = mane,
+    y = single_tx
 )
 
 single_tx_diffs
 
 # y can also contain multiple transcripts
 multi_tx <- gba_ens_105_exons \%>\%
-  dplyr::filter(transcript_name \%in\% c("GBA-203", "GBA-201", "GBA-204"))
+    dplyr::filter(transcript_name \%in\% c("GBA-203", "GBA-201", "GBA-204"))
 
 multi_tx_diffs <- to_diff(
-  x = mane,
-  y = multi_tx,
-  group_var = "transcript_name"
+    x = mane,
+    y = multi_tx,
+    group_var = "transcript_name"
 )
 
 multi_tx_diffs
+
+# an example of visualising differences
+mane \%>\%
+  dplyr::bind_rows(multi_tx) \%>\%
+  ggplot2::ggplot(
+    ggplot2::aes(
+      xstart = start,
+      xend = end,
+      y = transcript_name
+    )
+  ) +
+  geom_range() +
+  geom_range(
+    data = multi_tx_diffs,
+    ggplot2::aes(fill = diff_type),
+    alpha = 0.2,
+  )
 }
