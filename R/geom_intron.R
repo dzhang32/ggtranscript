@@ -193,6 +193,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
 #' @param group_var `character` specifying the column with the
 #'   group, most often the transcript id/name.
 #'
+#' @export
 #' @examples
 #'
 #' example_exons <-
@@ -205,7 +206,6 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
 #' example_exons
 #'
 #' to_intron(example_exons, group_var = "tx")
-#' @export
 to_intron <- function(x, group_var = NULL) {
     .check_coord_object(x)
     .check_group_var(x, group_var)
