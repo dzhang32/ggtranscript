@@ -6,13 +6,14 @@
 #' to a single transcript. In other words, `to_intron` assumes that exons (from
 #' each group) do not overlap one another.
 #'
-#' @param x `data.frame` containing exons co-ordinates (and possibly associated
-#'   transcript)
-#' @param group_var `character` specifying the column with the
-#'   group, most often the transcript id/name.
+#' Important: this functions defines introns precisely as the exon boundaries,
+#' rather than the intron start/end being exon start - 1, exon end + 1.
+#'
+#' @inheritParams to_diff
 #'
 #' @export
 #' @examples
+#' library(magrittr)
 #'
 #' example_exons <-
 #'     dplyr::tibble(
@@ -24,6 +25,20 @@
 #' example_exons
 #'
 #' to_intron(example_exons, group_var = "tx")
+#'
+#' # this can be convenient when plotting transcript annotation
+#' example_exons %>%
+#'     ggplot2::ggplot(
+#'         ggplot2::aes(
+#'             xstart = start,
+#'             xend = end,
+#'             y = tx
+#'         )
+#'     ) +
+#'     geom_range() +
+#'     geom_intron(
+#'         data = to_intron(example_exons, "tx")
+#'     )
 to_intron <- function(x, group_var = NULL) {
     .check_coord_object(x)
     .check_group_var(x, group_var)
@@ -43,8 +58,8 @@ to_intron <- function(x, group_var = NULL) {
     # obtain intron start and ends
     x <- x %>%
         dplyr::mutate(
-            intron_start := dplyr::lag(end) + 1,
-            intron_end := start - 1,
+            intron_start := dplyr::lag(end),
+            intron_end := start,
             type = "intron"
         ) %>%
         dplyr::select(-start, -end)

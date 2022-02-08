@@ -7,11 +7,12 @@
 to_intron(x, group_var = NULL)
 }
 \arguments{
-\item{x}{\code{data.frame} containing exons co-ordinates (and possibly associated
-transcript)}
+\item{x}{\code{data.frame} containing exonic ranges. \code{x} can contain data from
+from multiple transcripts.}
 
-\item{group_var}{\code{character} specifying the column with the
-group, most often the transcript id/name.}
+\item{group_var}{\code{character} if \code{x} contains more than 1 transcript,
+\code{group_var} should specify the column that differentiates transcripts (e.g.
+"transcript_id").}
 }
 \description{
 Taking a set of exons, \code{to_intron} will return the corresponding introns.
@@ -20,7 +21,12 @@ transcript or 2. be grouped via \code{group_var} such that each group correspond
 to a single transcript. In other words, \code{to_intron} assumes that exons (from
 each group) do not overlap one another.
 }
+\details{
+Important: this functions defines introns precisely as the exon boundaries,
+rather than the intron start/end being exon start - 1, exon end + 1.
+}
 \examples{
+library(magrittr)
 
 example_exons <-
     dplyr::tibble(
@@ -32,4 +38,17 @@ example_exons <-
 example_exons
 
 to_intron(example_exons, group_var = "tx")
+
+# this can be convenient when plotting transcript annotation
+example_exons \%>\%
+  ggplot2::ggplot(
+    ggplot2::aes(
+      xstart = start,
+      xend = end,
+      y = tx
+      )) +
+  geom_range() +
+  geom_intron(
+    data = to_intron(example_exons, "tx")
+  )
 }

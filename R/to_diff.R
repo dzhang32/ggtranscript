@@ -2,15 +2,15 @@
 #'
 #' `to_diff` is a helper function intended to facilitate visualizing the
 #' differences between transcript structure. `to_diff` expects two sets of user
-#' inputted exons; 1. `x` - exons from a single transcript which acts as the
-#' reference to compare to and 2. `y` exons from number of transcripts that will
-#' be compared to `x`.
+#' inputted exons; 1. `x` - exons from number of transcripts that will be
+#' compared to `y` and 2. `y` - exons from a single transcript which acts as the
+#' reference to compare to.
 #'
-#' @param x `data.frame` containing ranges to compare against. `x` should
-#'   originate from a single transcript.
-#' @param y `data.frame` containing ranges to compare with `x`. `y` can
-#'   originate from multiple transcripts.
-#' @param group_var `character` if `y` contains more than 1 transcript,
+#' @param x `data.frame` containing exonic ranges. `x` can contain data from
+#'   from multiple transcripts.
+#' @param y `data.frame` containing exonic ranges. `y` should contain data from
+#'   a single transcript.
+#' @param group_var `character` if `x` contains more than 1 transcript,
 #'   `group_var` should specify the column that differentiates transcripts (e.g.
 #'   "transcript_id").
 #'
@@ -34,8 +34,8 @@
 #'     dplyr::filter(transcript_name %in% c("GBA-203"))
 #'
 #' single_tx_diffs <- to_diff(
-#'     x = mane,
-#'     y = single_tx
+#'     x = single_tx,
+#'     y = mane
 #' )
 #'
 #' single_tx_diffs
@@ -45,8 +45,8 @@
 #'     dplyr::filter(transcript_name %in% c("GBA-203", "GBA-201", "GBA-204"))
 #'
 #' multi_tx_diffs <- to_diff(
-#'     x = mane,
-#'     y = multi_tx,
+#'     x = multi_tx,
+#'     y = mane,
 #'     group_var = "transcript_name"
 #' )
 #'
@@ -71,14 +71,14 @@
 to_diff <- function(x, y, group_var = NULL) {
     .check_coord_object(x)
     .check_coord_object(y)
-    .check_group_var(y, group_var)
+    .check_group_var(x, group_var)
 
     # need to remember if group is NULL for downstream
     null_group <- is.null(group_var)
 
     # we have to create dummy group if there is no group for .get_diff
     if (null_group) {
-        y <- y %>% dplyr::mutate(dummy_group = "A")
+        x <- x %>% dplyr::mutate(dummy_group = "A")
         group_var <- "dummy_group"
     }
 
@@ -94,7 +94,7 @@ to_diff <- function(x, y, group_var = NULL) {
 #' @keywords internal
 #' @noRd
 .get_diff <- function(x, y, group_var) {
-    groups <- y[[group_var]] %>% unique()
+    groups <- x[[group_var]] %>% unique()
 
     # needs to be a genomic range for downstream processing
     x_gr <- GenomicRanges::GRanges(x)
@@ -103,16 +103,16 @@ to_diff <- function(x, y, group_var = NULL) {
     diffs <- vector("list", length = length(group_var))
 
     for (i in seq_along(groups)) {
-        y_gr_curr <- y_gr[GenomicRanges::mcols(y_gr)[[group_var]] == groups[i]]
+        x_gr_curr <- x_gr[GenomicRanges::mcols(x_gr)[[group_var]] == groups[i]]
 
         # get the disjoint pieces (flattening and breaking apart exons)
-        disjoint_pieces <- GenomicRanges::disjoin(c(x_gr, y_gr_curr))
+        disjoint_pieces <- GenomicRanges::disjoin(c(y_gr, x_gr_curr))
 
         # find whether the disjoint pieces overlap x or the current y
         # those that only overlap 1 are the differences
         # TODO - perhaps allow modification of findOverlaps() via ... ?
-        overlap_x <- GenomicRanges::findOverlaps(disjoint_pieces, x_gr)
-        overlap_y <- GenomicRanges::findOverlaps(disjoint_pieces, y_gr_curr)
+        overlap_x <- GenomicRanges::findOverlaps(disjoint_pieces, x_gr_curr)
+        overlap_y <- GenomicRanges::findOverlaps(disjoint_pieces, y_gr)
 
         # convert pieces back to data.frame and classify diffs
         # TODO - could improve efficiency by placing this step post-loop

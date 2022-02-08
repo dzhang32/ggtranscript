@@ -7,13 +7,13 @@
 to_diff(x, y, group_var = NULL)
 }
 \arguments{
-\item{x}{\code{data.frame} containing ranges to compare against. \code{x} should
-originate from a single transcript.}
+\item{x}{\code{data.frame} containing exonic ranges. \code{x} can contain data from
+from multiple transcripts.}
 
-\item{y}{\code{data.frame} containing ranges to compare with \code{x}. \code{y} can
-originate from multiple transcripts.}
+\item{y}{\code{data.frame} containing exonic ranges. \code{y} should contain data from
+a single transcript.}
 
-\item{group_var}{\code{character} if \code{y} contains more than 1 transcript,
+\item{group_var}{\code{character} if \code{x} contains more than 1 transcript,
 \code{group_var} should specify the column that differentiates transcripts (e.g.
 "transcript_id").}
 }
@@ -23,9 +23,9 @@ a \code{data.frame} that details the differences of each \code{y} group to \code
 \description{
 \code{to_diff} is a helper function intended to facilitate visualizing the
 differences between transcript structure. \code{to_diff} expects two sets of user
-inputted exons; 1. \code{x} - exons from a single transcript which acts as the
-reference to compare to and 2. \code{y} exons from number of transcripts that will
-be compared to \code{x}.
+inputted exons; 1. \code{x} - exons from number of transcripts that will be
+compared to \code{y} and 2. \code{y} - exons from a single transcript which acts as the
+reference to compare to.
 }
 \examples{
 
@@ -44,8 +44,8 @@ single_tx <- gba_ens_105_exons \%>\%
     dplyr::filter(transcript_name \%in\% c("GBA-203"))
 
 single_tx_diffs <- to_diff(
-    x = mane,
-    y = single_tx
+    x = single_tx,
+    y = mane
 )
 
 single_tx_diffs
@@ -55,8 +55,8 @@ multi_tx <- gba_ens_105_exons \%>\%
     dplyr::filter(transcript_name \%in\% c("GBA-203", "GBA-201", "GBA-204"))
 
 multi_tx_diffs <- to_diff(
-    x = mane,
-    y = multi_tx,
+    x = multi_tx,
+    y = mane,
     group_var = "transcript_name"
 )
 

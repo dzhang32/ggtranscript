@@ -12,8 +12,8 @@ test_introns <-
     dplyr::tibble(
         strand = c("+", "-"),
         tx = c("A", "B"),
-        start = c(201, 601),
-        end = c(299, 649),
+        start = c(200, 600),
+        end = c(300, 650),
         type = "intron"
     )
 
