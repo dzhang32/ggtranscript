@@ -32,4 +32,5 @@ Imports:
     ggplot2,
     magrittr,
     rlang,
-    S4Vectors
+    S4Vectors,
+    GenomeInfoDb
