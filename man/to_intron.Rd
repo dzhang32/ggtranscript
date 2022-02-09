@@ -41,14 +41,15 @@ to_intron(example_exons, group_var = "tx")
 
 # this can be convenient when plotting transcript annotation
 example_exons \%>\%
-  ggplot2::ggplot(
-    ggplot2::aes(
-      xstart = start,
-      xend = end,
-      y = tx
-      )) +
-  geom_range() +
-  geom_intron(
-    data = to_intron(example_exons, "tx")
-  )
+    ggplot2::ggplot(
+        ggplot2::aes(
+            xstart = start,
+            xend = end,
+            y = tx
+        )
+    ) +
+    geom_range() +
+    geom_intron(
+        data = to_intron(example_exons, "tx")
+    )
 }
