@@ -76,8 +76,8 @@
 #'         labels = c("MANE Select", "GBA-201", "GBA-203", "GBA-204")
 #'     )
 to_diff <- function(x, y, group_var = NULL) {
-    .check_coord_object(x)
-    .check_coord_object(y)
+    .check_coord_object(x, check_seqnames = TRUE, check_strand = TRUE)
+    .check_coord_object(y, check_seqnames = TRUE, check_strand = TRUE)
     .check_group_var(x, group_var)
 
     # need to remember if group is NULL for downstream
