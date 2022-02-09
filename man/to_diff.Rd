@@ -50,7 +50,7 @@ single_tx_diffs <- to_diff(
 
 single_tx_diffs
 
-# y can also contain multiple transcripts
+# x can also contain multiple transcripts
 multi_tx <- gba_ens_105_exons \%>\%
     dplyr::filter(transcript_name \%in\% c("GBA-203", "GBA-201", "GBA-204"))
 
@@ -65,6 +65,10 @@ multi_tx_diffs
 # an example of visualising differences
 mane \%>\%
     dplyr::bind_rows(multi_tx) \%>\%
+    dplyr::mutate(
+      transcript_name = transcript_name \%>\%
+        factor(levels = c("GBA-202", "GBA-201", "GBA-203", "GBA-204"))
+    ) \%>\%
     ggplot2::ggplot(
         ggplot2::aes(
             xstart = start,
@@ -77,5 +81,8 @@ mane \%>\%
         data = multi_tx_diffs,
         ggplot2::aes(fill = diff_type),
         alpha = 0.2,
+    ) +
+    ggplot2::scale_y_discrete(
+      labels = c("MANE Select", "GBA-201", "GBA-203", "GBA-204")
     )
 }
