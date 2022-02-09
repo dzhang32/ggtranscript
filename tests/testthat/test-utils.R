@@ -29,6 +29,17 @@ testthat::test_that(".check_coord_object() catches user input errors", {
         .check_coord_object(test_exons %>% dplyr::select(-end)),
         "must have the columns"
     )
+    expect_error(
+        .check_coord_object(test_exons, check_seqnames = TRUE),
+        "must have the column"
+    )
+    expect_error(
+        .check_coord_object(
+            test_exons %>% dplyr::select(-strand),
+            check_strand = TRUE
+        ),
+        "must have the column"
+    )
 })
 
 ##### .check_group_var #####

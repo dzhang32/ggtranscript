@@ -1,6 +1,8 @@
 #' @keywords internal
 #' @noRd
-.check_coord_object <- function(x) {
+.check_coord_object <- function(x,
+                                check_seqnames = FALSE,
+                                check_strand = FALSE) {
     if (!is.data.frame(x)) {
         stop(
             "object must be a data.frame. ",
@@ -11,6 +13,18 @@
 
     if (!all(c("start", "end") %in% colnames(x))) {
         stop("object must have the columns 'start' and 'end'")
+    }
+
+    if (check_seqnames) {
+        if (!("seqnames" %in% colnames(x))) {
+            stop("object must have the column 'seqnames'")
+        }
+    }
+
+    if (check_strand) {
+        if (!("strand" %in% colnames(x))) {
+            stop("object must have the column 'strand'")
+        }
     }
 }
 
