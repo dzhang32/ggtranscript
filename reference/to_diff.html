@@ -127,7 +127,7 @@ a single transcript.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2        1 155239616 155239762   147      - diff      in_y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3        1 155241250 155241275    26      - diff      in_x</span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># y can also contain multiple transcripts</span></span>
+<span class="r-in"><span class="co"># x can also contain multiple transcripts</span></span>
 <span class="r-in"><span class="va">multi_tx</span> <span class="op">&lt;-</span> <span class="va">gba_ens_105_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GBA-203"</span>, <span class="st">"GBA-201"</span>, <span class="st">"GBA-204"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
@@ -152,6 +152,10 @@ a single transcript.</p></dd>
 <span class="r-in"><span class="co"># an example of visualising differences</span></span>
 <span class="r-in"><span class="va">mane</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">multi_tx</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span class="r-in">      transcript_name <span class="op">=</span> <span class="va">transcript_name</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">        <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span>levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GBA-202"</span>, <span class="st">"GBA-201"</span>, <span class="st">"GBA-203"</span>, <span class="st">"GBA-204"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
 <span class="r-in">        <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
 <span class="r-in">            xstart <span class="op">=</span> <span class="va">start</span>,</span>
@@ -164,6 +168,9 @@ a single transcript.</p></dd>
 <span class="r-in">        data <span class="op">=</span> <span class="va">multi_tx_diffs</span>,</span>
 <span class="r-in">        <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">diff_type</span><span class="op">)</span>,</span>
 <span class="r-in">        alpha <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span class="r-in">    <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_y_discrete</a></span><span class="op">(</span></span>
+<span class="r-in">      labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MANE Select"</span>, <span class="st">"GBA-201"</span>, <span class="st">"GBA-203"</span>, <span class="st">"GBA-204"</span><span class="op">)</span></span>
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-plt img"><img src="to_diff-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
