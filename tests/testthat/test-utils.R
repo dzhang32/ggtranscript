@@ -19,15 +19,15 @@ testthat::test_that(".check_coord_object() works correctly", {
 testthat::test_that(".check_coord_object() catches user input errors", {
     expect_error(
         .check_coord_object("1"),
-        "x must be a data.frame object"
+        "must be a data.frame"
     )
     expect_error(
         .check_coord_object(test_exons %>% dplyr::select(-start)),
-        "x must have the columns"
+        "must have the columns"
     )
     expect_error(
         .check_coord_object(test_exons %>% dplyr::select(-end)),
-        "x must have the columns"
+        "must have the columns"
     )
 })
 
@@ -47,6 +47,6 @@ testthat::test_that(".check_group_var() works correctly", {
 testthat::test_that(".check_group_var() catches user input errors", {
     expect_error(
         .check_group_var(test_exons, "not_a_col"),
-        "must be a column in x"
+        "must be a column in"
     )
 })

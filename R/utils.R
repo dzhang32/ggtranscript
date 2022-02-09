@@ -3,14 +3,14 @@
 .check_coord_object <- function(x) {
     if (!is.data.frame(x)) {
         stop(
-            "x must be a data.frame object. ",
+            "object must be a data.frame. ",
             "GRanges objects are currently not supported and must be converted ",
             "using e.g. as.data.frame()"
         )
     }
 
     if (!all(c("start", "end") %in% colnames(x))) {
-        stop("x must have the columns 'start' and 'end'")
+        stop("object must have the columns 'start' and 'end'")
     }
 }
 
@@ -21,7 +21,7 @@
         if (!all(group_var %in% colnames(x))) {
             stop(
                 "group_var ('", group_var, "') ",
-                "must be a column in x"
+                "must be a column in object"
             )
         }
     }
