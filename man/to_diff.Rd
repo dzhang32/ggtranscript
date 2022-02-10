@@ -66,8 +66,8 @@ multi_tx_diffs
 mane \%>\%
     dplyr::bind_rows(multi_tx) \%>\%
     dplyr::mutate(
-      transcript_name = transcript_name \%>\%
-        factor(levels = c("GBA-202", "GBA-201", "GBA-203", "GBA-204"))
+        transcript_name = transcript_name \%>\%
+            factor(levels = c("GBA-202", "GBA-201", "GBA-203", "GBA-204"))
     ) \%>\%
     ggplot2::ggplot(
         ggplot2::aes(
@@ -83,6 +83,6 @@ mane \%>\%
         alpha = 0.2,
     ) +
     ggplot2::scale_y_discrete(
-      labels = c("MANE Select", "GBA-201", "GBA-203", "GBA-204")
+        labels = c("MANE Select", "GBA-201", "GBA-203", "GBA-204")
     )
 }

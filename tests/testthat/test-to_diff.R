@@ -14,8 +14,8 @@ multi_tx <- gba_ens_105_exons %>%
 
 testthat::test_that("to_diff() works correctly", {
     test_diffs <- to_diff(
-        x = single_tx,
-        y = mane
+        exons = single_tx,
+        ref_exons = mane
     )
     expect_true(is.data.frame(test_diffs))
     expect_true(nrow(test_diffs) > 0)
@@ -27,8 +27,8 @@ testthat::test_that("to_diff() works correctly", {
 
 testthat::test_that("to_diff() works correctly for single transcripts", {
     test_diffs <- to_diff(
-        x = single_tx,
-        y = mane,
+        exons = single_tx,
+        ref_exons = mane,
         group_var = "transcript_name"
     )
     # think the easiest way to check diffs is via plotting
@@ -56,8 +56,8 @@ testthat::test_that("to_diff() works correctly for single transcripts", {
 
 testthat::test_that("to_diff() works correctly for multiple transcripts", {
     test_diffs <- to_diff(
-        x = multi_tx,
-        y = mane,
+        exons = multi_tx,
+        ref_exons = mane,
         group_var = "transcript_name"
     )
     multi_tx_diff_plot <- mane %>%
