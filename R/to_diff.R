@@ -2,9 +2,9 @@
 #'
 #' `to_diff` is a helper function intended to facilitate visualizing the
 #' differences between transcript structure. `to_diff` expects two sets of user
-#' inputted exons; 1. `exons` - exons from number of transcripts that will be
-#' compared to `ref_exons` and 2. `ref_exons` - exons from a single transcript
-#' which acts as the reference to compare to.
+#' inputted exons; 1. `exons` - exons from any number of transcripts that will
+#' be compared to `ref_exons` and 2. `ref_exons` - exons from a single
+#' transcript which acts as the reference to compare against.
 #'
 #' @param exons `data.frame` containing exonic ranges, which can contain data
 #'   from from multiple transcripts.

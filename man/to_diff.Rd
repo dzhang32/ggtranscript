@@ -4,28 +4,29 @@
 \alias{to_diff}
 \title{Obtain the differences between transcripts}
 \usage{
-to_diff(x, y, group_var = NULL)
+to_diff(exons, ref_exons, group_var = NULL)
 }
 \arguments{
-\item{x}{\code{data.frame} containing exonic ranges. \code{x} can contain data from
-from multiple transcripts.}
+\item{exons}{\code{data.frame} containing exonic ranges, which can contain data
+from from multiple transcripts.}
 
-\item{y}{\code{data.frame} containing exonic ranges. \code{y} should contain data from
-a single transcript.}
+\item{ref_exons}{\code{data.frame} containing exonic ranges that \code{exons} will be
+compared against. \code{ref_exons} must contain data from a single transcript.}
 
-\item{group_var}{\code{character} if \code{x} contains more than 1 transcript,
-\code{group_var} should specify the column that differentiates transcripts (e.g.
-"transcript_id").}
+\item{group_var}{\code{character} if input \code{data.frame} contains more than 1
+transcript, \code{group_var} should specify the column that differentiates
+transcripts (e.g. "transcript_id").}
 }
 \value{
-a \code{data.frame} that details the differences of each \code{y} group to \code{x}.
+a \code{data.frame} that details the differences of each \code{exon} (in each
+\code{group_var}) to \code{ref_exons}.
 }
 \description{
 \code{to_diff} is a helper function intended to facilitate visualizing the
 differences between transcript structure. \code{to_diff} expects two sets of user
-inputted exons; 1. \code{x} - exons from number of transcripts that will be
-compared to \code{y} and 2. \code{y} - exons from a single transcript which acts as the
-reference to compare to.
+inputted exons; 1. \code{exons} - exons from any number of transcripts that will
+be compared to \code{ref_exons} and 2. \code{ref_exons} - exons from a single
+transcript which acts as the reference to compare against.
 }
 \examples{
 
@@ -44,19 +45,19 @@ single_tx <- gba_ens_105_exons \%>\%
     dplyr::filter(transcript_name \%in\% c("GBA-203"))
 
 single_tx_diffs <- to_diff(
-    x = single_tx,
-    y = mane
+    exons = single_tx,
+    ref_exons = mane
 )
 
 single_tx_diffs
 
-# x can also contain multiple transcripts
+# exons can also contain multiple transcripts
 multi_tx <- gba_ens_105_exons \%>\%
     dplyr::filter(transcript_name \%in\% c("GBA-203", "GBA-201", "GBA-204"))
 
 multi_tx_diffs <- to_diff(
-    x = multi_tx,
-    y = mane,
+    exons = multi_tx,
+    ref_exons = mane,
     group_var = "transcript_name"
 )
 
@@ -73,7 +74,7 @@ mane \%>\%
         ggplot2::aes(
             xstart = start,
             xend = end,
-            y = transcript_name
+            ref_exons = transcript_name
         )
     ) +
     geom_range() +
