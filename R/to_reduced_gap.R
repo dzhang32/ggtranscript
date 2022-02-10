@@ -169,9 +169,8 @@ to_reduced_gap <- function(x,
 #' @noRd
 .get_reduced_gaps <- function(y, intron_gaps, gap_map, group_var, target_gap_width) {
 
-    # we need the intron widths (to reduce them)
-    y <- y %>%
-        dplyr::mutate(width = end - start)
+    # we need the intron/tx start gap widths (to reduce them)
+    y <- y %>% dplyr::mutate(width = (end - start) + 1)
 
     # characterise introns by scaling type
     y_reduced <- y %>%
@@ -245,7 +244,7 @@ to_reduced_gap <- function(x,
     # the widths of the exons and reduced introns
     x_rescaled <- x %>% dplyr::mutate(
         type = "exon",
-        width = end - start
+        width = (end - start) + 1
     )
 
     # bind together exons and introns and arrange into genomic order
