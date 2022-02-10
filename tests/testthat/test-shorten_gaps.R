@@ -17,17 +17,17 @@ gba_ens_105_introns <- gba_ens_105_exons %>%
 gba_ens_105_intron_gaps <- .get_gaps(GenomicRanges::GRanges(gba_ens_105_exons))
 test_intron_gaps <- .get_gaps(GenomicRanges::GRanges(test_exons))
 
-test_.get_gaps <- function(x, intron_gaps) {
+test_.get_gaps <- function(exons, intron_gaps) {
 
     # intron_gaps should not overlap any exons
-    x_hits <- GenomicRanges::findOverlaps(
-        GenomicRanges::GRanges(x),
+    exons_gap_hits <- GenomicRanges::findOverlaps(
+        GenomicRanges::GRanges(exons),
         intron_gaps
     )
 
-    overlap_x <- length(x_hits) == 0
+    overlap_exons <- length(exons_gap_hits) == 0
 
-    return(overlap_x)
+    return(overlap_exons)
 }
 
 testthat::test_that(".get_gaps() works correctly", {
@@ -47,10 +47,10 @@ gba_ens_105_tx_start_gaps <-
 test_exons_tx_start_gaps <-
     .get_tx_start_gaps(test_exons, NULL)
 
-test_.get_tx_start_gaps <- function(x, tx_start_gaps, group_var) {
+test_.get_tx_start_gaps <- function(exons, tx_start_gaps, group_var) {
     unique_start <- length(unique(tx_start_gaps[["start"]])) == 1
-    correct_start <- all(tx_start_gaps[["start"]] == min(x[["start"]]))
-    correct_end <- x %>%
+    correct_start <- all(tx_start_gaps[["start"]] == min(exons[["start"]]))
+    correct_end <- exons %>%
         dplyr::group_by_at(.vars = group_var) %>%
         dplyr::summarise(tx_start = min(start))
     correct_end <- all(tx_start_gaps[["end"]] == correct_end[["tx_start"]])
@@ -136,10 +136,10 @@ test_rescaled_tx <- shorten_gaps(
     target_gap_width = 50L
 )
 
-test_shorten_gaps <- function(x, rescaled_tx) {
+test_shorten_gaps <- function(exons, rescaled_tx) {
 
     # should never shorten exons
-    exon_widths_before <- x[["end"]] - x[["start"]]
+    exon_widths_before <- exons[["end"]] - exons[["start"]]
     exon_widths_after <- rescaled_tx %>%
         dplyr::filter(type == "exon") %>%
         dplyr::mutate(width = end - start) %>%
@@ -173,8 +173,8 @@ testthat::test_that("shorten_gaps() never modifies exons", {
 })
 
 # add labels helps manual checking
-plot_rescaled_tx <- function(x, rescaled_tx, group_var, add_labels = FALSE) {
-    before_rescaling <- x %>%
+plot_rescaled_tx <- function(exons, rescaled_tx, group_var, add_labels = FALSE) {
+    before_rescaling <- exons %>%
         ggplot2::ggplot(ggplot2::aes_string(
             xstart = "start",
             xend = "end",
@@ -182,7 +182,7 @@ plot_rescaled_tx <- function(x, rescaled_tx, group_var, add_labels = FALSE) {
         )) +
         geom_range() +
         geom_intron(
-            data = to_intron(x, group_var),
+            data = to_intron(exons, group_var),
             strand = "-",
             arrow.min.intron.length = 500
         )
@@ -221,7 +221,7 @@ plot_rescaled_tx <- function(x, rescaled_tx, group_var, add_labels = FALSE) {
 }
 
 testthat::test_that(
-    "shorten_gaps plays well with to_diff",
+    "shorten_gaps works correctly",
     {
         test_rescaled_plot <- plot_rescaled_tx(test_exons, test_rescaled_tx, "tx")
         gba_rescaled_plot <- plot_rescaled_tx(

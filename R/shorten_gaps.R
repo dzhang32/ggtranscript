@@ -1,35 +1,35 @@
 
 #' @keywords internal
 #' @noRd
-shorten_gaps <- function(x,
-                         x_intron,
+shorten_gaps <- function(exons,
+                         introns,
                          group_var = NULL,
                          target_gap_width = 100L) {
 
     # input checks
-    .check_coord_object(x, check_seqnames = TRUE, check_strand = TRUE)
-    .check_coord_object(x_intron, check_seqnames = TRUE, check_strand = TRUE)
-    .check_group_var(x, group_var)
-    .check_group_var(x_intron, group_var)
+    .check_coord_object(exons, check_seqnames = TRUE, check_strand = TRUE)
+    .check_coord_object(introns, check_seqnames = TRUE, check_strand = TRUE)
+    .check_group_var(exons, group_var)
+    .check_group_var(introns, group_var)
     target_gap_width <- .check_target_gap_width(target_gap_width)
 
     # to_intron() obtains exon boundaries as intron definition
     # we need to convert this to the gap definition to match
     # downstream GenomicRanges::gaps
-    x_intron <- x_intron %>%
+    introns <- introns %>%
         dplyr::mutate(
             start = start + 1,
             end = end - 1
         )
 
     # needs to be a genomic range for downstream processing
-    x_gr <- GenomicRanges::GRanges(x)
-    x_intron_gr <- GenomicRanges::GRanges(x_intron)
+    exons_gr <- GenomicRanges::GRanges(exons)
+    introns_gr <- GenomicRanges::GRanges(introns)
 
-    intron_gaps <- .get_gaps(x_gr)
-    gap_map_intron <- .get_gap_map(x_intron_gr, intron_gaps)
-    x_intron_reduced <- .get_reduced_gaps(
-        x_intron,
+    intron_gaps <- .get_gaps(exons_gr)
+    gap_map_intron <- .get_gap_map(introns_gr, intron_gaps)
+    introns_reduced <- .get_reduced_gaps(
+        introns,
         intron_gaps,
         gap_map_intron,
         group_var,
@@ -37,7 +37,7 @@ shorten_gaps <- function(x,
     )
 
     if (!is.null(group_var)) {
-        tx_start_gaps <- .get_tx_start_gaps(x, group_var)
+        tx_start_gaps <- .get_tx_start_gaps(exons, group_var)
         gap_map_tx_start_gaps <- .get_gap_map(
             tx_start_gaps %>% GenomicRanges::GRanges(),
             intron_gaps
@@ -52,32 +52,32 @@ shorten_gaps <- function(x,
             dplyr::select(-start, -end, -strand, -seqnames, -strand)
     }
 
-    x_rescaled <- .get_rescaled_transcripts(
-        x,
-        x_intron_reduced,
+    exons_rescaled <- .get_rescaled_transcripts(
+        exons,
+        introns_reduced,
         tx_start_gaps_reduced,
         group_var
     )
 
     # convert intron back to be defined by exon boundaries
-    x_rescaled <- x_rescaled %>%
+    exons_rescaled <- exons_rescaled %>%
         dplyr::mutate(
             start = ifelse(type == "intron", start - 1, start),
             end = ifelse(type == "intron", end + 1, end)
         )
 
-    return(x_rescaled)
+    return(exons_rescaled)
 }
 
 #' @keywords internal
 #' @noRd
-.get_gaps <- function(x_gr) {
-    orig_seqnames <- x_gr %>%
+.get_gaps <- function(exons_gr) {
+    orig_seqnames <- exons_gr %>%
         GenomicRanges::seqnames() %>%
         as.character() %>%
         unique()
 
-    orig_strand <- x_gr %>%
+    orig_strand <- exons_gr %>%
         GenomicRanges::strand() %>%
         as.character() %>%
         unique()
@@ -86,17 +86,17 @@ shorten_gaps <- function(x,
     .check_len_1_strand_seqnames(orig_seqnames, orig_strand)
 
     # "reduce" exons - here meaning to collapse into single meta transcript
-    x_gr_reduced <- x_gr %>% GenomicRanges::reduce()
+    exons_gr_reduced <- exons_gr %>% GenomicRanges::reduce()
 
     # keep only the relevant seqnames, otherwise gaps includes all seqlevels
-    GenomeInfoDb::seqlevels(x_gr_reduced, pruning.mode = "coarse") <-
+    GenomeInfoDb::seqlevels(exons_gr_reduced, pruning.mode = "coarse") <-
         orig_seqnames
 
     # obtain intronic gaps of the meta transcript
-    intron_gaps <- x_gr_reduced %>%
+    intron_gaps <- exons_gr_reduced %>%
         GenomicRanges::gaps(
-            start = min(GenomicRanges::start(x_gr_reduced)),
-            end = max(GenomicRanges::end(x_gr_reduced))
+            start = min(GenomicRanges::start(exons_gr_reduced)),
+            end = max(GenomicRanges::end(exons_gr_reduced))
         )
 
     # creates a gap per strand too, let's keep only those for the
@@ -108,14 +108,14 @@ shorten_gaps <- function(x,
 
 #' @keywords internal
 #' @noRd
-.get_tx_start_gaps <- function(x, group_var) {
+.get_tx_start_gaps <- function(exons, group_var) {
 
     # need to scale the transcript starts so transcripts align correctly
     # importantly, this tx start also has to take into account
     # whether gaps that overlap it's start have been reduced
     # get the start gap, i.e. from 1 to the transcript tx as GRanges
     tx_start_gaps <-
-        x %>%
+        exons %>%
         dplyr::group_by_at(.vars = c(
             group_var
         )) %>%
@@ -123,7 +123,7 @@ shorten_gaps <- function(x,
             seqnames = unique(seqnames),
             strand = unique(strand),
             end = min(start), # min start of this transcript
-            start = min(x[["start"]]) # min start of all transcripts
+            start = min(exons[["start"]]) # min start of all transcripts
         )
 
     return(tx_start_gaps)
@@ -254,25 +254,25 @@ shorten_gaps <- function(x,
 
 #' @keywords internal
 #' @noRd
-.get_rescaled_transcripts <- function(x,
-                                      x_intron_reduced,
+.get_rescaled_transcripts <- function(exons,
+                                      introns_reduced,
                                       tx_start_gaps_reduced,
                                       group_var) {
 
     # calculate the rescaled exon/intron start/ends using
     # the widths of the exons and reduced introns
-    x_rescaled <- x %>% dplyr::mutate(
+    exons_rescaled <- exons %>% dplyr::mutate(
         type = "exon",
         width = (end - start) + 1
     )
 
     # bind together exons and introns and arrange into genomic order
-    x_rescaled <- x_rescaled %>%
-        dplyr::bind_rows(x_intron_reduced %>% dplyr::mutate(type = "intron")) %>%
+    exons_rescaled <- exons_rescaled %>%
+        dplyr::bind_rows(introns_reduced %>% dplyr::mutate(type = "intron")) %>%
         dplyr::arrange_at(.vars = c(group_var, "start", "end"))
 
     # calculate the rescaled coords using cum of the widths of introns/exons
-    x_rescaled <- x_rescaled %>%
+    exons_rescaled <- exons_rescaled %>%
         dplyr::group_by_at(.vars = c(
             group_var
         )) %>%
@@ -284,10 +284,10 @@ shorten_gaps <- function(x,
 
     # account for the tx starts being in different places, to keep the
     if (is.null(group_var)) {
-        x_rescaled <- x_rescaled %>%
+        exons_rescaled <- exons_rescaled %>%
             dplyr::mutate(width_tx_start = 1)
     } else {
-        x_rescaled <- x_rescaled %>%
+        exons_rescaled <- exons_rescaled %>%
             dplyr::left_join(
                 tx_start_gaps_reduced,
                 by = c(group_var),
@@ -295,7 +295,7 @@ shorten_gaps <- function(x,
             )
     }
 
-    x_rescaled <- x_rescaled %>%
+    exons_rescaled <- exons_rescaled %>%
         dplyr::mutate(
             rescaled_end = rescaled_end + width_tx_start,
             rescaled_start = rescaled_start + width_tx_start
@@ -309,7 +309,7 @@ shorten_gaps <- function(x,
             dplyr::everything()
         )
 
-    return(x_rescaled)
+    return(exons_rescaled)
 }
 
 #' we expect the exons to originate from a single gene.
