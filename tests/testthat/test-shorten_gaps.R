@@ -101,9 +101,9 @@ testthat::test_that(".check_target_gap_width() catches user input errors", {
 })
 
 
-##### to_reduced_gap #####
+##### shorten_gaps #####
 
-gba_ens_105_rescaled_tx <- to_reduced_gap(
+gba_ens_105_rescaled_tx <- shorten_gaps(
     gba_ens_105_exons,
     gba_ens_105_introns,
     group_var = "transcript_name",
@@ -115,28 +115,28 @@ gba_ens_105_exons_1_tx <- gba_ens_105_exons %>%
 gba_ens_105_introns_1_tx <- gba_ens_105_introns %>%
     dplyr::filter(transcript_name == "GBA-202")
 
-gba_ens_105_rescaled_1_tx <- to_reduced_gap(
+gba_ens_105_rescaled_1_tx <- shorten_gaps(
     gba_ens_105_exons_1_tx,
     gba_ens_105_introns_1_tx,
     group_var = "transcript_name",
     target_gap_width = 100L
 )
 
-gba_ens_105_rescaled_1_tx_no_group <- to_reduced_gap(
+gba_ens_105_rescaled_1_tx_no_group <- shorten_gaps(
     gba_ens_105_exons_1_tx,
     gba_ens_105_introns_1_tx,
     group_var = NULL,
     target_gap_width = 100L
 )
 
-test_rescaled_tx <- to_reduced_gap(
+test_rescaled_tx <- shorten_gaps(
     test_exons,
     to_intron(test_exons, "tx"),
     group_var = "tx",
     target_gap_width = 50L
 )
 
-test_to_reduced_gap <- function(x, rescaled_tx) {
+test_shorten_gaps <- function(x, rescaled_tx) {
 
     # should never shorten exons
     exon_widths_before <- x[["end"]] - x[["start"]]
@@ -153,20 +153,20 @@ test_to_reduced_gap <- function(x, rescaled_tx) {
     return(unchanged_exon_widths)
 }
 
-testthat::test_that("to_reduced_gap() never modifies exons", {
-    expect_true(test_to_reduced_gap(
+testthat::test_that("shorten_gaps() never modifies exons", {
+    expect_true(test_shorten_gaps(
         gba_ens_105_exons,
         gba_ens_105_rescaled_tx
     ))
-    expect_true(test_to_reduced_gap(
+    expect_true(test_shorten_gaps(
         gba_ens_105_exons_1_tx,
         gba_ens_105_rescaled_1_tx
     ))
-    expect_true(test_to_reduced_gap(
+    expect_true(test_shorten_gaps(
         gba_ens_105_exons_1_tx,
         gba_ens_105_rescaled_1_tx_no_group
     ))
-    expect_true(test_to_reduced_gap(
+    expect_true(test_shorten_gaps(
         test_exons,
         test_rescaled_tx
     ))
@@ -221,7 +221,7 @@ plot_rescaled_tx <- function(x, rescaled_tx, group_var, add_labels = FALSE) {
 }
 
 testthat::test_that(
-    "to_reduced_gap plays well with to_diff",
+    "shorten_gaps plays well with to_diff",
     {
         test_rescaled_plot <- plot_rescaled_tx(test_exons, test_rescaled_tx, "tx")
         gba_rescaled_plot <- plot_rescaled_tx(
