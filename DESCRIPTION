@@ -36,3 +36,15 @@ Imports:
     rlang,
     S4Vectors,
     GenomeInfoDb
+Collate: 
+    'data.R'
+    'geom_range.R'
+    'geom_half_range.R'
+    'geom_intron.R'
+    'geom_junction.R'
+    'ggtranscript-package.R'
+    'globals.R'
+    'shorten_gaps.R'
+    'to_diff.R'
+    'to_intron.R'
+    'utils.R'
