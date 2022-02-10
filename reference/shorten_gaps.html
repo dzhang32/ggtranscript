@@ -78,10 +78,10 @@ for visualization as they will not match the original genomic coordinates.</p>
 from from multiple transcripts.</p></dd>
 <dt>introns</dt>
 <dd><p><code>data.frame</code> containing the corresponding introns to <code>exons</code>.
-This can be created by applying <code><a href="to_intron.html">to_intron()</a></code> to the <code>exons</code>. If you are
-not using <code>to_introns()</code>, you must make sure intron start/end are defined
-as those precisely matching the adjacent exon boundaries, rather than exon
-end + 1 and exon start - 1.</p></dd>
+This can be created by applying <code><a href="to_intron.html">to_intron()</a></code> to the <code>exons</code>. If not using
+<code><a href="to_intron.html">to_intron()</a></code>, make sure intron start/end are defined as those precisely
+matching the adjacent exon boundaries, rather than exon end + 1 and exon
+start - 1.</p></dd>
 <dt>group_var</dt>
 <dd><p><code>character</code> if input <code>data.frame</code> contains more than 1
 transcript, <code>group_var</code> should specify the column that differentiates
@@ -107,7 +107,7 @@ aligned.</p>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># first, let's use an example of a single transcript</span></span>
 <span class="r-in"><span class="va">single_tx</span> <span class="op">&lt;-</span> <span class="va">gba_ens_105_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GBA-203"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GBA-203"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">single_tx</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 8</span></span>
@@ -126,10 +126,10 @@ aligned.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: transcript_biotype &lt;chr&gt;</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">single_tx_rescaled</span> <span class="op">&lt;-</span> <span class="fu">shorten_gaps</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">single_tx</span>,</span>
-<span class="r-in">  <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">single_tx</span><span class="op">)</span>,</span>
-<span class="r-in">  group_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span class="r-in">  target_gap_width <span class="op">=</span> <span class="fl">100L</span></span>
+<span class="r-in">    <span class="va">single_tx</span>,</span>
+<span class="r-in">    <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">single_tx</span><span class="op">)</span>,</span>
+<span class="r-in">    group_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span class="r-in">    target_gap_width <span class="op">=</span> <span class="fl">100L</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># rescaled output contains both introns and exons</span></span>
@@ -161,64 +161,70 @@ aligned.</p>
 <span class="r-in"><span class="co"># before and after shortening gaps</span></span>
 <span class="r-in"><span class="va">plot_before_after</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">before_shorten_gaps</span>,</span>
 <span class="r-in">                              <span class="va">after_shorten_gaps</span>,</span>
-<span class="r-in">                             <span class="va">group_var</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">                              <span class="va">group_var</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">    <span class="va">before_plot</span> <span class="op">&lt;-</span> <span class="va">before_shorten_gaps</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">        <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_string</a></span><span class="op">(</span></span>
+<span class="r-in">            xstart <span class="op">=</span> <span class="st">"start"</span>,</span>
+<span class="r-in">            xend <span class="op">=</span> <span class="st">"end"</span>,</span>
+<span class="r-in">            y <span class="op">=</span> <span class="va">group_var</span></span>
+<span class="r-in">        <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">        <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">        <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">            data <span class="op">=</span> <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">before_shorten_gaps</span>, <span class="va">group_var</span><span class="op">)</span>,</span>
+<span class="r-in">            strand <span class="op">=</span> <span class="st">"-"</span>,</span>
+<span class="r-in">            arrow.min.intron.length <span class="op">=</span> <span class="fl">500</span></span>
+<span class="r-in">        <span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in">  <span class="va">before_plot</span> <span class="op">&lt;-</span> <span class="va">before_shorten_gaps</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_string</a></span><span class="op">(</span></span>
-<span class="r-in">      xstart <span class="op">=</span> <span class="st">"start"</span>,</span>
-<span class="r-in">      xend <span class="op">=</span> <span class="st">"end"</span>,</span>
-<span class="r-in">      y <span class="op">=</span> <span class="va">group_var</span></span>
-<span class="r-in">    <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
-<span class="r-in">      data <span class="op">=</span> <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">before_shorten_gaps</span>, <span class="va">group_var</span><span class="op">)</span>,</span>
-<span class="r-in">      strand <span class="op">=</span> <span class="st">"-"</span>,</span>
-<span class="r-in">      arrow.min.intron.length <span class="op">=</span> <span class="fl">500</span></span>
+<span class="r-in">    <span class="va">after_plot</span> <span class="op">&lt;-</span> <span class="va">after_shorten_gaps</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">        <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_string</a></span><span class="op">(</span></span>
+<span class="r-in">            xstart <span class="op">=</span> <span class="st">"start"</span>,</span>
+<span class="r-in">            xend <span class="op">=</span> <span class="st">"end"</span>,</span>
+<span class="r-in">            y <span class="op">=</span> <span class="va">group_var</span></span>
+<span class="r-in">        <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">        <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">        <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">            data <span class="op">=</span> <span class="va">after_shorten_gaps</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">                <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"intron"</span><span class="op">)</span>,</span>
+<span class="r-in">            strand <span class="op">=</span> <span class="st">"-"</span>,</span>
+<span class="r-in">            arrow.min.intron.length <span class="op">=</span> <span class="fl">200</span></span>
+<span class="r-in">        <span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in">    <span class="va">before_after_plotlist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">before_plot</span>, <span class="va">after_plot</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in">    <span class="va">before_after_plot</span> <span class="op">&lt;-</span> <span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html" class="external-link">ggarrange</a></span><span class="op">(</span></span>
+<span class="r-in">        plotlist <span class="op">=</span> <span class="va">before_after_plotlist</span>,</span>
+<span class="r-in">        nrow <span class="op">=</span> <span class="fl">2</span>,</span>
+<span class="r-in">        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Before shorten_gaps()"</span>, <span class="st">"After shorten_gaps()"</span><span class="op">)</span></span>
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in">  <span class="va">after_plot</span> <span class="op">&lt;-</span> <span class="va">after_shorten_gaps</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_string</a></span><span class="op">(</span></span>
-<span class="r-in">      xstart <span class="op">=</span> <span class="st">"start"</span>,</span>
-<span class="r-in">      xend <span class="op">=</span> <span class="st">"end"</span>,</span>
-<span class="r-in">      y <span class="op">=</span> <span class="va">group_var</span></span>
-<span class="r-in">    <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
-<span class="r-in">      data <span class="op">=</span> <span class="va">after_shorten_gaps</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"intron"</span><span class="op">)</span>,</span>
-<span class="r-in">      strand <span class="op">=</span> <span class="st">"-"</span>,</span>
-<span class="r-in">      arrow.min.intron.length <span class="op">=</span> <span class="fl">200</span></span>
-<span class="r-in">    <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">before_after_plotlist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">before_plot</span>, <span class="va">after_plot</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">before_after_plot</span> <span class="op">&lt;-</span> <span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html" class="external-link">ggarrange</a></span><span class="op">(</span></span>
-<span class="r-in">    plotlist <span class="op">=</span> <span class="va">before_after_plotlist</span>, nrow <span class="op">=</span> <span class="fl">2</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">before_after_plot</span><span class="op">)</span></span>
+<span class="r-in">    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">before_after_plot</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">plot_before_after</span><span class="op">(</span></span>
-<span class="r-in">  before_shorten_gaps <span class="op">=</span> <span class="va">single_tx</span>,</span>
-<span class="r-in">  after_shorten_gaps <span class="op">=</span> <span class="va">single_tx_rescaled</span>,</span>
-<span class="r-in">  group_var <span class="op">=</span> <span class="st">"transcript_name"</span></span>
+<span class="r-in">    before_shorten_gaps <span class="op">=</span> <span class="va">single_tx</span>,</span>
+<span class="r-in">    after_shorten_gaps <span class="op">=</span> <span class="va">single_tx_rescaled</span>,</span>
+<span class="r-in">    group_var <span class="op">=</span> <span class="st">"transcript_name"</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-plt img"><img src="shorten_gaps-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># exons can also contain multiple transcripts</span></span>
+<span class="r-in"><span class="va">multi_tx</span> <span class="op">&lt;-</span> <span class="va">gba_ens_105_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span class="r-in">        <span class="va">transcript_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"GBA-20"</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
+<span class="r-in">    <span class="op">)</span></span>
+<span class="r-in"></span>
 <span class="r-in"><span class="va">multi_tx_rescaled</span> <span class="op">&lt;-</span> <span class="fu">shorten_gaps</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">gba_ens_105_exons</span>,</span>
-<span class="r-in">  <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">gba_ens_105_exons</span>, <span class="st">"transcript_name"</span><span class="op">)</span>,</span>
-<span class="r-in">  group_var <span class="op">=</span> <span class="st">"transcript_name"</span>,</span>
-<span class="r-in">  target_gap_width <span class="op">=</span> <span class="fl">100L</span></span>
+<span class="r-in">    <span class="va">multi_tx</span>,</span>
+<span class="r-in">    <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">multi_tx</span>, <span class="st">"transcript_name"</span><span class="op">)</span>,</span>
+<span class="r-in">    group_var <span class="op">=</span> <span class="st">"transcript_name"</span>,</span>
+<span class="r-in">    target_gap_width <span class="op">=</span> <span class="fl">100L</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">plot_before_after</span><span class="op">(</span></span>
-<span class="r-in">  before_shorten_gaps <span class="op">=</span> <span class="va">gba_ens_105_exons</span>,</span>
-<span class="r-in">  after_shorten_gaps <span class="op">=</span> <span class="va">multi_tx_rescaled</span>,</span>
-<span class="r-in">  group_var <span class="op">=</span> <span class="st">"transcript_name"</span></span>
+<span class="r-in">    before_shorten_gaps <span class="op">=</span> <span class="va">multi_tx</span>,</span>
+<span class="r-in">    after_shorten_gaps <span class="op">=</span> <span class="va">multi_tx_rescaled</span>,</span>
+<span class="r-in">    group_var <span class="op">=</span> <span class="st">"transcript_name"</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-plt img"><img src="shorten_gaps-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
