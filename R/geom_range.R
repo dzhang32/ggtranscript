@@ -10,6 +10,7 @@
 #' @inheritParams ggplot2::geom_point
 #' @inheritParams ggplot2::geom_tile
 #' @inheritParams ggplot2::geom_segment
+#' @inheritParams grid::rectGrob
 #'
 #' @export
 #' @examples
@@ -39,6 +40,7 @@
 geom_range <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
                        ...,
+                       vjust = NULL,
                        linejoin = "mitre",
                        na.rm = FALSE,
                        show.legend = NA,
@@ -52,6 +54,7 @@ geom_range <- function(mapping = NULL, data = NULL,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
         params = list(
+            vjust = vjust,
             linejoin = linejoin,
             na.rm = na.rm,
             ...
@@ -63,11 +66,17 @@ geom_range <- function(mapping = NULL, data = NULL,
 #' nomenclature (`xstart`/`xend`)
 #' @noRd
 GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
+    required_aes = c("xstart", "xend", "y"),
+    default_aes = aes(
+        fill = "grey",
+        colour = "black",
+        size = 0.25,
+        linetype = 1,
+        alpha = NA,
+        height = NA
+    ),
     setup_data = function(data, params) {
-        # i think, height has to be created here (rather than in default_aes)
-        # as default_aes takes effect AFTER setup_data
-        # alternatively, I think we could move the data processing to draw_panel
-        # but this would be more complex
+        # modified from ggplot2::GeomTile
         data$height <- data$height %||% params$height %||% 0.5
 
         transform(
@@ -79,13 +88,36 @@ GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
             height = NULL
         )
     },
-    default_aes = aes(
-        fill = "grey",
-        colour = "black",
-        size = 0.25,
-        linetype = 1,
-        alpha = NA,
-        height = NA
-    ),
-    required_aes = c("xstart", "xend", "y")
+    draw_panel = function(self,
+                          data,
+                          panel_params,
+                          coord,
+                          vjust = NULL,
+                          lineend = "butt",
+                          linejoin = "mitre") {
+        if (!coord$is_linear()) {
+            # prefer to match geom_curve and warn
+            # rather than copy the implementation from GeomRect for simplicity
+            # also don'think geom_range would be used for non-linear coords
+            warn("geom_ is not implemented for non-linear coordinates")
+        }
+
+        coords <- coord$transform(data, panel_params)
+        grid::rectGrob(
+            coords$xmin, coords$ymax,
+            width = coords$xmax - coords$xmin,
+            height = coords$ymax - coords$ymin,
+            default.units = "native",
+            just = c("left", "top"),
+            vjust = vjust,
+            gp = grid::gpar(
+                col = coords$colour,
+                fill = ggplot2::alpha(coords$fill, coords$alpha),
+                lwd = coords$size * ggplot2::.pt,
+                lty = coords$linetype,
+                linejoin = linejoin,
+                lineend = lineend
+            )
+        )
+    }
 )

@@ -48,3 +48,16 @@ testthat::test_that(
         )
     }
 )
+
+testthat::test_that(
+    "geom_range(vjust = x) works correctly",
+    {
+        w_vjust_geom_range <- test_exons_plot +
+            geom_range(vjust = 1.5, height = 0.25)
+
+        vdiffr::expect_doppelganger(
+            "With vjust geom_range plot",
+            w_vjust_geom_range
+        )
+    }
+)

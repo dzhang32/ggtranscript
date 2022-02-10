@@ -27,8 +27,8 @@
 </defs>
 <g clip-path='url(#cpMjguODh8MzY4Ljk2fDM5LjQzfDU1Ny43MQ==)'>
 <rect x='28.88' y='39.43' width='340.08' height='518.27' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='44.33' y='357.46' width='47.56' height='117.79' style='stroke-width: 0.53; stroke-linecap: square; stroke-linejoin: miter; fill: #BEBEBE;' />
-<rect x='139.46' y='357.46' width='47.56' height='117.79' style='stroke-width: 0.53; stroke-linecap: square; stroke-linejoin: miter; fill: #BEBEBE;' />
+<rect x='44.33' y='357.46' width='47.56' height='117.79' style='stroke-width: 0.53; stroke-linecap: butt; stroke-linejoin: miter; fill: #BEBEBE;' />
+<rect x='139.46' y='357.46' width='47.56' height='117.79' style='stroke-width: 0.53; stroke-linecap: butt; stroke-linejoin: miter; fill: #BEBEBE;' />
 <rect x='28.88' y='39.43' width='340.08' height='518.27' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
@@ -40,8 +40,8 @@
 </defs>
 <g clip-path='url(#cpMzc0LjQ0fDcxNC41MnwzOS40M3w1NTcuNzE=)'>
 <rect x='374.44' y='39.43' width='340.08' height='518.27' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='580.15' y='121.89' width='47.56' height='117.79' style='stroke-width: 0.53; stroke-linecap: square; stroke-linejoin: miter; fill: #BEBEBE;' />
-<rect x='651.50' y='121.89' width='47.56' height='117.79' style='stroke-width: 0.53; stroke-linecap: square; stroke-linejoin: miter; fill: #BEBEBE;' />
+<rect x='580.15' y='121.89' width='47.56' height='117.79' style='stroke-width: 0.53; stroke-linecap: butt; stroke-linejoin: miter; fill: #BEBEBE;' />
+<rect x='651.50' y='121.89' width='47.56' height='117.79' style='stroke-width: 0.53; stroke-linecap: butt; stroke-linejoin: miter; fill: #BEBEBE;' />
 <rect x='374.44' y='39.43' width='340.08' height='518.27' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>

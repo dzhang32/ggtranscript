@@ -10,6 +10,7 @@ geom_range(
   stat = "identity",
   position = "identity",
   ...,
+  vjust = NULL,
   linejoin = "mitre",
   na.rm = FALSE,
   show.legend = NA,
@@ -47,6 +48,10 @@ a call to a position adjustment function.}
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
+
+\item{vjust}{horizontal and vertical justification of the grob.  Each
+justification value should be a number between 0 and 1.  Defaults to 0.5
+for both, centering each pixel over its data location.}
 
 \item{linejoin}{Line join style (round, mitre, bevel).}
 
