@@ -1,17 +1,33 @@
 # bypass R CMD Check notes, related to tidyverse non-standard evaluation
 # https://www.r-bloggers.com/2019/08/no-visible-binding-for-global-variable/
 utils::globalVariables(c(
+    "x",
     "start",
     "end",
     ":=",
     "intron_start",
     "intron_end",
-    "x",
+    "exons",
     "xend",
     "mid",
     "index",
     "diff_type",
-    "in_x",
-    "in_y",
-    "."
+    "in_exons",
+    "in_ref_exons",
+    ".",
+    # shorten_gaps()
+    "width",
+    "rescaled_start",
+    "rescaled_end",
+    "width_tx_start",
+    "seqnames",
+    "strand",
+    "shorten_type",
+    "gap_width",
+    "shortened_gap_width",
+    "shortened_gap_diff",
+    "sum_shortened_gap_diff",
+    "intron_indexes",
+    "shortened_width",
+    "type"
 ))
