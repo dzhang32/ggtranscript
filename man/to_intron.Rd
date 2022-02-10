@@ -4,26 +4,27 @@
 \alias{to_intron}
 \title{Convert exon co-ordinates to introns}
 \usage{
-to_intron(x, group_var = NULL)
+to_intron(exons, group_var = NULL)
 }
 \arguments{
-\item{x}{\code{data.frame} containing exonic ranges. \code{x} can contain data from
-from multiple transcripts.}
+\item{exons}{\code{data.frame} containing exonic ranges, which can contain data
+from from multiple transcripts.}
 
-\item{group_var}{\code{character} if \code{x} contains more than 1 transcript,
-\code{group_var} should specify the column that differentiates transcripts (e.g.
-"transcript_id").}
+\item{group_var}{\code{character} if input \code{data.frame} contains more than 1
+transcript, \code{group_var} should specify the column that differentiates
+transcripts (e.g. "transcript_id").}
 }
 \description{
-Taking a set of exons, \code{to_intron} will return the corresponding introns.
-\code{to_intron} expects inputted exons to either 1. originate from a single
-transcript or 2. be grouped via \code{group_var} such that each group corresponds
-to a single transcript. In other words, \code{to_intron} assumes that exons (from
-each group) do not overlap one another.
+Taking as input set of \code{exons}, \code{to_intron} will return the corresponding
+introns. \code{to_intron} expects inputted exons to either 1. originate from a
+single transcript or 2. be grouped via \code{group_var} such that each group
+corresponds to a single transcript. In other words, \code{to_intron} assumes that
+exons (from each transcript/\code{group_var}) do not overlap one another.
 }
 \details{
-Important: this functions defines introns precisely as the exon boundaries,
-rather than the intron start/end being exon start - 1, exon end + 1.
+Important: for visualisation purposes this functions defines introns
+precisely as the exon boundaries, rather than the intron start/end being
+(exon end + 1)/(exon start - 1).
 }
 \examples{
 library(magrittr)
