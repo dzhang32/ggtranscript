@@ -1,6 +1,111 @@
-
-#' @keywords internal
-#' @noRd
+#' Improve transcript structure visualisation by shortening intron gaps
+#'
+#' `shorten_gaps` is a helper function intended to improve visualizaing
+#' transcript structure when a transcript has long introns. `shorten_gaps` does
+#' this by shortening gaps (regions that do not overlap any `exons`) to a
+#' user-inputted `target_gap_width`, then rescaling `introns` and `exons` to
+#' preserve exon alignment. `shorten_gaps` will never modify the size of input
+#' `exons`. Importantly, the outputted rescaled co-ordinates should only be used
+#' for visualization as they will not match the original genomic coordinates.
+#'
+#' @inheritParams to_diff
+#' @param introns `data.frame` containing the corresponding introns to `exons`.
+#'   This can be created by applying `to_intron()` to the `exons`. If you are
+#'   not using `to_introns()`, you must make sure intron start/end are defined
+#'   as those precisely matching the adjacent exon boundaries, rather than exon
+#'   end + 1 and exon start - 1.
+#' @param target_gap_width `integer` specifying the size in base pairs to
+#'   shorten the gaps to.
+#'
+#' @return a `data.frame` that contains the co-ordinates of introns (with
+#'   shortened gaps) and exons of each input transcript, rescaled to keep exons
+#'   aligned.
+#'
+#' @export
+#' @examples
+#'
+#' library(magrittr)
+#'
+#' gba_ens_105_exons <- gba_ens_105 %>%
+#'     dplyr::filter(type == "exon")
+#'
+#' # first, let's use an example of a single transcript
+#' single_tx <- gba_ens_105_exons %>%
+#'     dplyr::filter(transcript_name %in% c("GBA-203"))
+#'
+#' single_tx
+#'
+#' single_tx_rescaled <- shorten_gaps(
+#'     single_tx,
+#'     to_intron(single_tx),
+#'     group_var = NULL,
+#'     target_gap_width = 100L
+#' )
+#'
+#' # rescaled output contains both introns and exons
+#' single_tx_rescaled
+#'
+#' # create function to compare transcript visualisation
+#' # before and after shortening gaps
+#' plot_before_after <- function(before_shorten_gaps,
+#'                               after_shorten_gaps,
+#'                               group_var) {
+#'     before_plot <- before_shorten_gaps %>%
+#'         ggplot2::ggplot(ggplot2::aes_string(
+#'             xstart = "start",
+#'             xend = "end",
+#'             y = group_var
+#'         )) +
+#'         geom_range() +
+#'         geom_intron(
+#'             data = to_intron(before_shorten_gaps, group_var),
+#'             strand = "-",
+#'             arrow.min.intron.length = 500
+#'         )
+#'
+#'     after_plot <- after_shorten_gaps %>%
+#'         dplyr::filter(type == "exon") %>%
+#'         ggplot2::ggplot(ggplot2::aes_string(
+#'             xstart = "start",
+#'             xend = "end",
+#'             y = group_var
+#'         )) +
+#'         geom_range() +
+#'         geom_intron(
+#'             data = after_shorten_gaps %>%
+#'                 dplyr::filter(type == "intron"),
+#'             strand = "-",
+#'             arrow.min.intron.length = 200
+#'         )
+#'
+#'     before_after_plotlist <- list(before_plot, after_plot)
+#'
+#'     before_after_plot <- ggpubr::ggarrange(
+#'         plotlist = before_after_plotlist, nrow = 2
+#'     )
+#'
+#'     return(before_after_plot)
+#' }
+#'
+#' plot_before_after(
+#'     before_shorten_gaps = single_tx,
+#'     after_shorten_gaps = single_tx_rescaled,
+#'     group_var = "transcript_name"
+#' )
+#'
+#' # exons can also contain multiple transcripts
+#' multi_tx_rescaled <- shorten_gaps(
+#'     gba_ens_105_exons,
+#'     to_intron(gba_ens_105_exons, "transcript_name"),
+#'     group_var = "transcript_name",
+#'     target_gap_width = 100L
+#' )
+#'
+#' plot_before_after(
+#'     before_shorten_gaps = gba_ens_105_exons,
+#'     after_shorten_gaps = multi_tx_rescaled,
+#'     group_var = "transcript_name"
+#' )
 shorten_gaps <- function(exons,
                          introns,
                          group_var = NULL,

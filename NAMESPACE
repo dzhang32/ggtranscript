@@ -3,6 +3,7 @@
 export(geom_intron)
 export(geom_junction)
 export(geom_range)
+export(shorten_gaps)
 export(to_diff)
 export(to_intron)
 importFrom(ggplot2,aes)
