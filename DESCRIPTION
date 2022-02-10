@@ -16,10 +16,12 @@ RoxygenNote: 7.1.2
 Suggests: 
     BiocStyle,
     covr,
+    ggpubr,
+    ggrepel,
     knitr,
     rmarkdown,
     sessioninfo,
-    testthat (>= 3.0.0), 
+    testthat (>= 3.0.0),
     vdiffr (== 1.0.2)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

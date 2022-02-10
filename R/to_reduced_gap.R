@@ -5,11 +5,12 @@ to_reduced_gap <- function(x,
                            x_intron,
                            group_var = NULL,
                            target_gap_width = 100L) {
+
+    # input checks
     .check_coord_object(x, check_seqnames = TRUE, check_strand = TRUE)
     .check_coord_object(x_intron, check_seqnames = TRUE, check_strand = TRUE)
     .check_group_var(x, group_var)
     .check_group_var(x_intron, group_var)
-
     target_gap_width <- .check_target_gap_width(target_gap_width)
 
     # to_intron() obtains exon boundaries as intron definition
@@ -26,16 +27,7 @@ to_reduced_gap <- function(x,
     x_intron_gr <- GenomicRanges::GRanges(x_intron)
 
     intron_gaps <- .get_gaps(x_gr)
-
-    tx_start_gaps <- .get_tx_start_gaps(x, group_var)
-
     gap_map_intron <- .get_gap_map(x_intron_gr, intron_gaps)
-
-    gap_map_tx_start_gaps <- .get_gap_map(
-        tx_start_gaps %>% GenomicRanges::GRanges(),
-        intron_gaps
-    )
-
     x_intron_reduced <- .get_reduced_gaps(
         x_intron,
         intron_gaps,
@@ -44,13 +36,21 @@ to_reduced_gap <- function(x,
         target_gap_width
     )
 
-    tx_start_gaps_reduced <- .get_reduced_gaps(
-        tx_start_gaps,
-        intron_gaps,
-        gap_map_tx_start_gaps,
-        group_var,
-        target_gap_width
-    )
+    if (!is.null(group_var)) {
+        tx_start_gaps <- .get_tx_start_gaps(x, group_var)
+        gap_map_tx_start_gaps <- .get_gap_map(
+            tx_start_gaps %>% GenomicRanges::GRanges(),
+            intron_gaps
+        )
+        tx_start_gaps_reduced <- .get_reduced_gaps(
+            tx_start_gaps,
+            intron_gaps,
+            gap_map_tx_start_gaps,
+            group_var,
+            target_gap_width
+        ) %>%
+            dplyr::select(-start, -end, -strand, -seqnames, -strand)
+    }
 
     x_rescaled <- .get_rescaled_transcripts(
         x,
@@ -58,6 +58,13 @@ to_reduced_gap <- function(x,
         tx_start_gaps_reduced,
         group_var
     )
+
+    # convert intron back to be defined by exon boundaries
+    x_rescaled <- x_rescaled %>%
+        dplyr::mutate(
+            start = ifelse(type == "intron", start - 1, start),
+            end = ifelse(type == "intron", end + 1, end)
+        )
 
     return(x_rescaled)
 }
@@ -154,7 +161,7 @@ to_reduced_gap <- function(x,
 
     # remove the "equal" hits from the "within"
     pure_within_hits <- within_hits %>%
-        dplyr::anti_join(equal_hits)
+        dplyr::anti_join(equal_hits, by = c("queryHits", "subjectHits"))
 
     # need both equal and pure within hits
     gap_map <- list(
@@ -194,41 +201,53 @@ to_reduced_gap <- function(x,
 
     # for the "within" cases we need to shorten the intron widths
     # by the total amount the overlapping gaps are shortened
-    # one intron may overlap multiple gaps
-    # first, calculate the sum of the reduction in gap
+
     overlapping_gap_indexes <- gap_map[["pure_within"]][["queryHits"]]
 
-    sum_gap_diff <- dplyr::tibble(
-        intron_indexes = gap_map[["pure_within"]][["subjectHits"]],
-        gap_width = GenomicRanges::width(intron_gaps)[overlapping_gap_indexes]
-    ) %>%
-        dplyr::mutate(
-            reduced_gap_width = ifelse(
-                gap_width > target_gap_width,
-                target_gap_width,
-                gap_width
-            ),
-            reduced_gap_diff = gap_width - reduced_gap_width,
+    # only have to this if there are gaps that are "pure_within"
+    if (length(overlapping_gap_indexes) > 0) {
+
+        # one intron may overlap multiple gaps
+        # first, calculate the sum of the reduction in gap
+        sum_gap_diff <- dplyr::tibble(
+            intron_indexes = gap_map[["pure_within"]][["subjectHits"]],
+            gap_width = GenomicRanges::width(intron_gaps)[overlapping_gap_indexes]
         ) %>%
-        dplyr::group_by(intron_indexes) %>%
-        dplyr::summarise(
-            sum_reduced_gap_diff = sum(reduced_gap_diff)
-        )
-
-    # now actually do reduction for introns with "pure_within" gaps
-    y_reduced[["sum_reduced_gap_diff"]][sum_gap_diff[["intron_indexes"]]] <-
-        sum_gap_diff[["sum_reduced_gap_diff"]]
-
-    # now actually do reduction for introns with "pure_within" gaps
-    y_reduced <- y_reduced %>%
-        dplyr::mutate(
-            reduced_width = ifelse(
-                is.na(sum_reduced_gap_diff),
-                reduced_width,
-                width - sum_reduced_gap_diff
+            dplyr::mutate(
+                reduced_gap_width = ifelse(
+                    gap_width > target_gap_width,
+                    target_gap_width,
+                    gap_width
+                ),
+                reduced_gap_diff = gap_width - reduced_gap_width,
+            ) %>%
+            dplyr::group_by(intron_indexes) %>%
+            dplyr::summarise(
+                sum_reduced_gap_diff = sum(reduced_gap_diff)
             )
-        ) %>%
-        dplyr::select(-sum_reduced_gap_diff, -width, width = reduced_width)
+
+        # now actually do reduction for introns with "pure_within" gaps
+        y_reduced[["sum_reduced_gap_diff"]][sum_gap_diff[["intron_indexes"]]] <-
+            sum_gap_diff[["sum_reduced_gap_diff"]]
+
+        # now actually do reduction for introns with "pure_within" gaps
+        y_reduced <- y_reduced %>%
+            dplyr::mutate(
+                reduced_width = ifelse(
+                    is.na(sum_reduced_gap_diff),
+                    reduced_width,
+                    width - sum_reduced_gap_diff
+                )
+            ) %>%
+            dplyr::select(-sum_reduced_gap_diff)
+    }
+
+    y_reduced <- y_reduced %>%
+        dplyr::select(
+            -reduce_type,
+            -width,
+            width = reduced_width
+        )
 
     return(y_reduced)
 }
@@ -264,18 +283,30 @@ to_reduced_gap <- function(x,
         dplyr::ungroup()
 
     # account for the tx starts being in different places, to keep the
+    if (is.null(group_var)) {
+        x_rescaled <- x_rescaled %>%
+            dplyr::mutate(width_tx_start = 1)
+    } else {
+        x_rescaled <- x_rescaled %>%
+            dplyr::left_join(
+                tx_start_gaps_reduced,
+                by = c(group_var),
+                suffix = c("", "_tx_start")
+            )
+    }
+
     x_rescaled <- x_rescaled %>%
-        dplyr::left_join(
-            tx_start_gaps_reduced %>%
-                dplyr::select(-start, -end),
-            by = c(group_var)
-        ) %>%
         dplyr::mutate(
-            rescaled_end = rescaled_end + width.y,
-            rescaled_start = rescaled_start + width.y
+            rescaled_end = rescaled_end + width_tx_start,
+            rescaled_start = rescaled_start + width_tx_start
         ) %>%
+        dplyr::select(-dplyr::contains("width"), -start, -end) %>%
         dplyr::select(
-            -dplyr::contains("width")
+            seqnames,
+            start = rescaled_start,
+            end = rescaled_end,
+            strand,
+            dplyr::everything()
         )
 
     return(x_rescaled)
@@ -286,15 +317,15 @@ to_reduced_gap <- function(x,
 #' @keywords internal
 #' @noRd
 .check_len_1_strand_seqnames <- function(orig_seqnames, orig_strand) {
-    ab_1_uniq <- "of x contains more than 1 unique value. "
-    reason <- "x is expected to contain exons from a single gene."
+    ab_1_uniq <- "of object contains more than 1 unique value. "
+    reason <- "object is expected to contain exons from a single gene."
 
     if (length(orig_seqnames) != 1) {
         stop("seqnames ", ab_1_uniq, reason)
     }
 
     if (length(orig_strand) != 1) {
-        stop("seqnames ", ab_1_uniq, reason)
+        stop("strand ", ab_1_uniq, reason)
     }
 }
 
