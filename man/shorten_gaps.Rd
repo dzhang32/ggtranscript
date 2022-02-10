@@ -11,10 +11,10 @@ shorten_gaps(exons, introns, group_var = NULL, target_gap_width = 100L)
 from from multiple transcripts.}
 
 \item{introns}{\code{data.frame} containing the corresponding introns to \code{exons}.
-This can be created by applying \code{to_intron()} to the \code{exons}. If you are
-not using \code{to_introns()}, you must make sure intron start/end are defined
-as those precisely matching the adjacent exon boundaries, rather than exon
-end + 1 and exon start - 1.}
+This can be created by applying \code{to_intron()} to the \code{exons}. If not using
+\code{to_intron()}, make sure intron start/end are defined as those precisely
+matching the adjacent exon boundaries, rather than exon end + 1 and exon
+start - 1.}
 
 \item{group_var}{\code{character} if input \code{data.frame} contains more than 1
 transcript, \code{group_var} should specify the column that differentiates
@@ -46,15 +46,15 @@ gba_ens_105_exons <- gba_ens_105 \%>\%
 
 # first, let's use an example of a single transcript
 single_tx <- gba_ens_105_exons \%>\%
-  dplyr::filter(transcript_name \%in\% c("GBA-203"))
+    dplyr::filter(transcript_name \%in\% c("GBA-203"))
 
 single_tx
 
 single_tx_rescaled <- shorten_gaps(
-  single_tx,
-  to_intron(single_tx),
-  group_var = NULL,
-  target_gap_width = 100L
+    single_tx,
+    to_intron(single_tx),
+    group_var = NULL,
+    target_gap_width = 100L
 )
 
 # rescaled output contains both introns and exons
@@ -64,62 +64,68 @@ single_tx_rescaled
 # before and after shortening gaps
 plot_before_after <- function(before_shorten_gaps,
                               after_shorten_gaps,
-                             group_var) {
+                              group_var) {
+    before_plot <- before_shorten_gaps \%>\%
+        ggplot2::ggplot(ggplot2::aes_string(
+            xstart = "start",
+            xend = "end",
+            y = group_var
+        )) +
+        geom_range() +
+        geom_intron(
+            data = to_intron(before_shorten_gaps, group_var),
+            strand = "-",
+            arrow.min.intron.length = 500
+        )
 
-  before_plot <- before_shorten_gaps \%>\%
-    ggplot2::ggplot(ggplot2::aes_string(
-      xstart = "start",
-      xend = "end",
-      y = group_var
-    )) +
-    geom_range() +
-    geom_intron(
-      data = to_intron(before_shorten_gaps, group_var),
-      strand = "-",
-      arrow.min.intron.length = 500
+    after_plot <- after_shorten_gaps \%>\%
+        dplyr::filter(type == "exon") \%>\%
+        ggplot2::ggplot(ggplot2::aes_string(
+            xstart = "start",
+            xend = "end",
+            y = group_var
+        )) +
+        geom_range() +
+        geom_intron(
+            data = after_shorten_gaps \%>\%
+                dplyr::filter(type == "intron"),
+            strand = "-",
+            arrow.min.intron.length = 200
+        )
+
+    before_after_plotlist <- list(before_plot, after_plot)
+
+    before_after_plot <- ggpubr::ggarrange(
+        plotlist = before_after_plotlist,
+        nrow = 2,
+        labels = c("Before shorten_gaps()", "After shorten_gaps()")
     )
 
-  after_plot <- after_shorten_gaps \%>\%
-    dplyr::filter(type == "exon") \%>\%
-    ggplot2::ggplot(ggplot2::aes_string(
-      xstart = "start",
-      xend = "end",
-      y = group_var
-    )) +
-    geom_range() +
-    geom_intron(
-      data = after_shorten_gaps \%>\%
-        dplyr::filter(type == "intron"),
-      strand = "-",
-      arrow.min.intron.length = 200
-    )
-
-  before_after_plotlist <- list(before_plot, after_plot)
-
-  before_after_plot <- ggpubr::ggarrange(
-    plotlist = before_after_plotlist, nrow = 2
-  )
-
-  return(before_after_plot)
+    return(before_after_plot)
 }
 
 plot_before_after(
-  before_shorten_gaps = single_tx,
-  after_shorten_gaps = single_tx_rescaled,
-  group_var = "transcript_name"
+    before_shorten_gaps = single_tx,
+    after_shorten_gaps = single_tx_rescaled,
+    group_var = "transcript_name"
 )
 
 # exons can also contain multiple transcripts
+multi_tx <- gba_ens_105_exons \%>\%
+  dplyr::filter(
+    transcript_name \%in\% paste0("GBA-20", 2:8)
+)
+
 multi_tx_rescaled <- shorten_gaps(
-  gba_ens_105_exons,
-  to_intron(gba_ens_105_exons, "transcript_name"),
-  group_var = "transcript_name",
-  target_gap_width = 100L
+  multi_tx,
+    to_intron(multi_tx, "transcript_name"),
+    group_var = "transcript_name",
+    target_gap_width = 100L
 )
 
 plot_before_after(
-  before_shorten_gaps = gba_ens_105_exons,
-  after_shorten_gaps = multi_tx_rescaled,
-  group_var = "transcript_name"
+    before_shorten_gaps = multi_tx,
+    after_shorten_gaps = multi_tx_rescaled,
+    group_var = "transcript_name"
 )
 }

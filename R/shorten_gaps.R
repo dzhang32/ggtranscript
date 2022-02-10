@@ -10,10 +10,10 @@
 #'
 #' @inheritParams to_diff
 #' @param introns `data.frame` containing the corresponding introns to `exons`.
-#'   This can be created by applying `to_intron()` to the `exons`. If you are
-#'   not using `to_introns()`, you must make sure intron start/end are defined
-#'   as those precisely matching the adjacent exon boundaries, rather than exon
-#'   end + 1 and exon start - 1.
+#'   This can be created by applying `to_intron()` to the `exons`. If not using
+#'   `to_intron()`, make sure intron start/end are defined as those precisely
+#'   matching the adjacent exon boundaries, rather than exon end + 1 and exon
+#'   start - 1.
 #' @param target_gap_width `integer` specifying the size in base pairs to
 #'   shorten the gaps to.
 #'
@@ -81,7 +81,9 @@
 #'     before_after_plotlist <- list(before_plot, after_plot)
 #'
 #'     before_after_plot <- ggpubr::ggarrange(
-#'         plotlist = before_after_plotlist, nrow = 2
+#'         plotlist = before_after_plotlist,
+#'         nrow = 2,
+#'         labels = c("Before shorten_gaps()", "After shorten_gaps()")
 #'     )
 #'
 #'     return(before_after_plot)
@@ -94,15 +96,20 @@
 #' )
 #'
 #' # exons can also contain multiple transcripts
+#' multi_tx <- gba_ens_105_exons %>%
+#'     dplyr::filter(
+#'         transcript_name %in% paste0("GBA-20", 2:8)
+#'     )
+#'
 #' multi_tx_rescaled <- shorten_gaps(
-#'     gba_ens_105_exons,
-#'     to_intron(gba_ens_105_exons, "transcript_name"),
+#'     multi_tx,
+#'     to_intron(multi_tx, "transcript_name"),
 #'     group_var = "transcript_name",
 #'     target_gap_width = 100L
 #' )
 #'
 #' plot_before_after(
-#'     before_shorten_gaps = gba_ens_105_exons,
+#'     before_shorten_gaps = multi_tx,
 #'     after_shorten_gaps = multi_tx_rescaled,
 #'     group_var = "transcript_name"
 #' )
