@@ -1,44 +1,8 @@
-#' Plot genomic ranges
-#'
-#' `geom_range()` draws blocks/tiles with a width specified by their `xstart`
-#' and `xend` position. The other required `aes`, `y`, is expected to be a
-#' `character` or `factor` (e.g. a transcript id/name). This `geom` is designed
-#' to represent genomic annotations that cover a genomic range (e.g. exons,
-#' CDS).
-#'
-#' @inheritParams ggplot2::layer
-#' @inheritParams ggplot2::geom_point
-#' @inheritParams ggplot2::geom_tile
-#' @inheritParams ggplot2::geom_segment
-#' @inheritParams grid::rectGrob
+#' @param range.orientation `character` one of "top" or "bottom", specifying
+#'   where to plot the half range.
 #'
 #' @export
 #' @rdname geom_range
-#'
-#' @examples
-#'
-#' example_exons <-
-#'     dplyr::tibble(
-#'         start = c(100, 300, 500, 650),
-#'         end = start + 100,
-#'         strand = c("+", "+", "-", "-"),
-#'         tx = c("A", "A", "B", "B")
-#'     )
-#'
-#' example_exons
-#'
-#' base <-
-#'     ggplot2::ggplot(
-#'         example_exons,
-#'         ggplot2::aes(
-#'             xstart = start,
-#'             xend = end,
-#'             y = tx
-#'         )
-#'     )
-#'
-#' base + geom_range()
-#' base + geom_range(ggplot2::aes(fill = tx))
 geom_half_range <- function(mapping = NULL, data = NULL,
                             stat = "identity", position = "identity",
                             ...,

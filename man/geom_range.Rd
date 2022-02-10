@@ -82,19 +82,19 @@ display.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
+
+\item{range.orientation}{\code{character} one of "top" or "bottom", specifying
+where to plot the half range.}
 }
 \description{
-\code{geom_range()} draws blocks/tiles with a width specified by their \code{xstart}
-and \code{xend} position. The other required \code{aes}, \code{y}, is expected to be a
-\code{character} or \code{factor} (e.g. a transcript id/name). This \code{geom} is designed
-to represent genomic annotations that cover a genomic range (e.g. exons,
-CDS).
-
-\code{geom_range()} draws blocks/tiles with a width specified by their \code{xstart}
-and \code{xend} position. The other required \code{aes}, \code{y}, is expected to be a
-\code{character} or \code{factor} (e.g. a transcript id/name). This \code{geom} is designed
-to represent genomic annotations that cover a genomic range (e.g. exons,
-CDS).
+\code{geom_range()} and \code{geom_half_range()} draw blocks/tiles with a width
+specified by their \code{xstart} and \code{xend} position. The other required \code{aes},
+\code{y}, is expected to be a \code{character} or \code{factor} (e.g. a transcript id/name).
+These \code{geom}s are designed to represent genomic annotations that cover a
+genomic range (e.g. exons, CDS). \code{geom_half_range()} plots takes advantage of
+the vertical symmetry of transcript annotation by enabling plotting of a
+"half range" on the top or bottom of a transcript structure. This can be
+useful to free up plotting space for other transcript annotations.
 }
 \examples{
 
@@ -121,26 +121,6 @@ base <-
 base + geom_range()
 base + geom_range(ggplot2::aes(fill = tx))
 
-example_exons <-
-    dplyr::tibble(
-        start = c(100, 300, 500, 650),
-        end = start + 100,
-        strand = c("+", "+", "-", "-"),
-        tx = c("A", "A", "B", "B")
-    )
-
-example_exons
-
-base <-
-    ggplot2::ggplot(
-        example_exons,
-        ggplot2::aes(
-            xstart = start,
-            xend = end,
-            y = tx
-        )
-    )
-
-base + geom_range()
-base + geom_range(ggplot2::aes(fill = tx))
+base + geom_half_range()
+base + geom_half_range(range.orientation = "top")
 }

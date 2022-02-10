@@ -1,10 +1,13 @@
 #' Plot genomic ranges
 #'
-#' `geom_range()` draws blocks/tiles with a width specified by their `xstart`
-#' and `xend` position. The other required `aes`, `y`, is expected to be a
-#' `character` or `factor` (e.g. a transcript id/name). This `geom` is designed
-#' to represent genomic annotations that cover a genomic range (e.g. exons,
-#' CDS).
+#' `geom_range()` and `geom_half_range()` draw blocks/tiles with a width
+#' specified by their `xstart` and `xend` position. The other required `aes`,
+#' `y`, is expected to be a `character` or `factor` (e.g. a transcript id/name).
+#' These `geom`s are designed to represent genomic annotations that cover a
+#' genomic range (e.g. exons, CDS). `geom_half_range()` plots takes advantage of
+#' the vertical symmetry of transcript annotation by enabling plotting of a
+#' "half range" on the top or bottom of a transcript structure. This can be
+#' useful to free up plotting space for other transcript annotations.
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
@@ -37,6 +40,9 @@
 #'
 #' base + geom_range()
 #' base + geom_range(ggplot2::aes(fill = tx))
+#'
+#' base + geom_half_range()
+#' base + geom_half_range(range.orientation = "top")
 geom_range <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
                        ...,
