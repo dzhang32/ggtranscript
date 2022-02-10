@@ -64,7 +64,7 @@
 #'         ggplot2::aes(
 #'             xstart = start,
 #'             xend = end,
-#'             ref_exons = transcript_name
+#'             y = transcript_name
 #'         )
 #'     ) +
 #'     geom_range() +
