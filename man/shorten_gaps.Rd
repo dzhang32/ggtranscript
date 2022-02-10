@@ -112,12 +112,12 @@ plot_before_after(
 
 # exons can also contain multiple transcripts
 multi_tx <- gba_ens_105_exons \%>\%
-  dplyr::filter(
-    transcript_name \%in\% paste0("GBA-20", 2:8)
-)
+    dplyr::filter(
+        transcript_name \%in\% paste0("GBA-20", 2:8)
+    )
 
 multi_tx_rescaled <- shorten_gaps(
-  multi_tx,
+    multi_tx,
     to_intron(multi_tx, "transcript_name"),
     group_var = "transcript_name",
     target_gap_width = 100L

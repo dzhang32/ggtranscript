@@ -90,11 +90,12 @@ geom_junction <- function(mapping = NULL, data = NULL,
     )
 }
 
+#' @keywords internal
 #' @noRd
 GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
     required_aes = c("xstart", "xend", "y"),
     setup_data = function(data, params) {
-        # check that junction.orientation is length 1 and one of possible options
+        # check that junction.orientation is length 1 + one of possible options
         .check_junction.orientation(params)
 
         if (params$curvature < 0) {
@@ -193,6 +194,8 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
     }
 )
 
+#' @keywords internal
+#' @noRd
 .check_junction.orientation <- function(params) {
     not_orient_option <-
         !(params$junction.orientation %in% c("alternating", "top", "bottom"))
@@ -205,6 +208,8 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
     }
 }
 
+#' @keywords internal
+#' @noRd
 .create_junction_grob <- function(data,
                                   panel_params,
                                   coord,
