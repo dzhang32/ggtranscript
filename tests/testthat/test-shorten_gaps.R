@@ -136,6 +136,13 @@ test_rescaled_tx <- shorten_gaps(
     target_gap_width = 50L
 )
 
+testthat::test_that("shorten_gaps() keeps existing columns", {
+    expect_true(!is.null(gba_ens_105_rescaled_tx[["transcript_biotype"]]))
+    expect_true(!is.null(
+        gba_ens_105_rescaled_1_tx_no_group[["transcript_biotype"]]
+    ))
+})
+
 test_shorten_gaps <- function(exons, rescaled_tx) {
 
     # should never shorten exons
@@ -173,7 +180,10 @@ testthat::test_that("shorten_gaps() never modifies exons", {
 })
 
 # add labels helps manual checking
-plot_rescaled_tx <- function(exons, rescaled_tx, group_var, add_labels = FALSE) {
+plot_rescaled_tx <- function(exons,
+                             rescaled_tx,
+                             group_var,
+                             add_labels = FALSE) {
     before_rescaling <- exons %>%
         ggplot2::ggplot(ggplot2::aes_string(
             xstart = "start",
@@ -208,14 +218,20 @@ plot_rescaled_tx <- function(exons, rescaled_tx, group_var, add_labels = FALSE) 
         for (i in seq_len(length(before_after_list))) {
             before_after_list[[i]] <- before_after_list[[i]] +
                 ggrepel::geom_label_repel(
-                    ggplot2::aes_string(x = "end", y = group_var, label = "end"),
+                    ggplot2::aes_string(
+                        x = "end",
+                        y = group_var,
+                        label = "end"
+                    ),
                     size = 2,
                     min.segment.length = 0
                 )
         }
     }
 
-    before_after_plot <- ggpubr::ggarrange(plotlist = before_after_list, nrow = 2)
+    before_after_plot <- ggpubr::ggarrange(
+        plotlist = before_after_list, nrow = 2
+    )
 
     return(before_after_plot)
 }
@@ -223,7 +239,9 @@ plot_rescaled_tx <- function(exons, rescaled_tx, group_var, add_labels = FALSE) 
 testthat::test_that(
     "shorten_gaps works correctly",
     {
-        test_rescaled_plot <- plot_rescaled_tx(test_exons, test_rescaled_tx, "tx")
+        test_rescaled_plot <- plot_rescaled_tx(
+            test_exons, test_rescaled_tx, "tx"
+        )
         gba_rescaled_plot <- plot_rescaled_tx(
             gba_ens_105_exons, gba_ens_105_rescaled_tx, "transcript_name"
         )
