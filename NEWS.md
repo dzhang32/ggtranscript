@@ -1,14 +1,6 @@
-# ggtranscript 0.99.0
+# ggtranscript 0.99.1
 
 NEW FEATURES
 
-* Added a `NEWS.md` file to track changes to the package.
-
-SIGNIFICANT USER-VISIBLE CHANGES
-
-* Your main changes to a function `foo()` or parameter `param`.
-
-BUG FIXES
-
-* Your bug fixes. See more details at
-<http://bioconductor.org/developers/package-guidelines/#news>.
+* Implement base geoms: `geom_range`, `geom_half_range`, `geom_intron` and
+helper functions: `to_intron`, `to_diff` and `shorten_gaps`
