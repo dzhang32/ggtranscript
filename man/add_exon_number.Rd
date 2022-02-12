@@ -26,7 +26,10 @@ with an ambiguous strand i.e. "*" will be assumed to be "+".
 library(magrittr)
 
 gba_ens_105_exons <- gba_ens_105 \%>\%
-    dplyr::filter(type == "exon")
+    dplyr::filter(
+        type == "exon",
+        transcript_name \%in\% paste0("GBA-20", 2:8)
+    )
 
 gba_ens_105_exons
 
@@ -43,18 +46,33 @@ base <- gba_ens_105_exons \%>\%
             y = transcript_name
         )
     ) +
-    geom_range()
+    geom_range() +
+    geom_intron(
+        data = to_intron(gba_ens_105_exons, "transcript_name"),
+        strand = "-",
+        arrow.min.intron.length = 500
+    )
 
 base +
     ggplot2::geom_text(ggplot2::aes(
         x = (start + end) / 2, # plot label at midpoint of exon
         label = exon_number
     ),
-    size = 1.5,
+    size = 1.5
     )
 
-# for complex transcript structures or small exons ggrepel::geom_label_repel
-# can be useful to separate labels from exons
+# for complex transcript structures or small exons, it can be useful to
+# set nudge_y to plot exon numbers above their respective exons
+base +
+    ggplot2::geom_text(ggplot2::aes(
+        x = (start + end) / 2, # plot label at midpoint of exon
+        label = exon_number
+    ),
+    size = 1.5,
+    nudge_y = 0.4
+    )
+
+# or use ggrepel::geom_label_repel to separate labels from exons
 base +
     ggrepel::geom_label_repel(ggplot2::aes(
         x = (start + end) / 2,
