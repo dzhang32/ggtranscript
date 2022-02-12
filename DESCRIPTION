@@ -43,6 +43,7 @@ Imports:
     S4Vectors,
     GenomeInfoDb
 Collate: 
+    'add_exon_number.R'
     'data.R'
     'geom_range.R'
     'geom_half_range.R'

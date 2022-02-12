@@ -29,5 +29,8 @@ utils::globalVariables(c(
     "sum_shortened_gap_diff",
     "intron_indexes",
     "shortened_width",
-    "type"
+    "type",
+    # add_exon_number()
+    "exon_number",
+    "n_exons"
 ))
