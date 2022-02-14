@@ -4,7 +4,6 @@ test_introns <-
     dplyr::filter(type == "exon") %>%
     to_intron(group_var = "transcript_name")
 
-
 # create base plot to be used in downstream tests
 test_introns_plot <- test_introns %>%
     ggplot2::ggplot(aes(
@@ -21,7 +20,7 @@ testthat::test_that(
         base_geom_junction <- test_introns_plot +
             geom_junction()
         w_param_geom_junction <- test_introns_plot +
-            geom_junction(colour = "red", curvature = 0.25)
+            geom_junction(colour = "red")
         w_aes_geom_junction <- test_introns_plot +
             geom_junction(aes(colour = transcript_name))
         w_facet_geom_junction <- test_introns_plot +
@@ -77,20 +76,63 @@ testthat::test_that(
 )
 
 testthat::test_that(
-    "geom_junction() catches junction_orientation input errors",
+    "geom_junction(junction.y.max = x) works correctly",
+    {
+        junction.y.max_0.5 <- test_introns_plot +
+            geom_junction(junction.y.max = 0.5)
+        w_aes_param_junction.y.max_0.5 <- test_introns_plot +
+            geom_junction(
+                aes(colour = transcript_name),
+                size = 1,
+                junction.y.max = 0.5
+            )
+        w_facet_junction.y.max_0.5 <- test_introns_plot +
+            geom_junction(junction.y.max = 0.5) +
+            ggplot2::facet_wrap(~transcript_biotype)
+
+        vdiffr::expect_doppelganger(
+            "0.5 junction.y.max plot",
+            junction.y.max_0.5
+        )
+        vdiffr::expect_doppelganger(
+            "with aes and param 0.5 junction.y.max plot",
+            w_aes_param_junction.y.max_0.5
+        )
+        vdiffr::expect_doppelganger(
+            "with facet 0.5 junction.y.max plot",
+            w_facet_junction.y.max_0.5
+        )
+    }
+)
+
+testthat::test_that(
+    "geom_junction() catches junction.orientation input errors",
     {
         a_junction.orientation <- test_introns_plot +
             geom_junction(junction.orientation = "a")
-        neg_curvature_junction.orientation <- test_introns_plot +
-            geom_junction(curvature = -0.5)
 
         expect_error(
             print(a_junction.orientation),
             "junction.orientation must be one of"
         )
-        expect_warning(
-            print(neg_curvature_junction.orientation),
-            "Setting curvature of < 0 will flip"
+    }
+)
+
+testthat::test_that(
+    "geom_junction() catches junction.y.max input errors",
+    {
+        len_2_junction.y.max <- test_introns_plot +
+            geom_junction(junction.y.max = c(1, 2))
+        a_junction.y.max <- test_introns_plot +
+            geom_junction(junction.y.max = "a")
+
+        expect_error(
+            print(len_2_junction.y.max),
+            "junction.y.max must have a length of 1"
+        )
+        expect_error(
+            print(a_junction.y.max),
+            "junction.y.max must be a numeric value"
         )
     }
 )

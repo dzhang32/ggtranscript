@@ -55,19 +55,21 @@
 #'     ggplot2::aes(colour = transcript_name),
 #'     curvature = 0.25
 #' )
-geom_junction <- function(mapping = NULL, data = NULL,
-                          stat = "identity", position = "identity",
-                          ...,
+#' @export
+#' @rdname geom_path
+geom_junction <- function(mapping = NULL,
+                          data = NULL,
+                          stat = "identity",
+                          position = "identity",
                           junction.orientation = "alternating",
-                          curvature = 0.5,
+                          junction.y.max = 1,
                           angle = 90,
-                          ncp = 5,
-                          arrow = NULL,
-                          arrow.fill = NULL,
-                          lineend = "butt",
+                          ncp = 15,
                           na.rm = FALSE,
+                          orientation = NA,
                           show.legend = NA,
-                          inherit.aes = TRUE) {
+                          inherit.aes = TRUE,
+                          ...) {
     ggplot2::layer(
         data = data,
         mapping = mapping,
@@ -77,14 +79,12 @@ geom_junction <- function(mapping = NULL, data = NULL,
         show.legend = show.legend,
         inherit.aes = inherit.aes,
         params = list(
-            arrow = arrow,
-            arrow.fill = arrow.fill,
             junction.orientation = junction.orientation,
-            curvature = curvature,
+            junction.y.max = junction.y.max,
             angle = angle,
             ncp = ncp,
-            lineend = lineend,
             na.rm = na.rm,
+            orientation = orientation,
             ...
         )
     )
@@ -92,21 +92,29 @@ geom_junction <- function(mapping = NULL, data = NULL,
 
 #' @keywords internal
 #' @noRd
-GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
+GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
     required_aes = c("xstart", "xend", "y"),
     setup_data = function(data, params) {
         # check that junction.orientation is length 1 + one of possible options
         .check_junction.orientation(params)
+        # check that junction.y.max is length 1 + one of possible options
+        .check_junction.y.max(params)
 
-        if (params$curvature < 0) {
-            warning("Setting curvature of < 0 will flip junction.orientation")
+
+        # we need a unique group id per junction, rather than per transcript
+        # similar to spring example from ggplot2 book
+        # https://ggplot2-book.org/spring1.html#spring3
+        if (is.null(data$group)) {
+            data$group <- seq_len(nrow(data))
+        }
+        if (anyDuplicated(data$group)) {
+            data$group <- paste(data$group, seq_len(nrow(data)), sep = "-")
         }
 
         # needed to permit usage of xstart/xend
         transform(
             data,
             x = xstart,
-            yend = y,
             xstart = NULL
         )
     },
@@ -114,85 +122,82 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
                           panel_params,
                           coord,
                           junction.orientation = "alternating",
-                          curvature = 0.5,
+                          junction.y.max = 1,
                           angle = 90,
-                          ncp = 5,
-                          arrow = NULL,
-                          arrow.fill = NULL,
-                          lineend = "butt",
-                          na.rm = FALSE) {
-        if (junction.orientation == "alternating") {
+                          ncp = 15) {
+        data <- data %>%
+            dplyr::group_by(y) %>%
+            dplyr::mutate(junction_index = dplyr::row_number()) %>%
+            dplyr::ungroup()
 
-            # to create alternating top/bottom junctions
-            # we need to split the data
-            # and plot the alternating indexes with curvature -0.5/0.5
-            # we group_by y (e.g. tx) to ensure the alternating junctions
-            # occurs within the y groups
-            data <- data %>%
-                dplyr::group_by(y) %>%
-                dplyr::mutate(
-                    odd_index = as.logical(dplyr::row_number() %% 2)
-                ) %>%
-                dplyr::ungroup()
-
-            even_index_data <- data[!data$odd_index, ]
-            odd_index_data <- data[data$odd_index, ]
-
-            # if there's 1 junction, even_index_data will have 0 rows
-            # .create_junction_grob will return nullGrob in that case
-            even_bottom_junction_grob <- .create_junction_grob(
-                data = even_index_data,
-                panel_params = panel_params,
-                coord = coord,
-                curvature = curvature,
-                angle = angle,
-                ncp = ncp,
-                arrow = arrow,
-                arrow.fill = arrow.fill,
-                lineend = lineend,
-                na.rm = na.rm
+        # again, very similar to springs example
+        # create the junction points, whilst preserving aes
+        # https://ggplot2-book.org/spring1.html#spring3
+        cols_to_keep <- setdiff(names(data), c("x", "xend", "y"))
+        junctions <- lapply(seq_len(nrow(data)), function(i) {
+            junction_curve <- .get_junction_curve(
+                data$x[i], data$xend[i], data$y[i],
+                angle, ncp
             )
+            cbind(junction_curve, unclass(data[i, cols_to_keep]))
+        })
 
-            odd_top_junction_grob <- .create_junction_grob(
-                data = odd_index_data,
-                panel_params = panel_params,
-                coord = coord,
-                curvature = -curvature,
-                angle = angle,
-                ncp = ncp,
-                arrow = arrow,
-                arrow.fill = arrow.fill,
-                lineend = lineend,
-                na.rm = na.rm
-            )
+        junctions <- do.call(rbind, junctions)
+        junctions <- .get_normalised_curve(junctions, junction.orientation, junction.y.max)
 
-            grid::grobTree(
-                even_bottom_junction_grob,
-                odd_top_junction_grob
-            )
-        } else {
-            # if "top" we need to flip the orientation to -0.5
-            curvature <- ifelse(
-                junction.orientation == "top",
-                -curvature,
-                curvature
-            )
-
-            .create_junction_grob(
-                data = data,
-                panel_params = panel_params,
-                coord = coord,
-                curvature = curvature,
-                angle = angle,
-                ncp = ncp,
-                arrow = arrow,
-                arrow.fill = arrow.fill,
-                lineend = lineend,
-                na.rm = na.rm
-            )
-        }
+        ggplot2::GeomLine$draw_panel(junctions, panel_params, coord)
     }
 )
+
+#' @keywords internal
+#' @noRd
+.get_junction_curve <- function(x, xend, y, angle, ncp) {
+    curve_points <- grid:::calcControlPoints(
+        x1 = x, x2 = xend,
+        y1 = y, y2 = y,
+        angle = angle,
+        curvature = -0.5,
+        ncp = ncp
+    )
+
+    junction_curve <- data.frame(
+        x_points = c(x, curve_points$x, xend),
+        y_points = c(y, curve_points$y, y),
+        y_orig = y
+    ) %>%
+        dplyr::rename(
+            x = x_points,
+            y = y_points
+        )
+
+    return(junction_curve)
+}
+
+#' @keywords internal
+#' @noRd
+.get_normalised_curve <- function(junctions,
+                                  junction.orientation,
+                                  junction.y.max) {
+    sf <- 1 / junction.y.max
+
+    if (junction.orientation == "top") {
+        junctions <- junctions %>% dplyr::mutate(
+            y = ifelse(y == y_orig, y, y_orig + (y / max(y)) / sf)
+        )
+    } else if (junction.orientation == "bottom") {
+        junctions <- junctions %>% dplyr::mutate(
+            y = ifelse(y == y_orig, y, y_orig - (y / max(y)) / sf)
+        )
+    } else if (junction.orientation == "alternating") {
+        junctions <- junctions %>% dplyr::mutate(y = dplyr::case_when(
+            y == y_orig ~ y,
+            junction_index %% 2 == 0 ~ y_orig - (y / max(y) / sf),
+            junction_index %% 2 == 1 ~ y_orig + (y / max(y) / sf)
+        ))
+    }
+
+    return(junctions)
+}
 
 #' @keywords internal
 #' @noRd
@@ -210,30 +215,15 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomCurve,
 
 #' @keywords internal
 #' @noRd
-.create_junction_grob <- function(data,
-                                  panel_params,
-                                  coord,
-                                  curvature,
-                                  angle,
-                                  ncp = 5,
-                                  arrow,
-                                  arrow.fill,
-                                  lineend,
-                                  na.rm) {
-    if (nrow(data) == 0) {
-        return(grid::nullGrob())
+.check_junction.y.max <- function(params) {
+    if (length(params$junction.y.max) != 1) {
+        stop(
+            "junction.y.max must have a length of 1"
+        )
     }
-
-    ggplot2::GeomCurve$draw_panel(
-        data = data,
-        panel_params = panel_params,
-        coord = coord,
-        curvature = curvature,
-        angle = angle,
-        ncp = ncp,
-        arrow = arrow,
-        arrow.fill = arrow.fill,
-        lineend = lineend,
-        na.rm = na.rm
-    )
+    if (!is.numeric(params$junction.y.max)) {
+        stop(
+            "junction.y.max must be a numeric value (integer/double)"
+        )
+    }
 }
