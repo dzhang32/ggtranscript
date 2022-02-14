@@ -68,7 +68,7 @@ base +
         x = (start + end) / 2, # plot label at midpoint of exon
         label = exon_number
     ),
-    size = 1.5,
+    size = 2.5,
     nudge_y = 0.4
     )
 
@@ -78,7 +78,7 @@ base +
         x = (start + end) / 2,
         label = exon_number
     ),
-    size = 1.5,
+    size = 2,
     min.segment.length = 0
     )
 }
