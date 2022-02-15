@@ -100,7 +100,6 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
         # check that junction.y.max is length 1 + one of possible options
         .check_junction.y.max(params)
 
-
         # we need a unique group id per junction, rather than per transcript
         # similar to spring example from ggplot2 book
         # https://ggplot2-book.org/spring1.html#spring3
@@ -130,24 +129,39 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
             dplyr::mutate(junction_index = dplyr::row_number()) %>%
             dplyr::ungroup()
 
-        # again, very similar to springs example
-        # create the junction points, whilst preserving aes
-        # https://ggplot2-book.org/spring1.html#spring3
-        cols_to_keep <- setdiff(names(data), c("x", "xend", "y"))
-        junctions <- lapply(seq_len(nrow(data)), function(i) {
-            junction_curve <- .get_junction_curve(
-                data$x[i], data$xend[i], data$y[i],
-                angle, ncp
-            )
-            cbind(junction_curve, unclass(data[i, cols_to_keep]))
-        })
-
-        junctions <- do.call(rbind, junctions)
-        junctions <- .get_normalised_curve(junctions, junction.orientation, junction.y.max)
+        junctions <- .get_junction_curves(data, angle, ncp)
+        junctions <- .get_normalised_curve(
+            junctions,
+            junction.orientation,
+            junction.y.max
+        )
 
         ggplot2::GeomLine$draw_panel(junctions, panel_params, coord)
     }
 )
+
+#' @keywords internal
+#' @noRd
+.get_junction_curves <- function(data, angle, ncp) {
+
+    # again, very similar to springs example
+    # create the junction points, whilst preserving aes
+    # https://ggplot2-book.org/spring1.html#spring3
+    # TODO - implementation could probably be vectorised for speed
+    cols_to_keep <- setdiff(names(data), c("x", "xend", "y"))
+    junctions <- lapply(seq_len(nrow(data)), function(i) {
+        junction_curve <- .get_junction_curve(
+            data$x[i], data$xend[i], data$y[i],
+            angle, ncp
+        )
+        cbind(junction_curve, unclass(data[i, cols_to_keep]))
+    })
+
+    junctions <- do.call(rbind, junctions)
+
+    return(junctions)
+}
+
 
 #' @keywords internal
 #' @noRd
