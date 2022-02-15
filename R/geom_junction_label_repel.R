@@ -1,5 +1,59 @@
-#' @inheritParams  ggrepel::geom_text_repel
+#' Label junction curves
+#'
+#' `geom_junction_label_repel()` labels junction curves at their midpoint using
+#' `ggrepel::geom_label_repel()`.
+#'
+#' @inheritParams ggrepel::geom_text_repel
+#' @inheritParams grid::curveGrob
+#' @inheritParams geom_junction
+#'
 #' @export
+#' @examples
+#'
+#' library(magrittr)
+#'
+#' example_introns <-
+#'     gba_ens_105 %>%
+#'     dplyr::filter(
+#'         type == "exon",
+#'         transcript_name %in% c("GBA-201", "GBA-202")
+#'     ) %>%
+#'     to_intron(group_var = "transcript_name")
+#'
+#' # add some arbitrary counts
+#' example_introns <- example_introns %>%
+#'     dplyr::mutate(
+#'         count = dplyr::row_number()
+#'     )
+#'
+#' example_introns
+#'
+#' base <- example_introns %>%
+#'     ggplot2::ggplot(ggplot2::aes(
+#'         xstart = start,
+#'         xend = end,
+#'         y = transcript_name
+#'     ))
+#'
+#' base + geom_junction()
+#'
+#' base +
+#'     geom_junction() +
+#'     geom_junction_label_repel(ggplot2::aes(label = count))
+#'
+#' # if users modify any of the geom_junction params that alter junction curves
+#' # i.e. junction.orientation, junction.y.max, ncp, angle
+#' base +
+#'     geom_junction(junction.orientation = "top", junction.y.max = 0.5) +
+#'     geom_junction_label_repel(ggplot2::aes(label = count))
+#'
+#' # users must make sure to match those arguments in geom_junction_label_repel
+#' base +
+#'     geom_junction(junction.orientation = "top", junction.y.max = 0.5) +
+#'     geom_junction_label_repel(
+#'         ggplot2::aes(label = count),
+#'         junction.orientation = "top", junction.y.max = 0.5
+#'     )
 geom_junction_label_repel <- function(mapping = NULL,
                                       data = NULL,
                                       stat = "identity",
@@ -15,7 +69,7 @@ geom_junction_label_repel <- function(mapping = NULL,
                                       point.padding = 1e-6,
                                       label.r = 0.15,
                                       label.size = 0.25,
-                                      min.segment.length = 0.5,
+                                      min.segment.length = 0,
                                       arrow = NULL,
                                       force = 1,
                                       force_pull = 1,
@@ -83,6 +137,11 @@ geom_junction_label_repel <- function(mapping = NULL,
 GeomJunctionLabelRepel <- ggplot2::ggproto(
     "GeomJunctionLabelRepel", ggrepel::GeomLabelRepel,
     required_aes = c("xstart", "xend", "y", "label"),
+    # copied from ggrepel::GeomLabelRepel with segment.colour and segment.alpha
+    # defaults set to appropriate values, rather than NULL
+    # this avoid warnings e.g. Unknown or uninitialised column: `segment.alpha`
+    # but does cause issues when setting e.g. aes(colour = tx)
+    # TODO - resolve either warning or make segment.colour borrow colour aes
     default_aes = aes(
         colour = "black",
         fill = "white",
@@ -121,7 +180,7 @@ GeomJunctionLabelRepel <- ggplot2::ggproto(
                           point.padding = 1e-6,
                           label.r = 0.15,
                           label.size = 0.25,
-                          min.segment.length = 0.5,
+                          min.segment.length = 0,
                           arrow = NULL,
                           force = 1,
                           force_pull = 1,
@@ -135,11 +194,15 @@ GeomJunctionLabelRepel <- ggplot2::ggproto(
                           direction = "both",
                           seed = NA,
                           verbose = FALSE) {
+
+        # junction_index represents the order of each junction within tx
+        # needed for junction.orientation = "alternating"
         data <- data %>%
             dplyr::group_by(y) %>%
             dplyr::mutate(junction_index = dplyr::row_number()) %>%
             dplyr::ungroup()
 
+        # obtain the midpoints of junction curves (where we want label)
         junction_midpoints <-
             to_junction_midpoints(
                 data,
@@ -178,9 +241,16 @@ GeomJunctionLabelRepel <- ggplot2::ggproto(
     }
 )
 
+#' Wrapper for obtaining junction curve midpoints
+#'
 #' @keywords internal
 #' @noRd
-to_junction_midpoints <- function(data, angle, ncp, junction.orientation, junction.y.max) {
+to_junction_midpoints <- function(data,
+                                  angle,
+                                  ncp,
+                                  junction.orientation,
+                                  junction.y.max) {
+    # TODO - maybe export this as helper?
     junctions <- .get_junction_curves(data, angle, ncp)
     junctions <- .get_normalised_curve(
         junctions,
@@ -196,13 +266,13 @@ to_junction_midpoints <- function(data, angle, ncp, junction.orientation, juncti
 #' @noRd
 .get_curve_midpoints <- function(junctions) {
 
-    # get the mid points of each curve for labelling junctions
-    # these are the points with the y value closest to median(x)
+    # get the mid points of each curve for labeling junctions
+    # these are the points with the x value closest to median(x)
     # this cannot be == median(x), this will not pick up point for even ncp's
     junctions_mid <- junctions %>%
         dplyr::group_by(group) %>%
         dplyr::mutate(
-            median_x = median(x),
+            median_x = stats::median(x),
             median_diff = abs(x - median_x)
         ) %>%
         dplyr::filter(median_diff == min(median_diff)) %>%
