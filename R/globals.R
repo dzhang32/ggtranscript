@@ -32,5 +32,15 @@ utils::globalVariables(c(
     "type",
     # add_exon_number()
     "exon_number",
-    "n_exons"
+    "n_exons",
+    # geom_junction_label_repel()
+    "group",
+    "median",
+    "median_x",
+    "median_diff",
+    "x_points",
+    "y_points",
+    "y",
+    "y_orig",
+    "position_nudge_repel"
 ))
