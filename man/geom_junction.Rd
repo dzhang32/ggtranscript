@@ -9,17 +9,15 @@ geom_junction(
   data = NULL,
   stat = "identity",
   position = "identity",
-  ...,
   junction.orientation = "alternating",
-  curvature = 0.5,
+  junction.y.max = 1,
   angle = 90,
-  ncp = 5,
-  arrow = NULL,
-  arrow.fill = NULL,
-  lineend = "butt",
+  ncp = 15,
   na.rm = FALSE,
+  orientation = NA,
   show.legend = NA,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  ...
 )
 }
 \arguments{
@@ -49,18 +47,13 @@ layer, as a string.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
-often aesthetics, used to set an aesthetic to a fixed value, like
-\code{colour = "red"} or \code{size = 3}. They may also be parameters
-to the paired geom/stat.}
-
 \item{junction.orientation}{\code{character} one of "alternating", "top" or
 "bottom". Specifies where the junctions will be plotted with respect to
 each \code{y} group.}
 
-\item{curvature}{A numeric value giving the amount of curvature.
-    Negative values produce left-hand curves, positive values
-    produce right-hand curves, and zero produces a straight line.}
+\item{junction.y.max}{\code{double} specifies the max y-value of each junction
+curve. This can be used to modify the junctions when they look too flat,
+overlap with another transcript or lie outside of the plot.}
 
 \item{angle}{A numeric value between 0 and 180,
     giving an amount to skew the control
@@ -71,15 +64,13 @@ each \code{y} group.}
 \item{ncp}{The number of control points used to draw the curve.
     More control points creates a smoother curve.}
 
-\item{arrow}{specification for arrow heads, as created by arrow().}
-
-\item{arrow.fill}{fill colour to use for the arrow head (if closed). \code{NULL}
-means use \code{colour} aesthetic.}
-
-\item{lineend}{Line end style (round, butt, square).}
-
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
+
+\item{orientation}{The orientation of the layer. The default (\code{NA})
+automatically determines the orientation from the aesthetic mapping. In the
+rare event that this fails it can be given explicitly by setting \code{orientation}
+to either \code{"x"} or \code{"y"}. See the \emph{Orientation} section for more detail.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
@@ -91,10 +82,15 @@ display.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
+
+\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+\code{colour = "red"} or \code{size = 3}. They may also be parameters
+to the paired geom/stat.}
 }
 \description{
 \code{geom_junction()} draws curves that are designed to represent junction reads
-from RNA-sequencing data. The curves can be modified using \code{curvature},
+from RNA-sequencing data. The curves can be modified using \code{junction.y.max},
 \code{angle} and \code{ncp} parameters. By default, the junctions will alternate
 between being plotted on the top and bottom of each \code{y} group, however this
 can be changed via \code{junction.orientation}.
@@ -118,11 +114,19 @@ base <- example_introns \%>\%
         y = transcript_name
     ))
 
+# sometimes, depending on the number and widths of transcripts and junctions
+# junctions will go overlap one another or extend beyond the plot margin
 base + geom_junction()
-base + geom_junction(junction.orientation = "top")
-base + geom_junction(junction.orientation = "bottom")
 
-# for multiple transcripts, sometimes the junctions will overlap
+# in such cases, junction.y.max can be used to rectify the max y
+base + geom_junction(junction.y.max = 0.5)
+
+# junction.orientation determines where the junction are plotted
+# either on the top or bottom
+base + geom_junction(junction.orientation = "top", junction.y.max = 0.5)
+base + geom_junction(junction.orientation = "bottom", junction.y.max = 0.5)
+
+# geom_junction can also be used with multiple y values
 base_multi_transcript <- example_introns \%>\%
     ggplot2::ggplot(ggplot2::aes(
         xstart = start,
@@ -132,11 +136,9 @@ base_multi_transcript <- example_introns \%>\%
 
 base_multi_transcript + geom_junction()
 
-# this can be corrected using the curvature parameter
-base_multi_transcript + geom_junction(curvature = 0.25)
-
+# and as a ggplot2 extension can be used aes and params
 base_multi_transcript + geom_junction(
     ggplot2::aes(colour = transcript_name),
-    curvature = 0.25
+    size = 0.75
 )
 }

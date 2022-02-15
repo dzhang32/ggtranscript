@@ -1,18 +1,20 @@
 #' Plot junction curves
 #'
 #' `geom_junction()` draws curves that are designed to represent junction reads
-#' from RNA-sequencing data. The curves can be modified using `curvature`,
+#' from RNA-sequencing data. The curves can be modified using `junction.y.max`,
 #' `angle` and `ncp` parameters. By default, the junctions will alternate
 #' between being plotted on the top and bottom of each `y` group, however this
 #' can be changed via `junction.orientation`.
 #'
 #' @inheritParams ggplot2::layer
-#' @inheritParams ggplot2::geom_point
-#' @inheritParams ggplot2::geom_segment
+#' @inheritParams ggplot2::geom_bar
 #' @inheritParams grid::curveGrob
 #' @param junction.orientation `character` one of "alternating", "top" or
 #'   "bottom". Specifies where the junctions will be plotted with respect to
 #'   each `y` group.
+#' @param junction.y.max `double` specifies the max y-value of each junction
+#'   curve. This can be used to modify the junctions when they look too flat,
+#'   overlap with another transcript or lie outside of the plot.
 #'
 #' @export
 #' @examples
@@ -34,11 +36,19 @@
 #'         y = transcript_name
 #'     ))
 #'
+#' # sometimes, depending on the number and widths of transcripts and junctions
+#' # junctions will go overlap one another or extend beyond the plot margin
 #' base + geom_junction()
-#' base + geom_junction(junction.orientation = "top")
-#' base + geom_junction(junction.orientation = "bottom")
 #'
-#' # for multiple transcripts, sometimes the junctions will overlap
+#' # in such cases, junction.y.max can be used to rectify the max y
+#' base + geom_junction(junction.y.max = 0.5)
+#'
+#' # junction.orientation determines where the junction are plotted
+#' # either on the top or bottom
+#' base + geom_junction(junction.orientation = "top", junction.y.max = 0.5)
+#' base + geom_junction(junction.orientation = "bottom", junction.y.max = 0.5)
+#'
+#' # geom_junction can also be used with multiple y values
 #' base_multi_transcript <- example_introns %>%
 #'     ggplot2::ggplot(ggplot2::aes(
 #'         xstart = start,
@@ -48,15 +58,11 @@
 #'
 #' base_multi_transcript + geom_junction()
 #'
-#' # this can be corrected using the curvature parameter
-#' base_multi_transcript + geom_junction(curvature = 0.25)
-#'
+#' # and as a ggplot2 extension can be used aes and params
 #' base_multi_transcript + geom_junction(
 #'     ggplot2::aes(colour = transcript_name),
-#'     curvature = 0.25
+#'     size = 0.75
 #' )
-#' @export
-#' @rdname geom_path
 geom_junction <- function(mapping = NULL,
                           data = NULL,
                           stat = "identity",
@@ -124,12 +130,18 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
                           junction.y.max = 1,
                           angle = 90,
                           ncp = 15) {
+        # junction_index represents the order of each junction within tx
+        # needed for junction.orientation = "alternating"
         data <- data %>%
             dplyr::group_by(y) %>%
             dplyr::mutate(junction_index = dplyr::row_number()) %>%
             dplyr::ungroup()
 
+        # obtain the actual curves using grid:::calcControlPoints
         junctions <- .get_junction_curves(data, angle, ncp)
+
+        # normalise curve points to lie between 0-1
+        # scale to fit depending on N txs, width of junctions
         junctions <- .get_normalised_curve(
             junctions,
             junction.orientation,
@@ -144,7 +156,7 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
 #' @noRd
 .get_junction_curves <- function(data, angle, ncp) {
 
-    # again, very similar to springs example
+    #  very similar to springs example
     # create the junction points, whilst preserving aes
     # https://ggplot2-book.org/spring1.html#spring3
     # TODO - implementation could probably be vectorised for speed
@@ -166,7 +178,8 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
 #' @keywords internal
 #' @noRd
 .get_junction_curve <- function(x, xend, y, angle, ncp) {
-    curve_points <- grid:::calcControlPoints(
+    # creates the points for each curve
+    curve_points <- calcControlPoints(
         x1 = x, x2 = xend,
         y1 = y, y2 = y,
         angle = angle,
@@ -174,6 +187,9 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
         ncp = ncp
     )
 
+    # need to re-add the original points as these not included
+    # by grid:::calcControlPoints
+    # makes sure junctions curves meet the intron lines
     junction_curve <- data.frame(
         x_points = c(x, curve_points$x, xend),
         y_points = c(y, curve_points$y, y),
@@ -192,8 +208,15 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
 .get_normalised_curve <- function(junctions,
                                   junction.orientation,
                                   junction.y.max) {
+
+    # junction.y.max is equivalent to the max y of each junction curve
+    # each tx is internally uses y an integer
+    # scaling factor (sf) is used normalise the junction curve points
     sf <- 1 / junction.y.max
 
+    # each curve point is normalised with relation to the original tx y
+    # first divided by the max(y), meaning all y values lie between 0-1
+    # then divided by the sf, setting the max y
     if (junction.orientation == "top") {
         junctions <- junctions %>% dplyr::mutate(
             y = ifelse(y == y_orig, y, y_orig + (y / max(y)) / sf)
@@ -241,3 +264,5 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
         )
     }
 }
+
+calcControlPoints <- grid:::calcControlPoints
