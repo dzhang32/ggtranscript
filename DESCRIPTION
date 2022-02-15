@@ -23,7 +23,6 @@ Suggests:
     BiocStyle,
     covr,
     ggpubr,
-    ggrepel,
     knitr,
     rmarkdown,
     sessioninfo,
@@ -41,7 +40,8 @@ Imports:
     magrittr,
     rlang,
     S4Vectors,
-    GenomeInfoDb
+    GenomeInfoDb,
+    ggrepel
 Collate: 
     'add_exon_number.R'
     'data.R'
@@ -49,6 +49,7 @@ Collate:
     'geom_half_range.R'
     'geom_intron.R'
     'geom_junction.R'
+    'geom_junction_label_repel.R'
     'ggtranscript-package.R'
     'globals.R'
     'shorten_gaps.R'
