@@ -1,11 +1,14 @@
 #' Add exon number
 #'
-#' `add_exon_number` is a helper function that adds the exon number, i.e. the
-#' order the exons are transcribed within a transcript, as a column in the
-#' `exons`. Importantly, a "strand" column must be present within `exons`
-#' in order to differentiate whether exon number should be calculated according
-#' to ascending ("+") or descending ("-") genomic co-ordinates. A transcript
-#' with an ambiguous strand i.e. "*" will be assumed to be "+".
+#' `add_exon_number()` adds the exon number (the order the exons are transcribed
+#' within each transcript) as a column in `exons`. This can be useful when
+#' visualizing long, complex transcript structures, in order to keep track of
+#' specific exons of interest.
+#'
+#' To note, a "strand" column must be present within `exons`. The strand is used
+#' to differentiate whether exon numbers should be calculated according to
+#' ascending ("+") or descending ("-") genomic co-ordinates. For ambiguous
+#' strands ("*"), `add_exon_number()` will be assumed the strand be "+".
 #'
 #' @inheritParams to_diff
 #'
