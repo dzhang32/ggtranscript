@@ -4,7 +4,9 @@ Version: 0.99.1
 Date: 2021-12-23
 Authors@R: 
     person("David", "Zhang", , "dyzhang32@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0003-2382-8460"))
+           comment = c(ORCID = "0000-0003-2382-8460")), 
+    person("Emil", "Gustavsson", , "e.gustavsson@ucl.ac.uk", role = c("aut"),
+           comment = c(ORCID = "0000-0003-0541-7537"))
 Description: The major goal of ggtranscript is the simplify the process of 
     visualizing transcript structure and annotation. ggtranscript achieves by 
     introducing 4 geoms (geom_range, geom_half_range, geom_intron and
