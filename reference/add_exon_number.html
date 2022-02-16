@@ -68,13 +68,18 @@ specific exons of interest.</p>
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>exons</dt>
-<dd><p><code>data.frame</code> containing exonic ranges, which can contain data
-from from multiple transcripts.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code> contains exons which can originate from multiple
+transcripts differentiated by <code>group_var</code>.</p></dd>
 <dt>group_var</dt>
-<dd><p><code>character</code> if input <code>data.frame</code> contains more than 1
-transcript, <code>group_var</code> should specify the column that differentiates
+<dd><p><code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code> if input data originates from more than 1
+transcript, <code>group_var</code> must specify the column that differentiates
 transcripts (e.g. "transcript_id").</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code> equivalent to input <code>exons</code>, with the additional
+column "exon_number".</p>
+    </div>
     <div id="details">
     <h2>Details</h2>
     <p>To note, a "strand" column must be present within <code>exons</code>. The strand is used
