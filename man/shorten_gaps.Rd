@@ -2,40 +2,44 @@
 % Please edit documentation in R/shorten_gaps.R
 \name{shorten_gaps}
 \alias{shorten_gaps}
-\title{Improve transcript structure visualisation by shortening intron gaps}
+\title{Improve transcript structure visualization by shortening gaps}
 \usage{
 shorten_gaps(exons, introns, group_var = NULL, target_gap_width = 100L)
 }
 \arguments{
-\item{exons}{\code{data.frame} containing exonic ranges, which can contain data
-from from multiple transcripts.}
+\item{exons}{\code{data.frame()} contains exons which can originate from multiple
+transcripts differentiated by \code{group_var}.}
 
-\item{introns}{\code{data.frame} containing the corresponding introns to \code{exons}.
-This can be created by applying \code{to_intron()} to the \code{exons}. If not using
-\code{to_intron()}, make sure intron start/end are defined as those precisely
-matching the adjacent exon boundaries, rather than exon end + 1 and exon
-start - 1.}
+\item{introns}{\code{data.frame()} the intron co-ordinates corresponding to the
+input \code{exons}. This can be created by applying \code{to_intron()} to the
+\code{exons}. If a user is not using \code{to_intron()}, they must make sure intron
+start/ends are defined precisely as the adjacent exon boundaries (rather
+than exon end + 1 and exon start - 1).}
 
-\item{group_var}{\code{character} if input \code{data.frame} contains more than 1
-transcript, \code{group_var} should specify the column that differentiates
+\item{group_var}{\code{character()} if input data originates from more than 1
+transcript, \code{group_var} must specify the column that differentiates
 transcripts (e.g. "transcript_id").}
 
-\item{target_gap_width}{\code{integer} specifying the size in base pairs to
-shorten the gaps to.}
+\item{target_gap_width}{\code{integer()} the width in base pairs to shorten the
+gaps to.}
 }
 \value{
-a \code{data.frame} that contains the co-ordinates of introns (with
-shortened gaps) and exons of each input transcript, rescaled to keep exons
-aligned.
+\code{data.frame()} contains the re-scaled co-ordinates of \code{introns} and
+\code{exons} of each input transcript with shortened gaps.
 }
 \description{
-\code{shorten_gaps} is a helper function intended to improve visualizaing
-transcript structure when a transcript has long introns. \code{shorten_gaps} does
-this by shortening gaps (regions that do not overlap any \code{exons}) to a
-user-inputted \code{target_gap_width}, then rescaling \code{introns} and \code{exons} to
-preserve exon alignment. \code{shorten_gaps} will never modify the size of input
-\code{exons}. Importantly, the outputted rescaled co-ordinates should only be used
-for visualization as they will not match the original genomic coordinates.
+For a given set of exons and introns, \code{shorten_gaps()} reduces the width of
+gaps (regions that do not overlap any \code{exons}) to a user-inputted
+\code{target_gap_width}. This can be useful when visualizing transcripts that have
+long introns, to hone in on the regions of interest (i.e. exons) and better
+compare between transcript structures.
+}
+\details{
+After \code{shorten_gaps()} reduces the size of gaps, it will re-scale \code{exons} and
+\code{introns} to preserve exon alignment. This process will only reduce the width
+of input \code{introns}, never \code{exons}. Importantly, the outputted re-scaled
+co-ordinates should only be used for visualization as they will not match the
+original genomic coordinates.
 }
 \examples{
 

@@ -1,17 +1,23 @@
 #' Plot intron lines with strand arrows
 #'
-#' `geom_intron()` draws a horizontal line specifying introns between two points
-#' (xstart, xend) for each e.g. transcript (y). The `strand` option (one of "+"
-#' or "-") enables arrows to be plotted at the centre of the introns to indicate
-#' the direction of transcription.
+#' `geom_intron()` draws horizontal lines with central arrows that are designed
+#' to represent introns. In combination with `geom_range()`/`geom_half_range()`,
+#' these geoms form the core components for visualizing transcript
+#' annotation.
+#'
+#' `geom_intron()`  requires the following `aes()`; `xstart`, `xend` and `y`
+#' (e.g. transcript name). The `strand` option (one of "+" or "-") adjusts the
+#' arrow direction to match the direction of transcription. the
+#' `arrow.min.intron.length` parameter can be useful to remove strand arrows
+#' overlapping exons, which can be a problem if plotted introns include those
+#' that are relatively short.
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #' @inheritParams ggplot2::geom_segment
-#' @param arrow.min.intron.length `integer` the minimum required length of an
-#'   intron for an arrow to be drawn. Depending on the length of the overall
-#'   transcript, this can be useful to remove cluttering of arrows on short
-#'   introns.
+#' @param arrow.min.intron.length `integer()` the minimum required width of an
+#'   intron for a strand arrow to be drawn. This can be useful to remove strand
+#'   arrows on short introns that overlap adjacent exons.
 #'
 #' @export
 #' @examples
@@ -183,6 +189,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
 #' @keywords internal
 #' @noRd
 .check_strand <- function(strand) {
+    # TODO - add option for "*" arrow?
     any_na <- any(is.na(strand))
     plus_minus <- !(all(strand %in% c("+", "-")))
 

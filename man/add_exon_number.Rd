@@ -7,12 +7,16 @@
 add_exon_number(exons, group_var = NULL)
 }
 \arguments{
-\item{exons}{\code{data.frame} containing exonic ranges, which can contain data
-from from multiple transcripts.}
+\item{exons}{\code{data.frame()} contains exons which can originate from multiple
+transcripts differentiated by \code{group_var}.}
 
-\item{group_var}{\code{character} if input \code{data.frame} contains more than 1
-transcript, \code{group_var} should specify the column that differentiates
+\item{group_var}{\code{character()} if input data originates from more than 1
+transcript, \code{group_var} must specify the column that differentiates
 transcripts (e.g. "transcript_id").}
+}
+\value{
+\code{data.frame()} equivalent to input \code{exons}, with the additional
+column "exon_number".
 }
 \description{
 \code{add_exon_number()} adds the exon number (the order the exons are transcribed

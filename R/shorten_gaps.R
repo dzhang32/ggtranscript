@@ -1,25 +1,28 @@
-#' Improve transcript structure visualisation by shortening intron gaps
+#' Improve transcript structure visualization by shortening gaps
 #'
-#' `shorten_gaps` is a helper function intended to improve visualizaing
-#' transcript structure when a transcript has long introns. `shorten_gaps` does
-#' this by shortening gaps (regions that do not overlap any `exons`) to a
-#' user-inputted `target_gap_width`, then rescaling `introns` and `exons` to
-#' preserve exon alignment. `shorten_gaps` will never modify the size of input
-#' `exons`. Importantly, the outputted rescaled co-ordinates should only be used
-#' for visualization as they will not match the original genomic coordinates.
+#' For a given set of exons and introns, `shorten_gaps()` reduces the width of
+#' gaps (regions that do not overlap any `exons`) to a user-inputted
+#' `target_gap_width`. This can be useful when visualizing transcripts that have
+#' long introns, to hone in on the regions of interest (i.e. exons) and better
+#' compare between transcript structures.
+#'
+#' After `shorten_gaps()` reduces the size of gaps, it will re-scale `exons` and
+#' `introns` to preserve exon alignment. This process will only reduce the width
+#' of input `introns`, never `exons`. Importantly, the outputted re-scaled
+#' co-ordinates should only be used for visualization as they will not match the
+#' original genomic coordinates.
 #'
 #' @inheritParams to_diff
-#' @param introns `data.frame` containing the corresponding introns to `exons`.
-#'   This can be created by applying `to_intron()` to the `exons`. If not using
-#'   `to_intron()`, make sure intron start/end are defined as those precisely
-#'   matching the adjacent exon boundaries, rather than exon end + 1 and exon
-#'   start - 1.
-#' @param target_gap_width `integer` specifying the size in base pairs to
-#'   shorten the gaps to.
+#' @param introns `data.frame()` the intron co-ordinates corresponding to the
+#'   input `exons`. This can be created by applying `to_intron()` to the
+#'   `exons`. If a user is not using `to_intron()`, they must make sure intron
+#'   start/ends are defined precisely as the adjacent exon boundaries (rather
+#'   than exon end + 1 and exon start - 1).
+#' @param target_gap_width `integer()` the width in base pairs to shorten the
+#'   gaps to.
 #'
-#' @return a `data.frame` that contains the co-ordinates of introns (with
-#'   shortened gaps) and exons of each input transcript, rescaled to keep exons
-#'   aligned.
+#' @return `data.frame()` contains the re-scaled co-ordinates of `introns` and
+#'   `exons` of each input transcript with shortened gaps.
 #'
 #' @export
 #' @examples

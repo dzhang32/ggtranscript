@@ -69,13 +69,13 @@ displayed as described in ?plotmath}
     \item Other arguments passed on to the stat.
   }}
 
-\item{junction.orientation}{\code{character} one of "alternating", "top" or
-"bottom". Specifies where the junctions will be plotted with respect to
-each \code{y} group.}
+\item{junction.orientation}{\code{character()} one of "alternating", "top" or
+"bottom", specifying where the junctions will be plotted with respect to
+each transcript (\code{y}).}
 
-\item{junction.y.max}{\code{double} specifies the max y-value of each junction
-curve. This can be used to modify the junctions when they look too flat,
-overlap with another transcript or lie outside of the plot.}
+\item{junction.y.max}{\code{double()} the max y-value of each junction curve. It
+can be useful to adjust this parameter when junction curves overlap with
+one another/other transcripts or extend beyond the plot margins.}
 
 \item{angle}{A numeric value between 0 and 180,
     giving an amount to skew the control
@@ -162,7 +162,19 @@ the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \description{
 \code{geom_junction_label_repel()} labels junction curves at their midpoint using
-\code{ggrepel::geom_label_repel()}.
+\code{ggrepel::geom_label_repel()}. This can be useful to label and compare
+junctions (plotted using \code{geom_junction()}) with metrics of their usage (e.g.
+count or percent-spliced-in).
+}
+\details{
+\code{geom_junction_label_repel()} requires the following \code{aes()}; \code{xstart},
+\code{xend}, \code{y} (e.g. transcript name) and \code{label}. Under the hood,
+\code{geom_junction_label_repel()} generates the same junction curves as
+\code{geom_junction()} to obtain curve midpoints for labeling. Therefore, it is
+important that users use the same input data and parameters that alter
+junction curves (namely \code{junction.orientation}, \code{junction.y.max}, \code{angle},
+\code{ncp}) for \code{geom_junction_label_repel()} that they have used for
+\code{geom_junction()}.
 }
 \examples{
 

@@ -7,24 +7,23 @@
 to_intron(exons, group_var = NULL)
 }
 \arguments{
-\item{exons}{\code{data.frame} containing exonic ranges, which can contain data
-from from multiple transcripts.}
+\item{exons}{\code{data.frame()} contains exons which can originate from multiple
+transcripts differentiated by \code{group_var}.}
 
-\item{group_var}{\code{character} if input \code{data.frame} contains more than 1
-transcript, \code{group_var} should specify the column that differentiates
+\item{group_var}{\code{character()} if input data originates from more than 1
+transcript, \code{group_var} must specify the column that differentiates
 transcripts (e.g. "transcript_id").}
 }
 \description{
-Taking as input set of \code{exons}, \code{to_intron} will return the corresponding
-introns. \code{to_intron} expects inputted exons to either 1. originate from a
-single transcript or 2. be grouped via \code{group_var} such that each group
-corresponds to a single transcript. In other words, \code{to_intron} assumes that
-exons (from each transcript/\code{group_var}) do not overlap one another.
+Given a set of \code{exons}, \code{to_intron()} will return the corresponding introns.
+If \code{exons} contains data originating from more than 1 transcript, \code{group_var}
+must specify the column that differentiates transcripts (e.g.
+"transcript_id").
 }
 \details{
-Important: for visualisation purposes this functions defines introns
-precisely as the exon boundaries, rather than the intron start/end being
-(exon end + 1)/(exon start - 1).
+It is important to note that, for visualisation purposes, \code{to_intron()}
+defines introns precisely as the exon boundaries, rather than the intron
+start/end being (exon end + 1)/(exon start - 1).
 }
 \examples{
 library(magrittr)

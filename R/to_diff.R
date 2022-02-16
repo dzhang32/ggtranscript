@@ -1,21 +1,22 @@
-#' Obtain the differences between transcripts
+#' Obtain the differences between transcript structure
 #'
-#' `to_diff` is a helper function intended to facilitate visualizing the
-#' differences between transcript structure. `to_diff` expects two sets of user
-#' inputted exons; 1. `exons` - exons from any number of transcripts that will
-#' be compared to `ref_exons` and 2. `ref_exons` - exons from a single
-#' transcript which acts as the reference to compare against.
+#' `to_diff()` obtains the difference between `exons` from a set of transcripts
+#' to a reference transcript (`ref_exons`). This can be useful when visualizing
+#' the differences between transcript structure. `to_diff()` expects two sets of
+#' input exons; 1. `exons` - exons from any number of transcripts that will be
+#' compared to `ref_exons` and 2. `ref_exons` - exons from a single transcript
+#' which acts as the reference to compare against.
 #'
-#' @param exons `data.frame` containing exonic ranges, which can contain data
-#'   from from multiple transcripts.
-#' @param ref_exons `data.frame` containing exonic ranges that `exons` will be
-#'   compared against. `ref_exons` must contain data from a single transcript.
-#' @param group_var `character` if input `data.frame` contains more than 1
-#'   transcript, `group_var` should specify the column that differentiates
+#' @param exons `data.frame()` contains exons which can originate from multiple
+#'   transcripts differentiated by `group_var`.
+#' @param ref_exons `data.frame()` contains exons that originate from a single
+#'   transcript, which `exons` will be compared against.
+#' @param group_var `character()` if input data originates from more than 1
+#'   transcript, `group_var` must specify the column that differentiates
 #'   transcripts (e.g. "transcript_id").
 #'
-#' @return a `data.frame` that details the differences of each `exon` (in each
-#'   `group_var`) to `ref_exons`.
+#' @return `data.frame()` details the differences between `exons` and
+#'   `ref_exons`.
 #'
 #' @export
 #' @examples
@@ -99,6 +100,7 @@ to_diff <- function(exons, ref_exons, group_var = NULL) {
 }
 
 #' The heavy lifting of `to_diff()` happens here.
+#'
 #' @keywords internal
 #' @noRd
 .get_diff <- function(exons, ref_exons, group_var) {

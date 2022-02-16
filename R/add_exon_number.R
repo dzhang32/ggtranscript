@@ -12,6 +12,9 @@
 #'
 #' @inheritParams to_diff
 #'
+#' @return `data.frame()` equivalent to input `exons`, with the additional
+#'   column "exon_number".
+#'
 #' @export
 #' @examples
 #' library(magrittr)

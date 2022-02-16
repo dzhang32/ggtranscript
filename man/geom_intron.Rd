@@ -64,10 +64,9 @@ means use \code{colour} aesthetic.}
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
 
-\item{arrow.min.intron.length}{\code{integer} the minimum required length of an
-intron for an arrow to be drawn. Depending on the length of the overall
-transcript, this can be useful to remove cluttering of arrows on short
-introns.}
+\item{arrow.min.intron.length}{\code{integer()} the minimum required width of an
+intron for a strand arrow to be drawn. This can be useful to remove strand
+arrows on short introns that overlap adjacent exons.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
@@ -81,10 +80,18 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
-\code{geom_intron()} draws a horizontal line specifying introns between two points
-(xstart, xend) for each e.g. transcript (y). The \code{strand} option (one of "+"
-or "-") enables arrows to be plotted at the centre of the introns to indicate
-the direction of transcription.
+\code{geom_intron()} draws horizontal lines with central arrows that are designed
+to represent introns. In combination with \code{geom_range()}/\code{geom_half_range()},
+these geoms form the core components for visualizing transcript
+annotation.
+}
+\details{
+\code{geom_intron()}  requires the following \code{aes()}; \code{xstart}, \code{xend} and \code{y}
+(e.g. transcript name). The \code{strand} option (one of "+" or "-") adjusts the
+arrow direction to match the direction of transcription. the
+\code{arrow.min.intron.length} parameter can be useful to remove strand arrows
+overlapping exons, which can be a problem if plotted introns include those
+that are relatively short.
 }
 \examples{
 

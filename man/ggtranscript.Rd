@@ -3,14 +3,15 @@
 \docType{package}
 \name{ggtranscript}
 \alias{ggtranscript}
-\title{ggtranscript: Visualising transcript structure and annotation using ggplot2}
+\title{\code{ggtranscript}: Visualizing transcript structure and annotation using
+\code{ggplot2}}
 \description{
-The major goal of ggtranscript is the simplify the process of visualizing
-transcript structure and annotation. ggtranscript achieves by introducing 4
-geoms (geom_range, geom_half_range, geom_intron and geom_junction) and
-several helper functions that are designed to visualize transcript annotation
-using ggplot2. As a ggplot2 extension, ggtranscript inherits ggplot2's
-familiarity and flexibility; users can intuitively adjust aesthetics and
-parameters as well as complement ggtranscript geoms with existing ggplot2
-geoms.
+The major goal of \code{ggtranscript} is the simplify the process of visualizing
+transcript structure and annotation. \code{ggtranscript} achieves by introducing 4
+geoms (\code{geom_range}, \code{geom_half_range}, \code{geom_intron} and \code{geom_junction})
+and several helper functions that are designed to visualize transcript
+annotation using \code{ggplot2}. As a \code{ggplot2} extension, \code{ggtranscript} inherits
+\code{ggplot2}'s familiarity and flexibility; users can intuitively adjust
+aesthetics and parameters as well as complement \code{ggtranscript} geoms with
+existing \code{ggplot2} geoms.
 }

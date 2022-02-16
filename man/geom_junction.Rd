@@ -47,13 +47,13 @@ layer, as a string.}
 \item{position}{Position adjustment, either as a string, or the result of
 a call to a position adjustment function.}
 
-\item{junction.orientation}{\code{character} one of "alternating", "top" or
-"bottom". Specifies where the junctions will be plotted with respect to
-each \code{y} group.}
+\item{junction.orientation}{\code{character()} one of "alternating", "top" or
+"bottom", specifying where the junctions will be plotted with respect to
+each transcript (\code{y}).}
 
-\item{junction.y.max}{\code{double} specifies the max y-value of each junction
-curve. This can be used to modify the junctions when they look too flat,
-overlap with another transcript or lie outside of the plot.}
+\item{junction.y.max}{\code{double()} the max y-value of each junction curve. It
+can be useful to adjust this parameter when junction curves overlap with
+one another/other transcripts or extend beyond the plot margins.}
 
 \item{angle}{A numeric value between 0 and 180,
     giving an amount to skew the control
@@ -90,10 +90,19 @@ to the paired geom/stat.}
 }
 \description{
 \code{geom_junction()} draws curves that are designed to represent junction reads
-from RNA-sequencing data. The curves can be modified using \code{junction.y.max},
-\code{angle} and \code{ncp} parameters. By default, the junctions will alternate
-between being plotted on the top and bottom of each \code{y} group, however this
-can be changed via \code{junction.orientation}.
+from RNA-sequencing data. It can be useful to overlay junction data on
+transcript annotation (plotted using \code{geom_range()}/\code{geom_half_range()} and
+\code{geom_intron()}) to understand which splicing events or transcripts have
+support from RNA-sequencing data.
+}
+\details{
+\code{geom_junction()} requires the following \code{aes()}; \code{xstart}, \code{xend} and \code{y}
+(e.g. transcript name). \code{geom_junction()} curves can be modified using
+\code{junction.y.max}, which can be useful when junctions overlap one
+another/other transcripts or extend beyond the plot margins. By default,
+junction curves will alternate between being plotted on the top and bottom of
+each transcript (\code{y}), however this can be modified via
+\code{junction.orientation}.
 }
 \examples{
 

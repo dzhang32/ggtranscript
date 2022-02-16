@@ -1,7 +1,18 @@
 #' Label junction curves
 #'
 #' `geom_junction_label_repel()` labels junction curves at their midpoint using
-#' `ggrepel::geom_label_repel()`.
+#' `ggrepel::geom_label_repel()`. This can be useful to label and compare
+#' junctions (plotted using `geom_junction()`) with metrics of their usage (e.g.
+#' count or percent-spliced-in).
+#'
+#' `geom_junction_label_repel()` requires the following `aes()`; `xstart`,
+#' `xend`, `y` (e.g. transcript name) and `label`. Under the hood,
+#' `geom_junction_label_repel()` generates the same junction curves as
+#' `geom_junction()` to obtain curve midpoints for labeling. Therefore, it is
+#' important that users use the same input data and parameters that alter
+#' junction curves (namely `junction.orientation`, `junction.y.max`, `angle`,
+#' `ncp`) for `geom_junction_label_repel()` that they have used for
+#' `geom_junction()`.
 #'
 #' @inheritParams ggrepel::geom_text_repel
 #' @inheritParams grid::curveGrob

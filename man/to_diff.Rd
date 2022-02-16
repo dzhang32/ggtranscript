@@ -2,31 +2,32 @@
 % Please edit documentation in R/to_diff.R
 \name{to_diff}
 \alias{to_diff}
-\title{Obtain the differences between transcripts}
+\title{Obtain the differences between transcript structure}
 \usage{
 to_diff(exons, ref_exons, group_var = NULL)
 }
 \arguments{
-\item{exons}{\code{data.frame} containing exonic ranges, which can contain data
-from from multiple transcripts.}
+\item{exons}{\code{data.frame()} contains exons which can originate from multiple
+transcripts differentiated by \code{group_var}.}
 
-\item{ref_exons}{\code{data.frame} containing exonic ranges that \code{exons} will be
-compared against. \code{ref_exons} must contain data from a single transcript.}
+\item{ref_exons}{\code{data.frame()} contains exons that originate from a single
+transcript, which \code{exons} will be compared against.}
 
-\item{group_var}{\code{character} if input \code{data.frame} contains more than 1
-transcript, \code{group_var} should specify the column that differentiates
+\item{group_var}{\code{character()} if input data originates from more than 1
+transcript, \code{group_var} must specify the column that differentiates
 transcripts (e.g. "transcript_id").}
 }
 \value{
-a \code{data.frame} that details the differences of each \code{exon} (in each
-\code{group_var}) to \code{ref_exons}.
+\code{data.frame()} details the differences between \code{exons} and
+\code{ref_exons}.
 }
 \description{
-\code{to_diff} is a helper function intended to facilitate visualizing the
-differences between transcript structure. \code{to_diff} expects two sets of user
-inputted exons; 1. \code{exons} - exons from any number of transcripts that will
-be compared to \code{ref_exons} and 2. \code{ref_exons} - exons from a single
-transcript which acts as the reference to compare against.
+\code{to_diff()} obtains the difference between \code{exons} from a set of transcripts
+to a reference transcript (\code{ref_exons}). This can be useful when visualizing
+the differences between transcript structure. \code{to_diff()} expects two sets of
+input exons; 1. \code{exons} - exons from any number of transcripts that will be
+compared to \code{ref_exons} and 2. \code{ref_exons} - exons from a single transcript
+which acts as the reference to compare against.
 }
 \examples{
 

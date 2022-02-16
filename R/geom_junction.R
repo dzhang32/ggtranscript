@@ -1,20 +1,28 @@
 #' Plot junction curves
 #'
 #' `geom_junction()` draws curves that are designed to represent junction reads
-#' from RNA-sequencing data. The curves can be modified using `junction.y.max`,
-#' `angle` and `ncp` parameters. By default, the junctions will alternate
-#' between being plotted on the top and bottom of each `y` group, however this
-#' can be changed via `junction.orientation`.
+#' from RNA-sequencing data. It can be useful to overlay junction data on
+#' transcript annotation (plotted using `geom_range()`/`geom_half_range()` and
+#' `geom_intron()`) to understand which splicing events or transcripts have
+#' support from RNA-sequencing data.
+#'
+#' `geom_junction()` requires the following `aes()`; `xstart`, `xend` and `y`
+#' (e.g. transcript name). `geom_junction()` curves can be modified using
+#' `junction.y.max`, which can be useful when junctions overlap one
+#' another/other transcripts or extend beyond the plot margins. By default,
+#' junction curves will alternate between being plotted on the top and bottom of
+#' each transcript (`y`), however this can be modified via
+#' `junction.orientation`.
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_bar
 #' @inheritParams grid::curveGrob
-#' @param junction.orientation `character` one of "alternating", "top" or
-#'   "bottom". Specifies where the junctions will be plotted with respect to
-#'   each `y` group.
-#' @param junction.y.max `double` specifies the max y-value of each junction
-#'   curve. This can be used to modify the junctions when they look too flat,
-#'   overlap with another transcript or lie outside of the plot.
+#' @param junction.orientation `character()` one of "alternating", "top" or
+#'   "bottom", specifying where the junctions will be plotted with respect to
+#'   each transcript (`y`).
+#' @param junction.y.max `double()` the max y-value of each junction curve. It
+#'   can be useful to adjust this parameter when junction curves overlap with
+#'   one another/other transcripts or extend beyond the plot margins.
 #'
 #' @export
 #' @examples

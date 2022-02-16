@@ -1,14 +1,13 @@
 #' Convert exon co-ordinates to introns
 #'
-#' Taking as input set of `exons`, `to_intron` will return the corresponding
-#' introns. `to_intron` expects inputted exons to either 1. originate from a
-#' single transcript or 2. be grouped via `group_var` such that each group
-#' corresponds to a single transcript. In other words, `to_intron` assumes that
-#' exons (from each transcript/`group_var`) do not overlap one another.
+#' Given a set of `exons`, `to_intron()` will return the corresponding introns.
+#' If `exons` contains data originating from more than 1 transcript, `group_var`
+#' must specify the column that differentiates transcripts (e.g.
+#' "transcript_id").
 #'
-#' Important: for visualisation purposes this functions defines introns
-#' precisely as the exon boundaries, rather than the intron start/end being
-#' (exon end + 1)/(exon start - 1).
+#' It is important to note that, for visualisation purposes, `to_intron()`
+#' defines introns precisely as the exon boundaries, rather than the intron
+#' start/end being (exon end + 1)/(exon start - 1).
 #'
 #' @inheritParams to_diff
 #'

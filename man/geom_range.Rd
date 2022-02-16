@@ -83,18 +83,23 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
-\item{range.orientation}{\code{character} one of "top" or "bottom", specifying
-where to plot the half range.}
+\item{range.orientation}{\code{character()} one of "top" or "bottom", specifying
+where the half ranges will be plotted with respect to each transcript
+(\code{y}).}
 }
 \description{
-\code{geom_range()} and \code{geom_half_range()} draw blocks/tiles with a width
-specified by their \code{xstart} and \code{xend} position. The other required \code{aes},
-\code{y}, is expected to be a \code{character} or \code{factor} (e.g. a transcript id/name).
-These \code{geom}s are designed to represent genomic annotations that cover a
-genomic range (e.g. exons, CDS). \code{geom_half_range()} plots takes advantage of
-the vertical symmetry of transcript annotation by enabling plotting of a
-"half range" on the top or bottom of a transcript structure. This can be
-useful to free up plotting space for other transcript annotations.
+\code{geom_range()} and \code{geom_half_range()} draw tiles that are designed to
+represent range-based genomic features, such as exons. In combination with
+\code{geom_intron()}, these geoms form the core components for visualizing
+transcript annotation.
+}
+\details{
+\code{geom_range()} and \code{geom_half_range()} require the following \code{aes()};
+\code{xstart}, \code{xend} and \code{y} (e.g. transcript name). \code{geom_half_range()} takes
+advantage of the vertical symmetry of transcript annotation by plotting only
+half of a range on the top or bottom of a transcript structure. This can be
+useful to free up plotting space for other transcript annotations (e.g.
+\code{geom_junction()}).
 }
 \examples{
 

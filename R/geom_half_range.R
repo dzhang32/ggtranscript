@@ -1,5 +1,6 @@
-#' @param range.orientation `character` one of "top" or "bottom", specifying
-#'   where to plot the half range.
+#' @param range.orientation `character()` one of "top" or "bottom", specifying
+#'   where the half ranges will be plotted with respect to each transcript
+#'   (`y`).
 #'
 #' @export
 #' @rdname geom_range
@@ -28,8 +29,10 @@ geom_half_range <- function(mapping = NULL, data = NULL,
     )
 }
 
+#' `GeomHalfRange` is `GeomRange` with default parameters for `vjust` and
+#' `height` as well as the added parameter `range.orientation`
+#'
 #' @include geom_range.R
-#' `GeomHalfRange` is `GeomRange` with the added parameter `range.orientation`
 #' @keywords internal
 #' @noRd
 GeomHalfRange <- ggplot2::ggproto("GeomHalfRange", GeomRange,
