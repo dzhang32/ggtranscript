@@ -140,8 +140,8 @@ ggtranscript_logo_hex <- hexSticker::sticker(
     # the package
     package = "ggtranscript",
     p_x = 1,
-    p_y = 0.6,
-    p_size = 30,
+    p_y = 0.65,
+    p_size = 35,
     p_family = "Raleway",
     p_fontface = "bold",
     p_color = ggpubr::get_palette("jco", 10)[6],
