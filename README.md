@@ -1,5 +1,5 @@
 
-# ggtranscript
+# ggtranscript <img src="man/figures/ggtranscript_logo_cropped.svg" align="right" height="139" />
 
 <!-- badges: start -->
 

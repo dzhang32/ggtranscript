@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ggtranscript
+# ggtranscript <img src="man/figures/ggtranscript_logo_cropped.svg" align="right" height="139" />
 
 <!-- badges: start -->
 [![GitHub issues](https://img.shields.io/github/issues/dzhang32/ggtranscript)](https://github.com/dzhang32/ggtranscript/issues)
