@@ -5,3 +5,6 @@
 ^\.github$
 ^codecov\.yml$
 ^.pre-commit-config.yaml$
+^data-raw$
+^_pkgdown.yml$
+^tests/testthat/_snaps/*
