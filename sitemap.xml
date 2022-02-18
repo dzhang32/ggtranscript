@@ -25,9 +25,6 @@
     <loc>/reference/add_exon_number.html</loc>
   </url>
   <url>
-    <loc>/reference/gba_ens_105.html</loc>
-  </url>
-  <url>
     <loc>/reference/geom_intron.html</loc>
   </url>
   <url>
@@ -47,6 +44,9 @@
   </url>
   <url>
     <loc>/reference/shorten_gaps.html</loc>
+  </url>
+  <url>
+    <loc>/reference/sod1_annotation.html</loc>
   </url>
   <url>
     <loc>/reference/to_diff.html</loc>

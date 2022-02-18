@@ -106,132 +106,143 @@ original genomic coordinates.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">gba_ens_105_exons</span> <span class="op">&lt;-</span> <span class="va">gba_ens_105</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># to illustrate the package's functionality</span></span>
+<span class="r-in"><span class="co"># ggtranscript includes example transcript annotation</span></span>
+<span class="r-in"><span class="va">pknox1_annotation</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 112 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    seqnames    start      end strand type        gene_name transcript_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 21       42<span style="text-decoration: underline;">974</span>510 43<span style="text-decoration: underline;">033</span>931 +      gene        PKNOX1    <span style="color: #BB0000;">NA</span>             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 21       42<span style="text-decoration: underline;">974</span>510 43<span style="text-decoration: underline;">033</span>931 +      transcript  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 21       42<span style="text-decoration: underline;">974</span>510 42<span style="text-decoration: underline;">974</span>664 +      exon        PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 21       43<span style="text-decoration: underline;">004</span>326 43<span style="text-decoration: underline;">004</span>432 +      exon        PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 21       43<span style="text-decoration: underline;">007</span>491 43<span style="text-decoration: underline;">007</span>618 +      exon        PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 21       43<span style="text-decoration: underline;">013</span>068 43<span style="text-decoration: underline;">013</span>238 +      exon        PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 21       43<span style="text-decoration: underline;">013</span>068 43<span style="text-decoration: underline;">013</span>238 +      CDS         PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 21       43<span style="text-decoration: underline;">013</span>068 43<span style="text-decoration: underline;">013</span>070 +      start_codon PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 21       43<span style="text-decoration: underline;">016</span>908 43<span style="text-decoration: underline;">017</span>007 +      exon        PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 21       43<span style="text-decoration: underline;">016</span>908 43<span style="text-decoration: underline;">017</span>007 +      CDS         PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 102 more rows, and 1 more variable: transcript_biotype &lt;chr&gt;</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># first, let's use an example of a single transcript</span></span>
-<span class="r-in"><span class="va">single_tx</span> <span class="op">&lt;-</span> <span class="va">gba_ens_105_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GBA-203"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># extract exons</span></span>
+<span class="r-in"><span class="va">pknox1_exons</span> <span class="op">&lt;-</span> <span class="va">pknox1_annotation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">pknox1_exons</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 59 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    seqnames    start      end strand type  gene_name transcript_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 21       42<span style="text-decoration: underline;">974</span>510 42<span style="text-decoration: underline;">974</span>664 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 21       43<span style="text-decoration: underline;">004</span>326 43<span style="text-decoration: underline;">004</span>432 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 21       43<span style="text-decoration: underline;">007</span>491 43<span style="text-decoration: underline;">007</span>618 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 21       43<span style="text-decoration: underline;">013</span>068 43<span style="text-decoration: underline;">013</span>238 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 21       43<span style="text-decoration: underline;">016</span>908 43<span style="text-decoration: underline;">017</span>007 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 21       43<span style="text-decoration: underline;">018</span>133 43<span style="text-decoration: underline;">018</span>230 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 21       43<span style="text-decoration: underline;">021</span>303 43<span style="text-decoration: underline;">021</span>431 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 21       43<span style="text-decoration: underline;">024</span>871 43<span style="text-decoration: underline;">024</span>947 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 21       43<span style="text-decoration: underline;">028</span>702 43<span style="text-decoration: underline;">028</span>874 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 21       43<span style="text-decoration: underline;">029</span>890 43<span style="text-decoration: underline;">033</span>931 +      exon  PKNOX1    PKNOX1-203     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 49 more rows, and 1 more variable: transcript_biotype &lt;chr&gt;</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">single_tx</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    seqnames     start       end strand type  gene_name transcript_name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 1        155<span style="text-decoration: underline;">241</span>086 155<span style="text-decoration: underline;">241</span>275 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 1        155<span style="text-decoration: underline;">240</span>630 155<span style="text-decoration: underline;">240</span>717 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 1        155<span style="text-decoration: underline;">239</span>886 155<span style="text-decoration: underline;">240</span>077 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 1        155<span style="text-decoration: underline;">238</span>517 155<span style="text-decoration: underline;">238</span>650 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 1        155<span style="text-decoration: underline;">238</span>134 155<span style="text-decoration: underline;">238</span>306 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 1        155<span style="text-decoration: underline;">237</span>341 155<span style="text-decoration: underline;">237</span>578 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 1        155<span style="text-decoration: underline;">236</span>245 155<span style="text-decoration: underline;">236</span>469 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 1        155<span style="text-decoration: underline;">235</span>681 155<span style="text-decoration: underline;">235</span>844 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 1        155<span style="text-decoration: underline;">235</span>195 155<span style="text-decoration: underline;">235</span>311 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 1        155<span style="text-decoration: underline;">234</span>559 155<span style="text-decoration: underline;">235</span>100 -      exon  GBA       GBA-203        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: transcript_biotype &lt;chr&gt;</span></span>
+<span class="r-in"><span class="co"># to_intron() is a helper function included in ggtranscript</span></span>
+<span class="r-in"><span class="co"># which is useful for converting exon co-ordinates to introns</span></span>
+<span class="r-in"><span class="va">pknox1_introns</span> <span class="op">&lt;-</span> <span class="va">pknox1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span>group_var <span class="op">=</span> <span class="st">"transcript_name"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">pknox1_introns</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 48 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    seqnames strand type   gene_name transcript_name transcript_biotype     start</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 21       +      intron PKNOX1    PKNOX1-203      protein_coding        4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 21       +      intron PKNOX1    PKNOX1-202      retained_intron       4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 21       +      intron PKNOX1    PKNOX1-201      protein_coding        4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 21       +      intron PKNOX1    PKNOX1-206      retained_intron       4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 21       +      intron PKNOX1    PKNOX1-204      retained_intron       4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 21       +      intron PKNOX1    PKNOX1-203      protein_coding        4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 21       +      intron PKNOX1    PKNOX1-201      protein_coding        4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 21       +      intron PKNOX1    PKNOX1-206      retained_intron       4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 21       +      intron PKNOX1    PKNOX1-209      nonsense_mediated_de… 4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 21       +      intron PKNOX1    PKNOX1-202      retained_intron       4.30<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 38 more rows, and 1 more variable: end &lt;int&gt;</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">single_tx_rescaled</span> <span class="op">&lt;-</span> <span class="fu">shorten_gaps</span><span class="op">(</span></span>
-<span class="r-in">    <span class="va">single_tx</span>,</span>
-<span class="r-in">    <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">single_tx</span><span class="op">)</span>,</span>
-<span class="r-in">    group_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span class="r-in">    target_gap_width <span class="op">=</span> <span class="fl">100L</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># rescaled output contains both introns and exons</span></span>
-<span class="r-in"><span class="va">single_tx_rescaled</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 19 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    seqnames start   end strand type   gene_name transcript_name transcript_biot…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 1            2   543 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 1          543   638 -      intron GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 1          638   754 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 1          754   855 -      intron GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 1          855  <span style="text-decoration: underline;">1</span>018 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 1         <span style="text-decoration: underline;">1</span>018  <span style="text-decoration: underline;">1</span>119 -      intron GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 1         <span style="text-decoration: underline;">1</span>119  <span style="text-decoration: underline;">1</span>343 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 1         <span style="text-decoration: underline;">1</span>343  <span style="text-decoration: underline;">1</span>444 -      intron GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 1         <span style="text-decoration: underline;">1</span>444  <span style="text-decoration: underline;">1</span>681 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 1         <span style="text-decoration: underline;">1</span>681  <span style="text-decoration: underline;">1</span>782 -      intron GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> 1         <span style="text-decoration: underline;">1</span>782  <span style="text-decoration: underline;">1</span>954 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> 1         <span style="text-decoration: underline;">1</span>954  <span style="text-decoration: underline;">2</span>055 -      intron GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> 1         <span style="text-decoration: underline;">2</span>055  <span style="text-decoration: underline;">2</span>188 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> 1         <span style="text-decoration: underline;">2</span>188  <span style="text-decoration: underline;">2</span>289 -      intron GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> 1         <span style="text-decoration: underline;">2</span>289  <span style="text-decoration: underline;">2</span>480 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> 1         <span style="text-decoration: underline;">2</span>480  <span style="text-decoration: underline;">2</span>581 -      intron GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> 1         <span style="text-decoration: underline;">2</span>581  <span style="text-decoration: underline;">2</span>668 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> 1         <span style="text-decoration: underline;">2</span>668  <span style="text-decoration: underline;">2</span>769 -      intron GBA       GBA-203         protein_coding  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">19</span> 1         <span style="text-decoration: underline;">2</span>769  <span style="text-decoration: underline;">2</span>958 -      exon   GBA       GBA-203         protein_coding  </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># create function to compare transcript visualisation</span></span>
-<span class="r-in"><span class="co"># before and after shortening gaps</span></span>
-<span class="r-in"><span class="va">plot_before_after</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">before_shorten_gaps</span>,</span>
-<span class="r-in">                              <span class="va">after_shorten_gaps</span>,</span>
-<span class="r-in">                              <span class="va">group_var</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">    <span class="va">before_plot</span> <span class="op">&lt;-</span> <span class="va">before_shorten_gaps</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">        <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_string</a></span><span class="op">(</span></span>
-<span class="r-in">            xstart <span class="op">=</span> <span class="st">"start"</span>,</span>
-<span class="r-in">            xend <span class="op">=</span> <span class="st">"end"</span>,</span>
-<span class="r-in">            y <span class="op">=</span> <span class="va">group_var</span></span>
-<span class="r-in">        <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">        <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">        <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
-<span class="r-in">            data <span class="op">=</span> <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">before_shorten_gaps</span>, <span class="va">group_var</span><span class="op">)</span>,</span>
-<span class="r-in">            strand <span class="op">=</span> <span class="st">"-"</span>,</span>
-<span class="r-in">            arrow.min.intron.length <span class="op">=</span> <span class="fl">500</span></span>
-<span class="r-in">        <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">    <span class="va">after_plot</span> <span class="op">&lt;-</span> <span class="va">after_shorten_gaps</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">        <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_string</a></span><span class="op">(</span></span>
-<span class="r-in">            xstart <span class="op">=</span> <span class="st">"start"</span>,</span>
-<span class="r-in">            xend <span class="op">=</span> <span class="st">"end"</span>,</span>
-<span class="r-in">            y <span class="op">=</span> <span class="va">group_var</span></span>
-<span class="r-in">        <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">        <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">        <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
-<span class="r-in">            data <span class="op">=</span> <span class="va">after_shorten_gaps</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">                <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"intron"</span><span class="op">)</span>,</span>
-<span class="r-in">            strand <span class="op">=</span> <span class="st">"-"</span>,</span>
-<span class="r-in">            arrow.min.intron.length <span class="op">=</span> <span class="fl">200</span></span>
-<span class="r-in">        <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">    <span class="va">before_after_plotlist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">before_plot</span>, <span class="va">after_plot</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">    <span class="va">before_after_plot</span> <span class="op">&lt;-</span> <span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html" class="external-link">ggarrange</a></span><span class="op">(</span></span>
-<span class="r-in">        plotlist <span class="op">=</span> <span class="va">before_after_plotlist</span>,</span>
-<span class="r-in">        nrow <span class="op">=</span> <span class="fl">2</span>,</span>
-<span class="r-in">        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Before shorten_gaps()"</span>, <span class="st">"After shorten_gaps()"</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">before_after_plot</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">plot_before_after</span><span class="op">(</span></span>
-<span class="r-in">    before_shorten_gaps <span class="op">=</span> <span class="va">single_tx</span>,</span>
-<span class="r-in">    after_shorten_gaps <span class="op">=</span> <span class="va">single_tx_rescaled</span>,</span>
-<span class="r-in">    group_var <span class="op">=</span> <span class="st">"transcript_name"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span class="co"># for transcripts with long introns, the exons of interest</span></span>
+<span class="r-in"><span class="co"># can be difficult to visualize clearly when using the default scale</span></span>
+<span class="r-in"><span class="va">pknox1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span class="r-in">    xstart <span class="op">=</span> <span class="va">start</span>,</span>
+<span class="r-in">    xend <span class="op">=</span> <span class="va">end</span>,</span>
+<span class="r-in">    y <span class="op">=</span> <span class="va">transcript_name</span></span>
+<span class="r-in">  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="va">pknox1_introns</span>,</span>
+<span class="r-in">    arrow.min.intron.length <span class="op">=</span> <span class="fl">3500</span></span>
+<span class="r-in">  <span class="op">)</span></span>
 <span class="r-plt img"><img src="shorten_gaps-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># exons can also contain multiple transcripts</span></span>
-<span class="r-in"><span class="va">multi_tx</span> <span class="op">&lt;-</span> <span class="va">gba_ens_105_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
-<span class="r-in">        <span class="va">transcript_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"GBA-20"</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">)</span></span>
+<span class="r-in"><span class="co"># in such cases it can be useful to rescale the exons and introns</span></span>
+<span class="r-in"><span class="co"># using shorten_gaps() which shortens regions that do not overlap an exon</span></span>
+<span class="r-in"><span class="va">pknox1_rescaled</span> <span class="op">&lt;-</span></span>
+<span class="r-in">  <span class="fu">shorten_gaps</span><span class="op">(</span><span class="va">pknox1_exons</span>, <span class="va">pknox1_introns</span>, group_var <span class="op">=</span> <span class="st">"transcript_name"</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">multi_tx_rescaled</span> <span class="op">&lt;-</span> <span class="fu">shorten_gaps</span><span class="op">(</span></span>
-<span class="r-in">    <span class="va">multi_tx</span>,</span>
-<span class="r-in">    <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">multi_tx</span>, <span class="st">"transcript_name"</span><span class="op">)</span>,</span>
-<span class="r-in">    group_var <span class="op">=</span> <span class="st">"transcript_name"</span>,</span>
-<span class="r-in">    target_gap_width <span class="op">=</span> <span class="fl">100L</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span class="va">pknox1_rescaled</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 107 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    seqnames start   end strand type   gene_name transcript_name transcript_biot…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 21          54   156 +      exon   PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 21         156   694 +      intron PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 21         694   800 +      exon   PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 21         800   901 +      intron PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 21         901  <span style="text-decoration: underline;">1</span>028 +      exon   PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 21        <span style="text-decoration: underline;">1</span>028  <span style="text-decoration: underline;">1</span>223 +      intron PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 21        <span style="text-decoration: underline;">1</span>223  <span style="text-decoration: underline;">1</span>394 +      exon   PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 21        <span style="text-decoration: underline;">1</span>394  <span style="text-decoration: underline;">1</span>495 +      intron PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 21        <span style="text-decoration: underline;">1</span>495  <span style="text-decoration: underline;">1</span>665 +      exon   PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 21        <span style="text-decoration: underline;">1</span>665  <span style="text-decoration: underline;">1</span>766 +      intron PKNOX1    PKNOX1-201      protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 97 more rows</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="fu">plot_before_after</span><span class="op">(</span></span>
-<span class="r-in">    before_shorten_gaps <span class="op">=</span> <span class="va">multi_tx</span>,</span>
-<span class="r-in">    after_shorten_gaps <span class="op">=</span> <span class="va">multi_tx_rescaled</span>,</span>
-<span class="r-in">    group_var <span class="op">=</span> <span class="st">"transcript_name"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span class="co"># this allows us to visualize differences in exonic structure more clearly</span></span>
+<span class="r-in"><span class="va">pknox1_rescaled</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span class="r-in">    xstart <span class="op">=</span> <span class="va">start</span>,</span>
+<span class="r-in">    xend <span class="op">=</span> <span class="va">end</span>,</span>
+<span class="r-in">    y <span class="op">=</span> <span class="va">transcript_name</span></span>
+<span class="r-in">  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="va">pknox1_rescaled</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"intron"</span><span class="op">)</span>,</span>
+<span class="r-in">    arrow.min.intron.length <span class="op">=</span> <span class="fl">300</span></span>
+<span class="r-in">  <span class="op">)</span></span>
 <span class="r-plt img"><img src="shorten_gaps-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># shorten_gaps() can be used in combination with to_diff()</span></span>
+<span class="r-in"><span class="co"># to further highlight differences in exon structure</span></span>
+<span class="r-in"><span class="co"># here, all other transcripts are compared to the MANE-select transcript</span></span>
+<span class="r-in"><span class="va">pknox1_rescaled_diffs</span> <span class="op">&lt;-</span> <span class="fu"><a href="to_diff.html">to_diff</a></span><span class="op">(</span></span>
+<span class="r-in">  exons <span class="op">=</span> <span class="va">pknox1_rescaled</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span>, <span class="va">transcript_name</span> <span class="op">!=</span> <span class="st">"PKNOX1-201"</span><span class="op">)</span>,</span>
+<span class="r-in">  ref_exons <span class="op">=</span> <span class="va">pknox1_rescaled</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span>, <span class="va">transcript_name</span> <span class="op">==</span> <span class="st">"PKNOX1-201"</span><span class="op">)</span>,</span>
+<span class="r-in">  group_var <span class="op">=</span> <span class="st">"transcript_name"</span></span>
+<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">pknox1_rescaled</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span class="r-in">    xstart <span class="op">=</span> <span class="va">start</span>,</span>
+<span class="r-in">    xend <span class="op">=</span> <span class="va">end</span>,</span>
+<span class="r-in">    y <span class="op">=</span> <span class="va">transcript_name</span></span>
+<span class="r-in">  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="va">pknox1_rescaled</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"intron"</span><span class="op">)</span>,</span>
+<span class="r-in">    arrow.min.intron.length <span class="op">=</span> <span class="fl">300</span></span>
+<span class="r-in">  <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="va">pknox1_rescaled_diffs</span>,</span>
+<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">diff_type</span><span class="op">)</span>,</span>
+<span class="r-in">    alpha <span class="op">=</span> <span class="fl">0.2</span></span>
+<span class="r-in">  <span class="op">)</span></span>
+<span class="r-plt img"><img src="shorten_gaps-3.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

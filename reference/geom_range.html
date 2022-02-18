@@ -158,42 +158,170 @@ useful to free up plotting space for other transcript annotations (e.g.
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="va">example_exons</span> <span class="op">&lt;-</span></span>
-<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span class="r-in">        start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">300</span>, <span class="fl">500</span>, <span class="fl">650</span><span class="op">)</span>,</span>
-<span class="r-in">        end <span class="op">=</span> <span class="va">start</span> <span class="op">+</span> <span class="fl">100</span>,</span>
-<span class="r-in">        strand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"+"</span>, <span class="st">"-"</span>, <span class="st">"-"</span><span class="op">)</span>,</span>
-<span class="r-in">        tx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">)</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">example_exons</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   start   end strand tx   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>   100   200 +      A    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>   300   400 +      A    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>   500   600 -      B    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>   650   750 -      B    </span>
+<span class="r-in"><span class="co"># to illustrate the package's functionality</span></span>
+<span class="r-in"><span class="co"># ggtranscript includes example transcript annotation</span></span>
+<span class="r-in"><span class="va">sod1_annotation</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 43 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    seqnames    start      end strand type        gene_name transcript_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 21       31<span style="text-decoration: underline;">659</span>666 31<span style="text-decoration: underline;">668</span>931 +      gene        SOD1      <span style="color: #BB0000;">NA</span>             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 21       31<span style="text-decoration: underline;">659</span>666 31<span style="text-decoration: underline;">668</span>931 +      transcript  SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 21       31<span style="text-decoration: underline;">659</span>666 31<span style="text-decoration: underline;">659</span>784 +      exon        SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 21       31<span style="text-decoration: underline;">659</span>770 31<span style="text-decoration: underline;">659</span>784 +      CDS         SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 21       31<span style="text-decoration: underline;">659</span>770 31<span style="text-decoration: underline;">659</span>772 +      start_codon SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 21       31<span style="text-decoration: underline;">663</span>790 31<span style="text-decoration: underline;">663</span>886 +      exon        SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 21       31<span style="text-decoration: underline;">663</span>790 31<span style="text-decoration: underline;">663</span>886 +      CDS         SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 21       31<span style="text-decoration: underline;">666</span>449 31<span style="text-decoration: underline;">666</span>518 +      exon        SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 21       31<span style="text-decoration: underline;">666</span>449 31<span style="text-decoration: underline;">666</span>518 +      CDS         SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 21       31<span style="text-decoration: underline;">667</span>258 31<span style="text-decoration: underline;">667</span>375 +      exon        SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 33 more rows, and 1 more variable: transcript_biotype &lt;chr&gt;</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">base</span> <span class="op">&lt;-</span></span>
-<span class="r-in">    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
-<span class="r-in">        <span class="va">example_exons</span>,</span>
-<span class="r-in">        <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
-<span class="r-in">            xstart <span class="op">=</span> <span class="va">start</span>,</span>
-<span class="r-in">            xend <span class="op">=</span> <span class="va">end</span>,</span>
-<span class="r-in">            y <span class="op">=</span> <span class="va">tx</span></span>
-<span class="r-in">        <span class="op">)</span></span>
-<span class="r-in">    <span class="op">)</span></span>
+<span class="r-in"><span class="co"># extract exons</span></span>
+<span class="r-in"><span class="va">sod1_exons</span> <span class="op">&lt;-</span> <span class="va">sod1_annotation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">sod1_exons</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 20 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    seqnames    start      end strand type  gene_name transcript_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 21       31<span style="text-decoration: underline;">659</span>666 31<span style="text-decoration: underline;">659</span>784 +      exon  SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 21       31<span style="text-decoration: underline;">663</span>790 31<span style="text-decoration: underline;">663</span>886 +      exon  SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 21       31<span style="text-decoration: underline;">666</span>449 31<span style="text-decoration: underline;">666</span>518 +      exon  SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 21       31<span style="text-decoration: underline;">667</span>258 31<span style="text-decoration: underline;">667</span>375 +      exon  SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 21       31<span style="text-decoration: underline;">668</span>471 31<span style="text-decoration: underline;">668</span>931 +      exon  SOD1      SOD1-202       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 21       31<span style="text-decoration: underline;">659</span>693 31<span style="text-decoration: underline;">659</span>841 +      exon  SOD1      SOD1-204       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 21       31<span style="text-decoration: underline;">661</span>549 31<span style="text-decoration: underline;">661</span>734 +      exon  SOD1      SOD1-204       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 21       31<span style="text-decoration: underline;">663</span>790 31<span style="text-decoration: underline;">663</span>886 +      exon  SOD1      SOD1-204       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 21       31<span style="text-decoration: underline;">666</span>449 31<span style="text-decoration: underline;">666</span>518 +      exon  SOD1      SOD1-204       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 21       31<span style="text-decoration: underline;">667</span>258 31<span style="text-decoration: underline;">667</span>341 +      exon  SOD1      SOD1-204       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> 21       31<span style="text-decoration: underline;">659</span>693 31<span style="text-decoration: underline;">659</span>841 +      exon  SOD1      SOD1-201       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> 21       31<span style="text-decoration: underline;">663</span>790 31<span style="text-decoration: underline;">663</span>886 +      exon  SOD1      SOD1-201       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> 21       31<span style="text-decoration: underline;">666</span>449 31<span style="text-decoration: underline;">666</span>518 +      exon  SOD1      SOD1-201       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> 21       31<span style="text-decoration: underline;">667</span>258 31<span style="text-decoration: underline;">667</span>375 +      exon  SOD1      SOD1-201       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> 21       31<span style="text-decoration: underline;">668</span>471 31<span style="text-decoration: underline;">668</span>931 +      exon  SOD1      SOD1-201       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> 21       31<span style="text-decoration: underline;">659</span>709 31<span style="text-decoration: underline;">660</span>708 +      exon  SOD1      SOD1-203       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> 21       31<span style="text-decoration: underline;">663</span>790 31<span style="text-decoration: underline;">663</span>886 +      exon  SOD1      SOD1-203       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> 21       31<span style="text-decoration: underline;">666</span>449 31<span style="text-decoration: underline;">666</span>518 +      exon  SOD1      SOD1-203       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">19</span> 21       31<span style="text-decoration: underline;">667</span>258 31<span style="text-decoration: underline;">667</span>375 +      exon  SOD1      SOD1-203       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">20</span> 21       31<span style="text-decoration: underline;">668</span>471 31<span style="text-decoration: underline;">668</span>931 +      exon  SOD1      SOD1-203       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: transcript_biotype &lt;chr&gt;</span></span>
 <span class="r-in"></span>
+<span class="r-in"><span class="va">base</span> <span class="op">&lt;-</span> <span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span class="r-in">    xstart <span class="op">=</span> <span class="va">start</span>,</span>
+<span class="r-in">    xend <span class="op">=</span> <span class="va">end</span>,</span>
+<span class="r-in">    y <span class="op">=</span> <span class="va">transcript_name</span></span>
+<span class="r-in">        <span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># geom_range() is designed to visualise range-based annotation such as exons</span></span>
 <span class="r-in"><span class="va">base</span> <span class="op">+</span> <span class="fu">geom_range</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-plt img"><img src="geom_range-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="va">base</span> <span class="op">+</span> <span class="fu">geom_range</span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">tx</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># geom_half_range() allows users to plot half ranges</span></span>
+<span class="r-in"><span class="co"># on the top or bottom of the transcript</span></span>
+<span class="r-in"><span class="va">base</span> <span class="op">+</span> <span class="fu">geom_half_range</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-plt img"><img src="geom_range-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">base</span> <span class="op">+</span> <span class="fu">geom_half_range</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-plt img"><img src="geom_range-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span class="co"># where the half ranges are plotted can be adjusted using range.orientation</span></span>
 <span class="r-in"><span class="va">base</span> <span class="op">+</span> <span class="fu">geom_half_range</span><span class="op">(</span>range.orientation <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
+<span class="r-plt img"><img src="geom_range-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># as a ggplot2 extension, ggtranscript geoms inherit the</span></span>
+<span class="r-in"><span class="co"># the functionality from the parameters and aesthetics in ggplot2</span></span>
+<span class="r-in"><span class="va">base</span> <span class="op">+</span> <span class="fu">geom_range</span><span class="op">(</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">transcript_name</span><span class="op">)</span>,</span>
+<span class="r-in">  size <span class="op">=</span> <span class="fl">1</span></span>
+<span class="r-in">  <span class="op">)</span></span>
 <span class="r-plt img"><img src="geom_range-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># together, geom_range() and geom_range() are designed to visualize</span></span>
+<span class="r-in"><span class="co"># the core components of transcript annotation</span></span>
+<span class="r-in"><span class="va">base</span> <span class="op">+</span> <span class="fu">geom_range</span><span class="op">(</span></span>
+<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">transcript_biotype</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">sod1_exons</span>, <span class="st">"transcript_name"</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span></span>
+<span class="r-plt img"><img src="geom_range-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># for protein coding transcripts</span></span>
+<span class="r-in"><span class="co"># geom_range() be useful for visualizing UTRs that lie outside of the CDS</span></span>
+<span class="r-in"><span class="va">sod1_exons_prot_coding</span> <span class="op">&lt;-</span> <span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_biotype</span> <span class="op">==</span> <span class="st">"protein_coding"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># extract cds</span></span>
+<span class="r-in"><span class="va">sod1_cds</span> <span class="op">&lt;-</span> <span class="va">sod1_annotation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"CDS"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">sod1_exons_prot_coding</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span class="r-in">    xstart <span class="op">=</span> <span class="va">start</span>,</span>
+<span class="r-in">    xend <span class="op">=</span> <span class="va">end</span>,</span>
+<span class="r-in">    y <span class="op">=</span> <span class="va">transcript_name</span></span>
+<span class="r-in">  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu">geom_range</span><span class="op">(</span></span>
+<span class="r-in">    fill <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span class="r-in">    height <span class="op">=</span> <span class="fl">0.25</span></span>
+<span class="r-in">  <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu">geom_range</span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="va">sod1_cds</span></span>
+<span class="r-in">  <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">sod1_exons_prot_coding</span>, <span class="st">"transcript_name"</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span></span>
+<span class="r-plt img"><img src="geom_range-6.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># one use case of geom_half_range() is to compare between two transcripts</span></span>
+<span class="r-in"><span class="co"># by visualising one on the top and the other on the bottom</span></span>
+<span class="r-in"><span class="va">sod1_201_exons</span> <span class="op">&lt;-</span> <span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_name</span> <span class="op">==</span> <span class="st">"SOD1-201"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">sod1_201_cds</span> <span class="op">&lt;-</span> <span class="va">sod1_cds</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_name</span> <span class="op">==</span> <span class="st">"SOD1-201"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">sod1_202_exons</span> <span class="op">&lt;-</span> <span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_name</span> <span class="op">==</span> <span class="st">"SOD1-202"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">sod1_202_cds</span> <span class="op">&lt;-</span> <span class="va">sod1_cds</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_name</span> <span class="op">==</span> <span class="st">"SOD1-202"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">sod1_201_plot</span> <span class="op">&lt;-</span> <span class="va">sod1_201_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span class="r-in">    xstart <span class="op">=</span> <span class="va">start</span>,</span>
+<span class="r-in">    xend <span class="op">=</span> <span class="va">end</span>,</span>
+<span class="r-in">    y <span class="op">=</span> <span class="st">"SOD1-201/202"</span></span>
+<span class="r-in">  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu">geom_half_range</span><span class="op">(</span></span>
+<span class="r-in">    fill <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span class="r-in">    height <span class="op">=</span> <span class="fl">0.125</span></span>
+<span class="r-in">  <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu">geom_half_range</span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="va">sod1_201_cds</span></span>
+<span class="r-in">  <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">sod1_201_exons</span>, <span class="st">"transcript_name"</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">sod1_201_plot</span></span>
+<span class="r-plt img"><img src="geom_range-7.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">sod1_201_202_plot</span> <span class="op">&lt;-</span> <span class="va">sod1_201_plot</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu">geom_half_range</span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="va">sod1_202_exons</span>,</span>
+<span class="r-in">    range.orientation <span class="op">=</span> <span class="st">"top"</span>,</span>
+<span class="r-in">    fill <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span class="r-in">    height <span class="op">=</span> <span class="fl">0.125</span></span>
+<span class="r-in">  <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu">geom_half_range</span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="va">sod1_202_cds</span>,</span>
+<span class="r-in">    range.orientation <span class="op">=</span> <span class="st">"top"</span>,</span>
+<span class="r-in">    fill <span class="op">=</span> <span class="st">"red"</span></span>
+<span class="r-in">  <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">    data <span class="op">=</span> <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">sod1_202_exons</span>, <span class="st">"transcript_name"</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">sod1_201_202_plot</span></span>
+<span class="r-plt img"><img src="geom_range-8.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># leveraging existing ggplot2 functionality vis coord_cartesian()</span></span>
+<span class="r-in"><span class="co"># can be useful to zoom in on areas of interest</span></span>
+<span class="r-in"><span class="va">sod1_201_202_plot</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">31659500</span>, <span class="fl">31660000</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-plt img"><img src="geom_range-9.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
