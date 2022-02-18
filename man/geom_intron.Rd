@@ -95,38 +95,69 @@ that are relatively short.
 }
 \examples{
 
-example_introns <-
-    dplyr::tibble(
-        strand = c("+", "-"),
-        tx = c("A", "B"),
-        start = c(201, 601),
-        end = c(299, 649),
-        type = "intron"
-    )
+library(magrittr)
+library(ggplot2)
 
-example_introns
+# to illustrate the package's functionality
+# ggtranscript includes example transcript annotation
+pknox1_annotation
 
-base <-
-    ggplot2::ggplot(
-        example_introns,
-        ggplot2::aes(
-            xstart = start,
-            xend = end,
-            y = tx
-        )
-    )
+# extract exons
+pknox1_exons <- pknox1_annotation \%>\% dplyr::filter(type == "exon")
+pknox1_exons
 
+# to_intron() is a helper function included in ggtranscript
+# which is useful for converting exon co-ordinates to introns
+pknox1_introns <- pknox1_exons \%>\% to_intron(group_var = "transcript_name")
+pknox1_introns
+
+base <- pknox1_introns \%>\%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+        ))
+
+# by default, geom_intron() assumes introns originate from the "+" strand
 base + geom_intron()
+
+# however this can be modified using the strand option
 base + geom_intron(strand = "-")
 
-# strand can also be mapped as an aesthetic
-base + geom_intron(ggplot2::aes(strand = strand))
+# strand can also be set as an aes()
+base + geom_intron(aes(strand = strand))
 
-base + geom_intron(ggplot2::aes(colour = tx, strand = strand))
-base + geom_intron(ggplot2::aes(
-    colour = tx,
-    strand = strand
-),
-arrow.min.intron.length = 50
-)
+# as a ggplot2 extension, ggtranscript geoms inherit the
+# the functionality from the parameters and aesthetics in ggplot2
+base + geom_intron(
+  aes(colour = transcript_name),
+  size = 1
+  )
+
+# together, geom_range() and geom_range() are designed to visualize
+# the core components of transcript annotation
+pknox1_exons \%>\%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range() +
+  geom_intron(
+    data = pknox1_introns
+  )
+
+# for short introns, sometimes strand arrows will overlap exons
+# to avoid this, users can set the arrow.min.intron.length parameter
+pknox1_exons \%>\%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range() +
+  geom_intron(
+    data = pknox1_introns,
+    arrow.min.intron.length = 3500
+  )
 }

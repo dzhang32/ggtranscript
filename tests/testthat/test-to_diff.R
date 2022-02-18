@@ -1,14 +1,14 @@
-gba_ens_105_exons <- gba_ens_105 %>%
+sod1_exons <- sod1_annotation %>%
     dplyr::filter(type == "exon")
 
-mane <- gba_ens_105_exons %>%
-    dplyr::filter(transcript_name == "GBA-202")
+mane <- sod1_exons %>%
+    dplyr::filter(transcript_name == "SOD1-201")
 
-single_tx <- gba_ens_105_exons %>%
-    dplyr::filter(transcript_name %in% c("GBA-203"))
+single_tx <- sod1_exons %>%
+    dplyr::filter(transcript_name %in% c("SOD1-202"))
 
-multi_tx <- gba_ens_105_exons %>%
-    dplyr::filter(transcript_name %in% c("GBA-203", "GBA-201", "GBA-204"))
+multi_tx <- sod1_exons %>%
+    dplyr::filter(transcript_name %in% c("SOD1-202", "SOD1-203", "SOD1-204"))
 
 ##### to_diff #####
 

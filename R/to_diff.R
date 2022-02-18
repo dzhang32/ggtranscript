@@ -22,60 +22,43 @@
 #' @examples
 #'
 #' library(magrittr)
+#' library(ggplot2)
 #'
-#' gba_ens_105_exons <- gba_ens_105 %>%
-#'     dplyr::filter(type == "exon")
+#' # to illustrate the package's functionality
+#' # ggtranscript includes example transcript annotation
+#' sod1_annotation
 #'
-#' gba_ens_105_exons
+#' # extract exons
+#' sod1_exons <- sod1_annotation %>% dplyr::filter(type == "exon")
+#' sod1_exons
 #'
-#' # for example, let's compare other transcripts to the MANE-select transcript
-#' mane <- gba_ens_105_exons %>%
-#'     dplyr::filter(transcript_name == "GBA-202")
+#' # for this example, let's compare transcripts to the MANE-select transcript
+#' sod1_mane <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-201")
+#' sod1_not_mane <- sod1_exons %>% dplyr::filter(transcript_name != "SOD1-201")
 #'
-#' single_tx <- gba_ens_105_exons %>%
-#'     dplyr::filter(transcript_name %in% c("GBA-203"))
-#'
-#' single_tx_diffs <- to_diff(
-#'     exons = single_tx,
-#'     ref_exons = mane
-#' )
-#'
-#' single_tx_diffs
-#'
-#' # exons can also contain multiple transcripts
-#' multi_tx <- gba_ens_105_exons %>%
-#'     dplyr::filter(transcript_name %in% c("GBA-203", "GBA-201", "GBA-204"))
-#'
-#' multi_tx_diffs <- to_diff(
-#'     exons = multi_tx,
-#'     ref_exons = mane,
+#' # to_diff() obtains the differences between the exons as ranges
+#' sod1_diffs <- to_diff(
+#'     exons = sod1_not_mane,
+#'     ref_exons = sod1_mane,
 #'     group_var = "transcript_name"
 #' )
 #'
-#' multi_tx_diffs
-#'
-#' # an example of visualising differences
-#' mane %>%
-#'     dplyr::bind_rows(multi_tx) %>%
-#'     dplyr::mutate(
-#'         transcript_name = transcript_name %>%
-#'             factor(levels = c("GBA-202", "GBA-201", "GBA-203", "GBA-204"))
-#'     ) %>%
-#'     ggplot2::ggplot(
-#'         ggplot2::aes(
-#'             xstart = start,
-#'             xend = end,
-#'             y = transcript_name
-#'         )
-#'     ) +
+#' # using geom_range(), it can be useful to visually overlay
+#' # the differences on top of the transcript annotation
+#' sod1_exons %>%
+#'     ggplot(aes(
+#'         xstart = start,
+#'         xend = end,
+#'         y = transcript_name
+#'     )) +
 #'     geom_range() +
-#'     geom_range(
-#'         data = multi_tx_diffs,
-#'         ggplot2::aes(fill = diff_type),
-#'         alpha = 0.2,
+#'     geom_intron(
+#'         data = to_intron(sod1_exons, "transcript_name")
 #'     ) +
-#'     ggplot2::scale_y_discrete(
-#'         labels = c("MANE Select", "GBA-201", "GBA-203", "GBA-204")
+#'     geom_range(
+#'         data = sod1_diffs,
+#'         ggplot2::aes(fill = diff_type),
+#'         alpha = 0.2
 #'     )
 to_diff <- function(exons, ref_exons, group_var = NULL) {
     .check_coord_object(exons, check_seqnames = TRUE, check_strand = TRUE)

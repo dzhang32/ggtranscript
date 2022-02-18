@@ -1,9 +1,9 @@
 # manually create the expected introns
 test_introns <-
-    gba_ens_105 %>%
+    sod1_annotation %>%
     dplyr::filter(
         type == "exon",
-        transcript_name %in% c("GBA-201", "GBA-202")
+        transcript_name %in% c("SOD1-201", "SOD1-202")
     ) %>%
     to_intron(group_var = "transcript_name") %>%
     dplyr::mutate(
@@ -25,14 +25,18 @@ testthat::test_that(
     {
         base_geom_junction_labels <- test_introns_plot +
             geom_junction() +
-            geom_junction_label_repel(aes(label = count))
+            geom_junction_label_repel(
+                aes(label = count),
+                seed = 32
+            )
         w_param_geom_junction_labels <- test_introns_plot +
             geom_junction(
                 junction.y.max = 0.5
             ) +
             geom_junction_label_repel(
                 aes(label = count),
-                junction.y.max = 0.5
+                junction.y.max = 0.5,
+                seed = 32
             )
         w_aes_geom_junction_labels <- test_introns_plot +
             geom_junction(aes(colour = transcript_name)) +
@@ -40,12 +44,13 @@ testthat::test_that(
                 aes(
                     label = count,
                     colour = transcript_name
-                )
+                ),
+                seed = 32
             )
         w_facet_geom_junction_labels <- test_introns_plot +
             geom_junction() +
             geom_junction_label_repel(
-                aes(label = count)
+                aes(label = count),
             ) +
             ggplot2::facet_wrap(transcript_name ~ ., drop = TRUE)
 

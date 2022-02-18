@@ -26,18 +26,48 @@ gtf_path <- gtf_path %>%
 
 gtf <- rtracklayer::import(gtf_path)
 
-# extract gba transcripts
-# convert to data.frame()
-gba_ens_105 <-
-    gtf[!is.na(gtf$gene_name) & gtf$gene_name == "GBA"] %>%
+# extract example gene transcripts
+# convert to tibble()
+sod1_annotation <-
+    gtf[!is.na(gtf$gene_name) & gtf$gene_name == "SOD1"] %>%
     as.data.frame() %>%
     dplyr::as_tibble() %>%
-    dplyr::select(seqnames, start, end, strand, type, gene_name, transcript_name, transcript_biotype)
+    dplyr::select(
+        seqnames,
+        start,
+        end,
+        strand,
+        type,
+        gene_name,
+        transcript_name,
+        transcript_biotype
+    )
+
+pknox1_annotation <-
+    gtf[!is.na(gtf$gene_name) & gtf$gene_name == "PKNOX1"] %>%
+    as.data.frame() %>%
+    dplyr::as_tibble() %>%
+    dplyr::select(
+        seqnames,
+        start,
+        end,
+        strand,
+        type,
+        gene_name,
+        transcript_name,
+        transcript_biotype
+    )
 
 # Save data ---------------------------------------------------------------
 
 usethis::use_data(
-    gba_ens_105,
+    sod1_annotation,
+    compress = "gzip",
+    overwrite = TRUE
+)
+
+usethis::use_data(
+    pknox1_annotation,
     compress = "gzip",
     overwrite = TRUE
 )

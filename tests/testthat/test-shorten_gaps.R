@@ -7,14 +7,14 @@ test_exons <-
         tx = c("A", "A", "B", "B")
     )
 
-gba_ens_105_exons <- gba_ens_105 %>% dplyr::filter(type == "exon")
-gba_ens_105_introns <- gba_ens_105_exons %>%
+pknox1_exons <- pknox1_annotation %>% dplyr::filter(type == "exon")
+pknox1_introns <- pknox1_exons %>%
     to_intron("transcript_name")
 
 ##### .get_gaps #####
 
 # need to create gaps globally for downstream tests
-gba_ens_105_intron_gaps <- .get_gaps(GenomicRanges::GRanges(gba_ens_105_exons))
+pknox1_intron_gaps <- .get_gaps(GenomicRanges::GRanges(pknox1_exons))
 test_intron_gaps <- .get_gaps(GenomicRanges::GRanges(test_exons))
 
 test_.get_gaps <- function(exons, intron_gaps) {
@@ -32,7 +32,7 @@ test_.get_gaps <- function(exons, intron_gaps) {
 
 testthat::test_that(".get_gaps() works correctly", {
     expect_true(test_.get_gaps(
-        gba_ens_105_exons, gba_ens_105_intron_gaps
+        pknox1_exons, pknox1_intron_gaps
     ))
     expect_true(test_.get_gaps(
         test_exons, test_intron_gaps
@@ -41,8 +41,8 @@ testthat::test_that(".get_gaps() works correctly", {
 
 ##### .get_tx_start_gaps #####
 
-gba_ens_105_tx_start_gaps <-
-    .get_tx_start_gaps(gba_ens_105_exons, "transcript_name")
+pknox1_tx_start_gaps <-
+    .get_tx_start_gaps(pknox1_exons, "transcript_name")
 
 test_exons_tx_start_gaps <-
     .get_tx_start_gaps(test_exons, NULL)
@@ -64,8 +64,8 @@ test_.get_tx_start_gaps <- function(exons, tx_start_gaps, group_var) {
 
 testthat::test_that(".get_tx_start_gaps() works correctly", {
     expect_true(test_.get_tx_start_gaps(
-        gba_ens_105_exons,
-        gba_ens_105_tx_start_gaps,
+        pknox1_exons,
+        pknox1_tx_start_gaps,
         "transcript_name"
     ))
     expect_true(test_.get_tx_start_gaps(
@@ -103,28 +103,28 @@ testthat::test_that(".check_target_gap_width() catches user input errors", {
 
 ##### shorten_gaps #####
 
-gba_ens_105_rescaled_tx <- shorten_gaps(
-    gba_ens_105_exons,
-    gba_ens_105_introns,
+pknox1_rescaled_tx <- shorten_gaps(
+    pknox1_exons,
+    pknox1_introns,
     group_var = "transcript_name",
     target_gap_width = 100L
 )
 
-gba_ens_105_exons_1_tx <- gba_ens_105_exons %>%
-    dplyr::filter(transcript_name == "GBA-202")
-gba_ens_105_introns_1_tx <- gba_ens_105_introns %>%
-    dplyr::filter(transcript_name == "GBA-202")
+pknox1_exons_1_tx <- pknox1_exons %>%
+    dplyr::filter(transcript_name == "PKNOX1-202")
+pknox1_introns_1_tx <- pknox1_introns %>%
+    dplyr::filter(transcript_name == "PKNOX1-202")
 
-gba_ens_105_rescaled_1_tx <- shorten_gaps(
-    gba_ens_105_exons_1_tx,
-    gba_ens_105_introns_1_tx,
+pknox1_rescaled_1_tx <- shorten_gaps(
+    pknox1_exons_1_tx,
+    pknox1_introns_1_tx,
     group_var = "transcript_name",
     target_gap_width = 100L
 )
 
-gba_ens_105_rescaled_1_tx_no_group <- shorten_gaps(
-    gba_ens_105_exons_1_tx,
-    gba_ens_105_introns_1_tx,
+pknox1_rescaled_1_tx_no_group <- shorten_gaps(
+    pknox1_exons_1_tx,
+    pknox1_introns_1_tx,
     group_var = NULL,
     target_gap_width = 100L
 )
@@ -137,9 +137,9 @@ test_rescaled_tx <- shorten_gaps(
 )
 
 testthat::test_that("shorten_gaps() keeps existing columns", {
-    expect_true(!is.null(gba_ens_105_rescaled_tx[["transcript_biotype"]]))
+    expect_true(!is.null(pknox1_rescaled_tx[["transcript_biotype"]]))
     expect_true(!is.null(
-        gba_ens_105_rescaled_1_tx_no_group[["transcript_biotype"]]
+        pknox1_rescaled_1_tx_no_group[["transcript_biotype"]]
     ))
 })
 
@@ -162,16 +162,16 @@ test_shorten_gaps <- function(exons, rescaled_tx) {
 
 testthat::test_that("shorten_gaps() never modifies exons", {
     expect_true(test_shorten_gaps(
-        gba_ens_105_exons,
-        gba_ens_105_rescaled_tx
+        pknox1_exons,
+        pknox1_rescaled_tx
     ))
     expect_true(test_shorten_gaps(
-        gba_ens_105_exons_1_tx,
-        gba_ens_105_rescaled_1_tx
+        pknox1_exons_1_tx,
+        pknox1_rescaled_1_tx
     ))
     expect_true(test_shorten_gaps(
-        gba_ens_105_exons_1_tx,
-        gba_ens_105_rescaled_1_tx_no_group
+        pknox1_exons_1_tx,
+        pknox1_rescaled_1_tx_no_group
     ))
     expect_true(test_shorten_gaps(
         test_exons,
@@ -242,16 +242,16 @@ testthat::test_that(
         test_rescaled_plot <- plot_rescaled_tx(
             test_exons, test_rescaled_tx, "tx"
         )
-        gba_rescaled_plot <- plot_rescaled_tx(
-            gba_ens_105_exons, gba_ens_105_rescaled_tx, "transcript_name"
+        pknox1_rescaled_plot <- plot_rescaled_tx(
+            pknox1_exons, pknox1_rescaled_tx, "transcript_name"
         )
-        gba_rescaled_plot_1_tx <- plot_rescaled_tx(
-            gba_ens_105_exons_1_tx, gba_ens_105_rescaled_1_tx, "transcript_name"
+        pknox1_rescaled_plot_1_tx <- plot_rescaled_tx(
+            pknox1_exons_1_tx, pknox1_rescaled_1_tx, "transcript_name"
         )
         # make sure everything works okay even if group is set to NULL
-        gba_rescaled_plot_1_tx_no_group <- plot_rescaled_tx(
-            gba_ens_105_exons_1_tx,
-            gba_ens_105_rescaled_1_tx_no_group,
+        pknox1_plot_1_tx_no_group <- plot_rescaled_tx(
+            pknox1_exons_1_tx,
+            pknox1_rescaled_1_tx_no_group,
             "transcript_name"
         )
 
@@ -260,12 +260,16 @@ testthat::test_that(
             test_rescaled_plot
         )
         vdiffr::expect_doppelganger(
-            "gba rescaled plot",
-            gba_rescaled_plot
+            "pknox1 rescaled plot",
+            pknox1_rescaled_plot
         )
         vdiffr::expect_doppelganger(
-            "gba rescaled plot 1 tx",
-            gba_rescaled_plot_1_tx
+            "pknox1 rescaled plot 1 tx",
+            pknox1_rescaled_plot_1_tx
+        )
+        vdiffr::expect_doppelganger(
+            "pknox1 rescaled plot 1 tx no group",
+            pknox1_plot_1_tx_no_group
         )
     }
 )

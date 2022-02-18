@@ -14,6 +14,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 coverage](https://codecov.io/gh/dzhang32/ggtranscript/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dzhang32/ggtranscript?branch=main)
 <!-- badges: end -->
 
+## Overview
+
 `ggtranscript` is a `ggplot2` extension that makes it easy visualize
 transcript structure and annotation.
 
@@ -46,23 +48,23 @@ library(dplyr)
 library(ggplot2)
 library(ggtranscript)
 
-# gene annotation for the an example gene (GBA)
-gba_ens_105 %>% head()
+# gene annotation for the an example gene (SOD1)
+sod1_annotation %>% head()
 #> # A tibble: 6 × 8
 #>   seqnames  start    end strand type  gene_name transcript_name transcript_biot…
 #>   <fct>     <int>  <int> <fct>  <fct> <chr>     <chr>           <chr>           
-#> 1 1        1.55e8 1.55e8 -      gene  GBA       <NA>            <NA>            
-#> 2 1        1.55e8 1.55e8 -      tran… GBA       GBA-202         protein_coding  
-#> 3 1        1.55e8 1.55e8 -      exon  GBA       GBA-202         protein_coding  
-#> 4 1        1.55e8 1.55e8 -      CDS   GBA       GBA-202         protein_coding  
-#> 5 1        1.55e8 1.55e8 -      star… GBA       GBA-202         protein_coding  
-#> 6 1        1.55e8 1.55e8 -      exon  GBA       GBA-202         protein_coding
+#> 1 21       3.17e7 3.17e7 +      gene  SOD1      <NA>            <NA>            
+#> 2 21       3.17e7 3.17e7 +      tran… SOD1      SOD1-202        protein_coding  
+#> 3 21       3.17e7 3.17e7 +      exon  SOD1      SOD1-202        protein_coding  
+#> 4 21       3.17e7 3.17e7 +      CDS   SOD1      SOD1-202        protein_coding  
+#> 5 21       3.17e7 3.17e7 +      star… SOD1      SOD1-202        protein_coding  
+#> 6 21       3.17e7 3.17e7 +      exon  SOD1      SOD1-202        protein_coding
 
 # obtain exons
-gba_ens_105_exons <- gba_ens_105 %>%
+sod1_exons <- sod1_annotation %>%
     dplyr::filter(type == "exon")
 
-gba_ens_105_exons %>%
+sod1_exons %>%
     ggplot(aes(
         xstart = start,
         xend = end,
@@ -72,7 +74,7 @@ gba_ens_105_exons %>%
         aes(fill = transcript_biotype)
     ) +
     geom_intron(
-        data = to_intron(gba_ens_105_exons, "transcript_name"),
+        data = to_intron(sod1_exons, "transcript_name"),
         aes(strand = strand),
         arrow.min.intron.length = 500,
     )
@@ -86,14 +88,14 @@ visually distinguish the coding segments from UTRs.
 
 ``` r
 # keeping only the exons from protein coding transcripts
-gba_ens_105_exons_prot_cod <- gba_ens_105_exons %>%
+sod1_exons_prot_cod <- sod1_exons %>%
     dplyr::filter(transcript_biotype == "protein_coding")
 
 # obtain cds
-gba_ens_105_cds <- gba_ens_105 %>%
+sod1_cds <- sod1_annotation %>%
     dplyr::filter(type == "CDS")
 
-gba_ens_105_exons_prot_cod %>%
+sod1_exons_prot_cod %>%
     ggplot(aes(
         xstart = start,
         xend = end,
@@ -104,10 +106,10 @@ gba_ens_105_exons_prot_cod %>%
         height = 0.25
     ) +
     geom_range(
-        data = gba_ens_105_cds
+        data = sod1_cds
     ) +
     geom_intron(
-        data = to_intron(gba_ens_105_exons_prot_cod, "transcript_name"),
+        data = to_intron(sod1_exons_prot_cod, "transcript_name"),
         aes(strand = strand),
         arrow.min.intron.length = 500,
     )
@@ -121,22 +123,22 @@ check whether a known transcript structure has junction support using
 
 ``` r
 # using two transcripts as an example
-gba_ens_105_201_exons <- gba_ens_105_exons %>%
-    dplyr::filter(transcript_name == c("GBA-201"))
+sod1_201_exons <- sod1_exons %>%
+    dplyr::filter(transcript_name == c("SOD1-201"))
 
-gba_ens_105_201_cds <- gba_ens_105_cds %>%
-    dplyr::filter(transcript_name == "GBA-201")
+sod1_201_cds <- sod1_cds %>%
+    dplyr::filter(transcript_name == "SOD1-201")
 
 # simulate junction data, randomly keeping half of the junctions
-gba_ens_105_201_introns <- gba_ens_105_201_exons %>%
+sod1_201_introns <- sod1_201_exons %>%
     to_intron("transcript_name")
 
 set.seed(32)
 
-gba_ens_105_201_junctions <-
-    gba_ens_105_201_introns[sample(seq_len(nrow(gba_ens_105_201_introns)), 6), ]
+sod1_201_junctions <-
+    sod1_201_introns[sample(seq_len(nrow(sod1_201_introns)), 3), ]
 
-gba_ens_105_201_exons %>%
+sod1_201_exons %>%
     ggplot(aes(
         xstart = start,
         xend = end,
@@ -147,16 +149,17 @@ gba_ens_105_201_exons %>%
         height = 0.25
     ) +
     geom_range(
-        data = gba_ens_105_201_cds
+        data = sod1_201_cds
     ) +
     geom_intron(
-        data = gba_ens_105_201_introns,
+        data = sod1_201_introns,
         aes(strand = strand),
         arrow.min.intron.length = 500,
     ) +
     geom_junction(
-        data = gba_ens_105_201_junctions,
-        colour = "red"
+        data = sod1_201_junctions,
+        colour = "red",
+        junction.y.max = 0.5
     )
 ```
 

@@ -24,10 +24,10 @@
 #' library(magrittr)
 #'
 #' example_introns <-
-#'     gba_ens_105 %>%
+#'     sod1_annotation %>%
 #'     dplyr::filter(
 #'         type == "exon",
-#'         transcript_name %in% c("GBA-201", "GBA-202")
+#'         transcript_name %in% c("SOD1-201", "SOD1-202")
 #'     ) %>%
 #'     to_intron(group_var = "transcript_name")
 #'

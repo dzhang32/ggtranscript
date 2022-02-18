@@ -30,14 +30,14 @@
 #' library(magrittr)
 #'
 #' example_introns <-
-#'     gba_ens_105 %>%
+#'     sod1_annotation %>%
 #'     dplyr::filter(type == "exon") %>%
 #'     to_intron(group_var = "transcript_name")
 #'
 #' example_introns
 #'
 #' base <- example_introns %>%
-#'     dplyr::filter(transcript_name == "GBA-202") %>%
+#'     dplyr::filter(transcript_name == "SOD1-202") %>%
 #'     ggplot2::ggplot(ggplot2::aes(
 #'         xstart = start,
 #'         xend = end,

@@ -1,14 +1,14 @@
-gba_ens_105_exons <- gba_ens_105 %>%
+sod1_exons <- sod1_annotation %>%
     dplyr::filter(type == "exon")
 
 # create dummy transcripts with both positive and minus strand
 # purely for testing strand functionality
-test_exons <- gba_ens_105_exons %>%
-    dplyr::filter(transcript_name == "GBA-202") %>%
-    dplyr::mutate(strand = "+") %>%
+test_exons <- sod1_exons %>%
+    dplyr::filter(transcript_name == "SOD1-202") %>%
+    dplyr::mutate(strand = "-") %>%
     dplyr::bind_rows(
-        gba_ens_105_exons %>%
-            dplyr::filter(transcript_name == "GBA-201")
+        sod1_exons %>%
+            dplyr::filter(transcript_name == "SOD1-201")
     )
 
 ##### add_exon_number #####

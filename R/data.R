@@ -1,7 +1,7 @@
 #' Example transcript annotation
 #'
-#' Co-ordinates (hg38) of the genes, transcripts, exons for an example gene
-#' (GBA) originating from Ensembl v105 reference annotation.
+#' Co-ordinates (hg38) of the genes, transcripts, exons for an example genes
+#' (SOD1, PKNOX1) originating from Ensembl v105 reference annotation.
 #'
 #' @format A `tibble::tibble()` with 26 rows and 4 columns:
 #' \describe{
@@ -15,5 +15,8 @@
 #'   \item{transcript_biotype}{`character()` biotype of transcript.}
 #' }
 #'
-#' @source generated using `ggtranscript/data-raw/gba_ens_105.R`
-"gba_ens_105"
+#' @source generated using `ggtranscript/data-raw/sod1_pknox1_annotation.R`
+"sod1_annotation"
+
+#' @rdname sod1_annotation
+"pknox1_annotation"

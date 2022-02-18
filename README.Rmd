@@ -22,6 +22,8 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/dzhang32/ggtranscript/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dzhang32/ggtranscript?branch=main)
 <!-- badges: end -->
 
+## Overview
+
 `ggtranscript` is a `ggplot2` extension that makes it easy visualize transcript structure and annotation. 
 
 ## Installation
@@ -43,14 +45,14 @@ library(dplyr)
 library(ggplot2)
 library(ggtranscript)
 
-# gene annotation for the an example gene (GBA)
-gba_ens_105 %>% head()
+# gene annotation for the an example gene (SOD1)
+sod1_annotation %>% head()
 
 # obtain exons
-gba_ens_105_exons <- gba_ens_105 %>%
+sod1_exons <- sod1_annotation %>%
     dplyr::filter(type == "exon")
 
-gba_ens_105_exons %>%
+sod1_exons %>%
     ggplot(aes(
         xstart = start,
         xend = end,
@@ -60,7 +62,7 @@ gba_ens_105_exons %>%
         aes(fill = transcript_biotype)
     ) +
     geom_intron(
-        data = to_intron(gba_ens_105_exons, "transcript_name"),
+        data = to_intron(sod1_exons, "transcript_name"),
         aes(strand = strand),
         arrow.min.intron.length = 500,
     )
@@ -71,14 +73,14 @@ gba_ens_105_exons %>%
 ```{r tx-annot-w-cds, fig.width = 7}
 
 # keeping only the exons from protein coding transcripts
-gba_ens_105_exons_prot_cod <- gba_ens_105_exons %>%
+sod1_exons_prot_cod <- sod1_exons %>%
     dplyr::filter(transcript_biotype == "protein_coding")
 
 # obtain cds
-gba_ens_105_cds <- gba_ens_105 %>%
+sod1_cds <- sod1_annotation %>%
     dplyr::filter(type == "CDS")
 
-gba_ens_105_exons_prot_cod %>%
+sod1_exons_prot_cod %>%
     ggplot(aes(
         xstart = start,
         xend = end,
@@ -89,10 +91,10 @@ gba_ens_105_exons_prot_cod %>%
         height = 0.25
     ) +
     geom_range(
-        data = gba_ens_105_cds
+        data = sod1_cds
     ) +
     geom_intron(
-        data = to_intron(gba_ens_105_exons_prot_cod, "transcript_name"),
+        data = to_intron(sod1_exons_prot_cod, "transcript_name"),
         aes(strand = strand),
         arrow.min.intron.length = 500,
     )
@@ -100,25 +102,25 @@ gba_ens_105_exons_prot_cod %>%
 
 When working with short-read RNA-sequencing data, it can be useful to check whether a known transcript structure has junction support using `geom_junction()`. 
 
-```{r tx-annot-w-junction, fig.height = 2, fig.width = 7}
+```{r tx-annot-w-junction, fig.height = 3, fig.width = 7}
 
 # using two transcripts as an example
-gba_ens_105_201_exons <- gba_ens_105_exons %>%
-    dplyr::filter(transcript_name == c("GBA-201"))
+sod1_201_exons <- sod1_exons %>%
+    dplyr::filter(transcript_name == c("SOD1-201"))
 
-gba_ens_105_201_cds <- gba_ens_105_cds %>%
-    dplyr::filter(transcript_name == "GBA-201")
+sod1_201_cds <- sod1_cds %>%
+    dplyr::filter(transcript_name == "SOD1-201")
 
 # simulate junction data, randomly keeping half of the junctions
-gba_ens_105_201_introns <- gba_ens_105_201_exons %>%
+sod1_201_introns <- sod1_201_exons %>%
     to_intron("transcript_name")
 
 set.seed(32)
 
-gba_ens_105_201_junctions <-
-    gba_ens_105_201_introns[sample(seq_len(nrow(gba_ens_105_201_introns)), 6), ]
+sod1_201_junctions <-
+    sod1_201_introns[sample(seq_len(nrow(sod1_201_introns)), 3), ]
 
-gba_ens_105_201_exons %>%
+sod1_201_exons %>%
     ggplot(aes(
         xstart = start,
         xend = end,
@@ -129,16 +131,17 @@ gba_ens_105_201_exons %>%
         height = 0.25
     ) +
     geom_range(
-        data = gba_ens_105_201_cds
+        data = sod1_201_cds
     ) +
     geom_intron(
-        data = gba_ens_105_201_introns,
+        data = sod1_201_introns,
         aes(strand = strand),
         arrow.min.intron.length = 500,
     ) +
     geom_junction(
-        data = gba_ens_105_201_junctions,
-        colour = "red"
+        data = sod1_201_junctions,
+        colour = "red",
+        junction.y.max = 0.5
     )
 ```
 

@@ -1,6 +1,6 @@
 # manually create the expected introns
 test_introns <-
-    gba_ens_105 %>%
+    sod1_annotation %>%
     dplyr::filter(type == "exon") %>%
     to_intron(group_var = "transcript_name")
 

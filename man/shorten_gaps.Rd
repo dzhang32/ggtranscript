@@ -44,92 +44,82 @@ original genomic coordinates.
 \examples{
 
 library(magrittr)
+library(ggplot2)
 
-gba_ens_105_exons <- gba_ens_105 \%>\%
-    dplyr::filter(type == "exon")
+# to illustrate the package's functionality
+# ggtranscript includes example transcript annotation
+pknox1_annotation
 
-# first, let's use an example of a single transcript
-single_tx <- gba_ens_105_exons \%>\%
-    dplyr::filter(transcript_name \%in\% c("GBA-203"))
+# extract exons
+pknox1_exons <- pknox1_annotation \%>\% dplyr::filter(type == "exon")
+pknox1_exons
 
-single_tx
+# to_intron() is a helper function included in ggtranscript
+# which is useful for converting exon co-ordinates to introns
+pknox1_introns <- pknox1_exons \%>\% to_intron(group_var = "transcript_name")
+pknox1_introns
 
-single_tx_rescaled <- shorten_gaps(
-    single_tx,
-    to_intron(single_tx),
-    group_var = NULL,
-    target_gap_width = 100L
+# for transcripts with long introns, the exons of interest
+# can be difficult to visualize clearly when using the default scale
+pknox1_exons \%>\%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range() +
+  geom_intron(
+    data = pknox1_introns,
+    arrow.min.intron.length = 3500
+  )
+
+# in such cases it can be useful to rescale the exons and introns
+# using shorten_gaps() which shortens regions that do not overlap an exon
+pknox1_rescaled <-
+  shorten_gaps(pknox1_exons, pknox1_introns, group_var = "transcript_name")
+
+pknox1_rescaled
+
+# this allows us to visualize differences in exonic structure more clearly
+pknox1_rescaled \%>\%
+  dplyr::filter(type == "exon") \%>\%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range() +
+  geom_intron(
+    data = pknox1_rescaled \%>\% dplyr::filter(type == "intron"),
+    arrow.min.intron.length = 300
+  )
+
+# shorten_gaps() can be used in combination with to_diff()
+# to further highlight differences in exon structure
+# here, all other transcripts are compared to the MANE-select transcript
+pknox1_rescaled_diffs <- to_diff(
+  exons = pknox1_rescaled \%>\%
+    dplyr::filter(type == "exon", transcript_name != "PKNOX1-201"),
+  ref_exons = pknox1_rescaled \%>\%
+    dplyr::filter(type == "exon", transcript_name == "PKNOX1-201"),
+  group_var = "transcript_name"
 )
 
-# rescaled output contains both introns and exons
-single_tx_rescaled
-
-# create function to compare transcript visualisation
-# before and after shortening gaps
-plot_before_after <- function(before_shorten_gaps,
-                              after_shorten_gaps,
-                              group_var) {
-    before_plot <- before_shorten_gaps \%>\%
-        ggplot2::ggplot(ggplot2::aes_string(
-            xstart = "start",
-            xend = "end",
-            y = group_var
-        )) +
-        geom_range() +
-        geom_intron(
-            data = to_intron(before_shorten_gaps, group_var),
-            strand = "-",
-            arrow.min.intron.length = 500
-        )
-
-    after_plot <- after_shorten_gaps \%>\%
-        dplyr::filter(type == "exon") \%>\%
-        ggplot2::ggplot(ggplot2::aes_string(
-            xstart = "start",
-            xend = "end",
-            y = group_var
-        )) +
-        geom_range() +
-        geom_intron(
-            data = after_shorten_gaps \%>\%
-                dplyr::filter(type == "intron"),
-            strand = "-",
-            arrow.min.intron.length = 200
-        )
-
-    before_after_plotlist <- list(before_plot, after_plot)
-
-    before_after_plot <- ggpubr::ggarrange(
-        plotlist = before_after_plotlist,
-        nrow = 2,
-        labels = c("Before shorten_gaps()", "After shorten_gaps()")
-    )
-
-    return(before_after_plot)
-}
-
-plot_before_after(
-    before_shorten_gaps = single_tx,
-    after_shorten_gaps = single_tx_rescaled,
-    group_var = "transcript_name"
-)
-
-# exons can also contain multiple transcripts
-multi_tx <- gba_ens_105_exons \%>\%
-    dplyr::filter(
-        transcript_name \%in\% paste0("GBA-20", 2:8)
-    )
-
-multi_tx_rescaled <- shorten_gaps(
-    multi_tx,
-    to_intron(multi_tx, "transcript_name"),
-    group_var = "transcript_name",
-    target_gap_width = 100L
-)
-
-plot_before_after(
-    before_shorten_gaps = multi_tx,
-    after_shorten_gaps = multi_tx_rescaled,
-    group_var = "transcript_name"
-)
+pknox1_rescaled \%>\%
+  dplyr::filter(type == "exon") \%>\%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range() +
+  geom_intron(
+    data = pknox1_rescaled \%>\% dplyr::filter(type == "intron"),
+    arrow.min.intron.length = 300
+  ) +
+  geom_range(
+    data = pknox1_rescaled_diffs,
+    aes(fill = diff_type),
+    alpha = 0.2
+  )
 }

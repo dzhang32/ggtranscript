@@ -18,61 +18,51 @@
 #' @export
 #' @examples
 #' library(magrittr)
+#' library(ggplot2)
 #'
-#' gba_ens_105_exons <- gba_ens_105 %>%
-#'     dplyr::filter(
-#'         type == "exon",
-#'         transcript_name %in% paste0("GBA-20", 2:8)
-#'     )
+#' # to illustrate the package's functionality
+#' # ggtranscript includes example transcript annotation
+#' sod1_annotation
 #'
-#' gba_ens_105_exons
+#' # extract exons
+#' sod1_exons <- sod1_annotation %>% dplyr::filter(type == "exon")
+#' sod1_exons
 #'
-#' gba_ens_105_exons %>%
-#'     add_exon_number(group_var = "transcript_name")
+#' # add the exon number for each transcript
+#' sod1_exons <- sod1_exons %>% add_exon_number(group_var = "transcript_name")
+#' sod1_exons
 #'
-#' # this can be useful to label exons with their order/number
-#' base <- gba_ens_105_exons %>%
-#'     add_exon_number(group_var = "transcript_name") %>%
-#'     ggplot2::ggplot(
-#'         ggplot2::aes(
-#'             xstart = start,
-#'             xend = end,
-#'             y = transcript_name
-#'         )
-#'     ) +
+#' base <- sod1_exons %>%
+#'     ggplot(aes(
+#'         xstart = start,
+#'         xend = end,
+#'         y = transcript_name
+#'     )) +
 #'     geom_range() +
 #'     geom_intron(
-#'         data = to_intron(gba_ens_105_exons, "transcript_name"),
-#'         strand = "-",
-#'         arrow.min.intron.length = 500
+#'         data = to_intron(sod1_exons, "transcript_name"),
+#'         strand = "+"
 #'     )
 #'
+#' # it can be useful to annotate exons with their exon number
+#' # using ggplot2::geom_text()
 #' base +
-#'     ggplot2::geom_text(ggplot2::aes(
+#'     geom_text(aes(
 #'         x = (start + end) / 2, # plot label at midpoint of exon
 #'         label = exon_number
 #'     ),
-#'     size = 1.5
-#'     )
-#'
-#' # for complex transcript structures or small exons, it can be useful to
-#' # set nudge_y to plot exon numbers above their respective exons
-#' base +
-#'     ggplot2::geom_text(ggplot2::aes(
-#'         x = (start + end) / 2, # plot label at midpoint of exon
-#'         label = exon_number
-#'     ),
-#'     size = 2.5,
+#'     size = 3.5,
 #'     nudge_y = 0.4
 #'     )
 #'
-#' # or use ggrepel::geom_label_repel to separate labels from exons
+#' # Or alternatively, using ggrepel::geom_label_repel()
+#' # to separate labels from exons
 #' base +
 #'     ggrepel::geom_label_repel(ggplot2::aes(
 #'         x = (start + end) / 2,
 #'         label = exon_number
 #'     ),
-#'     size = 2,
+#'     size = 3.5,
 #'     min.segment.length = 0
 #'     )
 add_exon_number <- function(exons, group_var = NULL) {

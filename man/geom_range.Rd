@@ -103,29 +103,121 @@ useful to free up plotting space for other transcript annotations (e.g.
 }
 \examples{
 
-example_exons <-
-    dplyr::tibble(
-        start = c(100, 300, 500, 650),
-        end = start + 100,
-        strand = c("+", "+", "-", "-"),
-        tx = c("A", "A", "B", "B")
-    )
+library(magrittr)
+library(ggplot2)
 
-example_exons
+# to illustrate the package's functionality
+# ggtranscript includes example transcript annotation
+sod1_annotation
 
-base <-
-    ggplot2::ggplot(
-        example_exons,
-        ggplot2::aes(
-            xstart = start,
-            xend = end,
-            y = tx
-        )
-    )
+# extract exons
+sod1_exons <- sod1_annotation \%>\% dplyr::filter(type == "exon")
+sod1_exons
 
+base <- sod1_exons \%>\%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+        ))
+
+# geom_range() is designed to visualise range-based annotation such as exons
 base + geom_range()
-base + geom_range(ggplot2::aes(fill = tx))
 
+# geom_half_range() allows users to plot half ranges
+# on the top or bottom of the transcript
 base + geom_half_range()
+
+# where the half ranges are plotted can be adjusted using range.orientation
 base + geom_half_range(range.orientation = "top")
+
+# as a ggplot2 extension, ggtranscript geoms inherit the
+# the functionality from the parameters and aesthetics in ggplot2
+base + geom_range(
+  aes(fill = transcript_name),
+  size = 1
+  )
+
+# together, geom_range() and geom_range() are designed to visualize
+# the core components of transcript annotation
+base + geom_range(
+    aes(fill = transcript_biotype)
+  ) +
+  geom_intron(
+    data = to_intron(sod1_exons, "transcript_name")
+  )
+
+# for protein coding transcripts
+# geom_range() be useful for visualizing UTRs that lie outside of the CDS
+sod1_exons_prot_coding <- sod1_exons \%>\%
+  dplyr::filter(transcript_biotype == "protein_coding")
+
+# extract cds
+sod1_cds <- sod1_annotation \%>\%
+  dplyr::filter(type == "CDS")
+
+sod1_exons_prot_coding \%>\%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range(
+    fill = "white",
+    height = 0.25
+  ) +
+  geom_range(
+    data = sod1_cds
+  ) +
+  geom_intron(
+    data = to_intron(sod1_exons_prot_coding, "transcript_name")
+  )
+
+# one use case of geom_half_range() is to compare between two transcripts
+# by visualising one on the top and the other on the bottom
+sod1_201_exons <- sod1_exons \%>\% dplyr::filter(transcript_name == "SOD1-201")
+sod1_201_cds <- sod1_cds \%>\% dplyr::filter(transcript_name == "SOD1-201")
+sod1_202_exons <- sod1_exons \%>\% dplyr::filter(transcript_name == "SOD1-202")
+sod1_202_cds <- sod1_cds \%>\% dplyr::filter(transcript_name == "SOD1-202")
+
+sod1_201_plot <- sod1_201_exons \%>\%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = "SOD1-201/202"
+  )) +
+  geom_half_range(
+    fill = "white",
+    height = 0.125
+  ) +
+  geom_half_range(
+    data = sod1_201_cds
+  ) +
+  geom_intron(
+    data = to_intron(sod1_201_exons, "transcript_name")
+  )
+
+sod1_201_plot
+
+sod1_201_202_plot <- sod1_201_plot +
+  geom_half_range(
+    data = sod1_202_exons,
+    range.orientation = "top",
+    fill = "white",
+    height = 0.125
+  ) +
+  geom_half_range(
+    data = sod1_202_cds,
+    range.orientation = "top",
+    fill = "red"
+  ) +
+  geom_intron(
+    data = to_intron(sod1_202_exons, "transcript_name")
+  )
+
+sod1_201_202_plot
+
+# leveraging existing ggplot2 functionality vis coord_cartesian()
+# can be useful to zoom in on areas of interest
+sod1_201_202_plot + coord_cartesian(xlim = c(31659500, 31660000))
 }
