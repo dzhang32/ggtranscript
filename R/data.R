@@ -21,3 +21,22 @@
 
 #' @rdname sod1_annotation
 "pknox1_annotation"
+
+#' Example junctions
+#'
+#' Junction co-ordinates and counts associated with the \emph{SOD1} gene.
+#' Junctions counts originate from GTEx liver samples and are downloaded via the
+#' Bioconductor package `snapcount`. Only unannotated junctions with a mean
+#' count above 0.3 have been retained for this example.
+#'
+#' @format A `tibble::tibble()`:
+#' \describe{
+#'   \item{seqnames}{`factor()` chromosome.}
+#'   \item{start}{`integer()` start position.}
+#'   \item{end}{`integer()` end position.}
+#'   \item{strand}{`factor()` strand.}
+#'   \item{mean_count}{`factor()` Average count across all GTEx liver samples.}
+#' }
+#'
+#' @source generated using `ggtranscript/data-raw/sod1_junctions.R`
+"sod1_junctions"
