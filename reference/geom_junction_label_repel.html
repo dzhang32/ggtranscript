@@ -234,67 +234,77 @@ junction curves (namely <code>junction.orientation</code>, <code>junction.y.max<
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">example_introns</span> <span class="op">&lt;-</span></span>
-<span class="r-in">    <span class="va">sod1_annotation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
-<span class="r-in">        <span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span>,</span>
-<span class="r-in">        <span class="va">transcript_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SOD1-201"</span>, <span class="st">"SOD1-202"</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span>group_var <span class="op">=</span> <span class="st">"transcript_name"</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># to illustrate the package's functionality</span></span>
+<span class="r-in"><span class="co"># ggtranscript includes example transcript annotation</span></span>
+<span class="r-in"><span class="va">sod1_annotation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   seqnames  start    end strand type  gene_name transcript_name transcript_biot…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      gene  SOD1      <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span>              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      tran… SOD1      SOD1-202        protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      exon  SOD1      SOD1-202        protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      CDS   SOD1      SOD1-202        protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      star… SOD1      SOD1-202        protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      exon  SOD1      SOD1-202        protein_coding  </span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># add some arbitrary counts</span></span>
-<span class="r-in"><span class="va">example_introns</span> <span class="op">&lt;-</span> <span class="va">example_introns</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span class="r-in">        count <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/ranking.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">)</span></span>
+<span class="r-in"><span class="co"># as well as a set of example (unannotated) junctions</span></span>
+<span class="r-in"><span class="co"># originating from GTEx and downloaded via the Bioconductor package snapcount</span></span>
+<span class="r-in"><span class="va">sod1_junctions</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   seqnames    start      end strand mean_count</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> chr21    31<span style="text-decoration: underline;">659</span>787 31<span style="text-decoration: underline;">666</span>448 +           0.463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> chr21    31<span style="text-decoration: underline;">659</span>842 31<span style="text-decoration: underline;">660</span>554 +           0.831</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> chr21    31<span style="text-decoration: underline;">659</span>842 31<span style="text-decoration: underline;">663</span>794 +           0.316</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> chr21    31<span style="text-decoration: underline;">659</span>842 31<span style="text-decoration: underline;">667</span>257 +           4.35 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> chr21    31<span style="text-decoration: underline;">660</span>351 31<span style="text-decoration: underline;">663</span>789 +           0.324</span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">example_introns</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   seqnames strand type  gene_name transcript_name transcript_biot…  start    end</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 21       +      intr… SOD1      SOD1-202        protein_coding   3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 21       +      intr… SOD1      SOD1-201        protein_coding   3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 21       +      intr… SOD1      SOD1-202        protein_coding   3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 21       +      intr… SOD1      SOD1-201        protein_coding   3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 21       +      intr… SOD1      SOD1-202        protein_coding   3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> 21       +      intr… SOD1      SOD1-201        protein_coding   3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> 21       +      intr… SOD1      SOD1-202        protein_coding   3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> 21       +      intr… SOD1      SOD1-201        protein_coding   3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: count &lt;int&gt;</span></span>
+<span class="r-in"><span class="co"># extract exons</span></span>
+<span class="r-in"><span class="va">sod1_exons</span> <span class="op">&lt;-</span> <span class="va">sod1_annotation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span class="r-in">    <span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span>,</span>
+<span class="r-in">    <span class="va">transcript_name</span> <span class="op">==</span> <span class="st">"SOD1-201"</span></span>
+<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   seqnames  start    end strand type  gene_name transcript_name transcript_biot…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      exon  SOD1      SOD1-201        protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      exon  SOD1      SOD1-201        protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      exon  SOD1      SOD1-201        protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      exon  SOD1      SOD1-201        protein_coding  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      exon  SOD1      SOD1-201        protein_coding  </span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">base</span> <span class="op">&lt;-</span> <span class="va">example_introns</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span class="r-in"><span class="co"># add transcript_name to junctions for plotting</span></span>
+<span class="r-in"><span class="va">sod1_junctions</span> <span class="op">&lt;-</span> <span class="va">sod1_junctions</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>transcript_name <span class="op">=</span> <span class="st">"SOD1-201"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># geom_junction_label_repel() can be used to label junctions</span></span>
+<span class="r-in"><span class="va">base</span> <span class="op">&lt;-</span> <span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
 <span class="r-in">        xstart <span class="op">=</span> <span class="va">start</span>,</span>
 <span class="r-in">        xend <span class="op">=</span> <span class="va">end</span>,</span>
 <span class="r-in">        y <span class="op">=</span> <span class="va">transcript_name</span></span>
-<span class="r-in">    <span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">base</span> <span class="op">+</span> <span class="fu"><a href="geom_junction.html">geom_junction</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-plt img"><img src="geom_junction_label_repel-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">base</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu"><a href="geom_junction.html">geom_junction</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu">geom_junction_label_repel</span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">count</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-plt img"><img src="geom_junction_label_repel-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># if users modify any of the geom_junction params that alter junction curves</span></span>
-<span class="r-in"><span class="co"># i.e. junction.orientation, junction.y.max, ncp, angle</span></span>
-<span class="r-in"><span class="va">base</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu"><a href="geom_junction.html">geom_junction</a></span><span class="op">(</span>junction.orientation <span class="op">=</span> <span class="st">"top"</span>, junction.y.max <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu">geom_junction_label_repel</span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">count</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-plt img"><img src="geom_junction_label_repel-3.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># users must make sure to match those arguments in geom_junction_label_repel</span></span>
-<span class="r-in"><span class="va">base</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu"><a href="geom_junction.html">geom_junction</a></span><span class="op">(</span>junction.orientation <span class="op">=</span> <span class="st">"top"</span>, junction.y.max <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">    <span class="fu">geom_junction_label_repel</span><span class="op">(</span></span>
-<span class="r-in">        <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">count</span><span class="op">)</span>,</span>
-<span class="r-in">        junction.orientation <span class="op">=</span> <span class="st">"top"</span>, junction.y.max <span class="op">=</span> <span class="fl">0.5</span></span>
+<span class="r-in">    <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">    <span class="fu"><a href="geom_range.html">geom_range</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">    <span class="fu"><a href="geom_intron.html">geom_intron</a></span><span class="op">(</span></span>
+<span class="r-in">        data <span class="op">=</span> <span class="fu"><a href="to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">sod1_exons</span>, <span class="st">"transcript_name"</span><span class="op">)</span></span>
 <span class="r-in">    <span class="op">)</span></span>
-<span class="r-plt img"><img src="geom_junction_label_repel-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># this can be useful to label junctions with their counts</span></span>
+<span class="r-in"><span class="va">base</span> <span class="op">+</span></span>
+<span class="r-in">    <span class="fu"><a href="geom_junction.html">geom_junction</a></span><span class="op">(</span></span>
+<span class="r-in">        data <span class="op">=</span> <span class="va">sod1_junctions</span>,</span>
+<span class="r-in">        junction.y.max <span class="op">=</span> <span class="fl">0.5</span></span>
+<span class="r-in">    <span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">    <span class="fu">geom_junction_label_repel</span><span class="op">(</span></span>
+<span class="r-in">        data <span class="op">=</span> <span class="va">sod1_junctions</span>,</span>
+<span class="r-in">        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">mean_count</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">        junction.y.max <span class="op">=</span> <span class="fl">0.5</span></span>
+<span class="r-in">    <span class="op">)</span></span>
+<span class="r-plt img"><img src="geom_junction_label_repel-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
