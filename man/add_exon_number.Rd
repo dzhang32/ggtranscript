@@ -44,7 +44,6 @@ sod1_exons \%>\% head()
 
 # add the exon number for each transcript
 sod1_exons <- sod1_exons \%>\% add_exon_number(group_var = "transcript_name")
-sod1_exons \%>\% head()
 
 base <- sod1_exons \%>\%
     ggplot(aes(
