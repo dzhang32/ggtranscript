@@ -20,50 +20,50 @@
 #'
 #' @export
 #' @examples
-#'
 #' library(magrittr)
+#' library(ggplot2)
 #'
-#' example_introns <-
-#'     sod1_annotation %>%
-#'     dplyr::filter(
-#'         type == "exon",
-#'         transcript_name %in% c("SOD1-201", "SOD1-202")
-#'     ) %>%
-#'     to_intron(group_var = "transcript_name")
+#' # to illustrate the package's functionality
+#' # ggtranscript includes example transcript annotation
+#' sod1_annotation %>% head()
 #'
-#' # add some arbitrary counts
-#' example_introns <- example_introns %>%
-#'     dplyr::mutate(
-#'         count = dplyr::row_number()
-#'     )
+#' # as well as a set of example (unannotated) junctions
+#' # originating from GTEx and downloaded via the Bioconductor package snapcount
+#' sod1_junctions
 #'
-#' example_introns
+#' # extract exons
+#' sod1_exons <- sod1_annotation %>% dplyr::filter(
+#'     type == "exon",
+#'     transcript_name == "SOD1-201"
+#' )
+#' sod1_exons %>% head()
 #'
-#' base <- example_introns %>%
-#'     ggplot2::ggplot(ggplot2::aes(
+#' # add transcript_name to junctions for plotting
+#' sod1_junctions <- sod1_junctions %>%
+#'     dplyr::mutate(transcript_name = "SOD1-201")
+#'
+#' # geom_junction_label_repel() can be used to label junctions
+#' base <- sod1_exons %>%
+#'     ggplot(aes(
 #'         xstart = start,
 #'         xend = end,
 #'         y = transcript_name
-#'     ))
+#'     )) +
+#'     geom_range() +
+#'     geom_intron(
+#'         data = to_intron(sod1_exons, "transcript_name")
+#'     )
 #'
-#' base + geom_junction()
-#'
+#' # this can be useful to label junctions with their counts
 #' base +
-#'     geom_junction() +
-#'     geom_junction_label_repel(ggplot2::aes(label = count))
-#'
-#' # if users modify any of the geom_junction params that alter junction curves
-#' # i.e. junction.orientation, junction.y.max, ncp, angle
-#' base +
-#'     geom_junction(junction.orientation = "top", junction.y.max = 0.5) +
-#'     geom_junction_label_repel(ggplot2::aes(label = count))
-#'
-#' # users must make sure to match those arguments in geom_junction_label_repel
-#' base +
-#'     geom_junction(junction.orientation = "top", junction.y.max = 0.5) +
+#'     geom_junction(
+#'         data = sod1_junctions,
+#'         junction.y.max = 0.5
+#'     ) +
 #'     geom_junction_label_repel(
-#'         ggplot2::aes(label = count),
-#'         junction.orientation = "top", junction.y.max = 0.5
+#'         data = sod1_junctions,
+#'         aes(label = round(mean_count, 2)),
+#'         junction.y.max = 0.5
 #'     )
 geom_junction_label_repel <- function(mapping = NULL,
                                       data = NULL,

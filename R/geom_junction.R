@@ -28,16 +28,29 @@
 #' @examples
 #'
 #' library(magrittr)
+#' library(ggplot2)
 #'
-#' example_introns <-
-#'     sod1_annotation %>%
-#'     dplyr::filter(type == "exon") %>%
-#'     to_intron(group_var = "transcript_name")
+#' # to illustrate the package's functionality
+#' # ggtranscript includes example transcript annotation
+#' sod1_annotation %>% head()
 #'
-#' example_introns
+#' # as well as a set of example (unannotated) junctions
+#' # originating from GTEx and downloaded via the Bioconductor package snapcount
+#' sod1_junctions
 #'
-#' base <- example_introns %>%
-#'     dplyr::filter(transcript_name == "SOD1-202") %>%
+#' # extract exons
+#' sod1_exons <- sod1_annotation %>% dplyr::filter(
+#'     type == "exon",
+#'     transcript_name == "SOD1-201"
+#' )
+#' sod1_exons %>% head()
+#'
+#' # add transcript_name to junctions for plotting
+#' sod1_junctions <- sod1_junctions %>%
+#'     dplyr::mutate(transcript_name = "SOD1-201")
+#'
+#' # junctions can be plotted as curves using geom_junction()
+#' base <- sod1_junctions %>%
 #'     ggplot2::ggplot(ggplot2::aes(
 #'         xstart = start,
 #'         xend = end,
@@ -48,29 +61,66 @@
 #' # junctions will go overlap one another or extend beyond the plot margin
 #' base + geom_junction()
 #'
-#' # in such cases, junction.y.max can be used to rectify the max y
+#' # in such cases, junction.y.max can be adjusted to modify the max y of curves
 #' base + geom_junction(junction.y.max = 0.5)
 #'
-#' # junction.orientation determines where the junction are plotted
-#' # either on the top or bottom
+#' # ncp can be used improve the smoothness of curves
+#' base + geom_junction(junction.y.max = 0.5, ncp = 30)
+#'
+#' # junction.orientation controls where the junction are plotted
+#' # with respect to each transcript
+#' # either alternating (default), or on the top or bottom
 #' base + geom_junction(junction.orientation = "top", junction.y.max = 0.5)
 #' base + geom_junction(junction.orientation = "bottom", junction.y.max = 0.5)
 #'
-#' # geom_junction can also be used with multiple y values
-#' base_multi_transcript <- example_introns %>%
-#'     ggplot2::ggplot(ggplot2::aes(
+#' # it can be useful useful to overlay junction curves onto existing annotation
+#' # plotted using geom_range() and geom_intron()
+#' base <- sod1_exons %>%
+#'     ggplot(aes(
 #'         xstart = start,
 #'         xend = end,
 #'         y = transcript_name
-#'     ))
+#'     )) +
+#'     geom_range() +
+#'     geom_intron(
+#'         data = to_intron(sod1_exons, "transcript_name")
+#'     )
 #'
-#' base_multi_transcript + geom_junction()
-#'
-#' # and as a ggplot2 extension can be used aes and params
-#' base_multi_transcript + geom_junction(
-#'     ggplot2::aes(colour = transcript_name),
-#'     size = 0.75
+#' base + geom_junction(
+#'     data = sod1_junctions,
+#'     junction.y.max = 0.5
 #' )
+#'
+#' # as a ggplot2 extension, ggtranscript geoms inherit the
+#' # the functionality from the parameters and aesthetics in ggplot2
+#' # this can be useful when mapping junction thickness to their counts
+#' base + geom_junction(
+#'     data = sod1_junctions,
+#'     aes(size = mean_count),
+#'     junction.y.max = 0.5,
+#'     colour = "purple"
+#' ) +
+#'     scale_size(range = c(0.1, 1))
+#'
+#' # it can be useful to combine geom_junction() with geom_half_range()
+#' sod1_exons %>%
+#'     ggplot(aes(
+#'         xstart = start,
+#'         xend = end,
+#'         y = transcript_name
+#'     )) +
+#'     geom_half_range() +
+#'     geom_intron(
+#'         data = to_intron(sod1_exons, "transcript_name")
+#'     ) +
+#'     geom_junction(
+#'         data = sod1_junctions,
+#'         aes(size = mean_count),
+#'         junction.y.max = 0.5,
+#'         junction.orientation = "top",
+#'         colour = "purple"
+#'     ) +
+#'     scale_size(range = c(0.1, 1))
 geom_junction <- function(mapping = NULL,
                           data = NULL,
                           stat = "identity",
