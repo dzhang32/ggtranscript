@@ -1,15 +1,16 @@
 #' Example transcript annotation
 #'
-#' Co-ordinates (hg38) of the genes, transcripts, exons for an example genes
-#' (SOD1, PKNOX1) originating from Ensembl v105 reference annotation.
+#' Transcript annotation including the co-ordinates (hg38) of the genes,
+#' transcripts, exons and CDS regions for \emph{SOD1} and \emph{PKNOX1}, which
+#' originate from version 105 of the Ensembl reference annotation.
 #'
-#' @format A `tibble::tibble()` with 26 rows and 4 columns:
+#' @format A `tibble::tibble()`:
 #' \describe{
 #'   \item{seqnames}{`factor()` chromosome.}
 #'   \item{start}{`integer()` start position.}
 #'   \item{end}{`integer()` end position.}
 #'   \item{strand}{`factor()` strand.}
-#'   \item{type}{`factor()` type of data, one of gene, transcript, exon or CDS.}
+#'   \item{type}{`factor()` E.g.gene, transcript, exon or CDS.}
 #'   \item{gene_name}{`character()` name of gene (GBA).}
 #'   \item{transcript_name}{`character()` name of transcript.}
 #'   \item{transcript_biotype}{`character()` biotype of transcript.}

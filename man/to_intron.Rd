@@ -31,28 +31,28 @@ library(ggplot2)
 
 # to illustrate the package's functionality
 # ggtranscript includes example transcript annotation
-sod1_annotation
+sod1_annotation \%>\% head()
 
 # extract exons
 sod1_exons <- sod1_annotation \%>\% dplyr::filter(type == "exon")
-sod1_exons
+sod1_exons \%>\% head()
 
 # to_intron() is a helper function included in ggtranscript
 # which is useful for converting exon co-ordinates to introns
 sod1_introns <- sod1_exons \%>\% to_intron(group_var = "transcript_name")
-sod1_introns
+sod1_introns \%>\% head()
 
 # this can be particular useful when combined with
-# geom_range() and geom_range()
+# geom_range() and geom_intron()
 # to visualize the core components of transcript annotation
 sod1_exons \%>\%
-  ggplot(aes(
-    xstart = start,
-    xend = end,
-    y = transcript_name
-  )) +
-  geom_range() +
-  geom_intron(
-    data = to_intron(sod1_exons, "transcript_name")
-  )
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range() +
+    geom_intron(
+        data = to_intron(sod1_exons, "transcript_name")
+    )
 }

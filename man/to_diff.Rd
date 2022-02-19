@@ -36,11 +36,11 @@ library(ggplot2)
 
 # to illustrate the package's functionality
 # ggtranscript includes example transcript annotation
-sod1_annotation
+sod1_annotation \%>\% head()
 
 # extract exons
 sod1_exons <- sod1_annotation \%>\% dplyr::filter(type == "exon")
-sod1_exons
+sod1_exons \%>\% head()
 
 # for this example, let's compare transcripts to the MANE-select transcript
 sod1_mane <- sod1_exons \%>\% dplyr::filter(transcript_name == "SOD1-201")
@@ -53,17 +53,19 @@ sod1_diffs <- to_diff(
     group_var = "transcript_name"
 )
 
+sod1_diffs \%>\% head()
+
 # using geom_range(), it can be useful to visually overlay
 # the differences on top of the transcript annotation
 sod1_exons \%>\%
     ggplot(aes(
-            xstart = start,
-            xend = end,
-            y = transcript_name
-        )) +
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
     geom_range() +
     geom_intron(
-      data = to_intron(sod1_exons, "transcript_name")
+        data = to_intron(sod1_exons, "transcript_name")
     ) +
     geom_range(
         data = sod1_diffs,

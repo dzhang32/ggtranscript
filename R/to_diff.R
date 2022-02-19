@@ -26,11 +26,11 @@
 #'
 #' # to illustrate the package's functionality
 #' # ggtranscript includes example transcript annotation
-#' sod1_annotation
+#' sod1_annotation %>% head()
 #'
 #' # extract exons
 #' sod1_exons <- sod1_annotation %>% dplyr::filter(type == "exon")
-#' sod1_exons
+#' sod1_exons %>% head()
 #'
 #' # for this example, let's compare transcripts to the MANE-select transcript
 #' sod1_mane <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-201")
@@ -42,6 +42,8 @@
 #'     ref_exons = sod1_mane,
 #'     group_var = "transcript_name"
 #' )
+#'
+#' sod1_diffs %>% head()
 #'
 #' # using geom_range(), it can be useful to visually overlay
 #' # the differences on top of the transcript annotation

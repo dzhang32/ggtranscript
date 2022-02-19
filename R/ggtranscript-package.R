@@ -1,14 +1,14 @@
 #' `ggtranscript`: Visualizing transcript structure and annotation using
 #' `ggplot2`
 #'
-#' The major goal of `ggtranscript` is the simplify the process of visualizing
-#' transcript structure and annotation. `ggtranscript` achieves by introducing 4
-#' geoms (`geom_range`, `geom_half_range`, `geom_intron` and `geom_junction`)
-#' and several helper functions that are designed to visualize transcript
-#' annotation using `ggplot2`. As a `ggplot2` extension, `ggtranscript` inherits
-#' `ggplot2`'s familiarity and flexibility; users can intuitively adjust
-#' aesthetics and parameters as well as complement `ggtranscript` geoms with
-#' existing `ggplot2` geoms.
+#' The goal of `ggtranscript` is the simplify the process of visualizing
+#' transcript structure and annotation. To achieve this, `ggtranscript`
+#' introduces 5 new geoms (`geom_range()`, `geom_half_range()`, `geom_intron()`,
+#' `geom_junction()` and `geom_junction_label_repel()`) as well as several
+#' helper functions. As a `ggplot2` extension, `ggtranscript` inherits
+#' `ggplot2`'s familiarity and flexibility, enabling users to intuitively adjust
+#' aesthetics, parameters, scales etc as well as complement `ggtranscript` geoms
+#' with existing `ggplot2` geoms to create informative, publication-ready plots.
 #'
 #' @docType package
 #' @name ggtranscript

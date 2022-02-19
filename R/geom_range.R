@@ -26,11 +26,11 @@
 #'
 #' # to illustrate the package's functionality
 #' # ggtranscript includes example transcript annotation
-#' sod1_annotation
+#' sod1_annotation %>% head()
 #'
 #' # extract exons
 #' sod1_exons <- sod1_annotation %>% dplyr::filter(type == "exon")
-#' sod1_exons
+#' sod1_exons %>% head()
 #'
 #' base <- sod1_exons %>%
 #'     ggplot(aes(
@@ -56,7 +56,7 @@
 #'     size = 1
 #' )
 #'
-#' # together, geom_range() and geom_range() are designed to visualize
+#' # together, geom_range() and geom_intron() are designed to visualize
 #' # the core components of transcript annotation
 #' base + geom_range(
 #'     aes(fill = transcript_biotype)
@@ -91,8 +91,8 @@
 #'         data = to_intron(sod1_exons_prot_coding, "transcript_name")
 #'     )
 #'
-#' # one use case of geom_half_range() is to compare between two transcripts
-#' # by visualising one on the top and the other on the bottom
+#' # geom_half_range() can be useful for comparing between two transcripts
+#' # enabling visualization of one transcript on the top, other on the bottom
 #' sod1_201_exons <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-201")
 #' sod1_201_cds <- sod1_cds %>% dplyr::filter(transcript_name == "SOD1-201")
 #' sod1_202_exons <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-202")
@@ -135,7 +135,7 @@
 #'
 #' sod1_201_202_plot
 #'
-#' # leveraging existing ggplot2 functionality vis coord_cartesian()
+#' # leveraging existing ggplot2 functionality via e.g. coord_cartesian()
 #' # can be useful to zoom in on areas of interest
 #' sod1_201_202_plot + coord_cartesian(xlim = c(31659500, 31660000))
 geom_range <- function(mapping = NULL, data = NULL,

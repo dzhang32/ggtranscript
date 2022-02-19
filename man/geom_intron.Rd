@@ -82,15 +82,14 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \description{
 \code{geom_intron()} draws horizontal lines with central arrows that are designed
 to represent introns. In combination with \code{geom_range()}/\code{geom_half_range()},
-these geoms form the core components for visualizing transcript
-annotation.
+these geoms form the core components for visualizing transcript annotation.
 }
 \details{
-\code{geom_intron()}  requires the following \code{aes()}; \code{xstart}, \code{xend} and \code{y}
+\code{geom_intron()} requires the following \code{aes()}; \code{xstart}, \code{xend} and \code{y}
 (e.g. transcript name). The \code{strand} option (one of "+" or "-") adjusts the
-arrow direction to match the direction of transcription. the
+arrow direction to match the direction of transcription. The
 \code{arrow.min.intron.length} parameter can be useful to remove strand arrows
-overlapping exons, which can be a problem if plotted introns include those
+that overlap exons, which can be a problem if plotted introns include those
 that are relatively short.
 }
 \examples{
@@ -100,23 +99,23 @@ library(ggplot2)
 
 # to illustrate the package's functionality
 # ggtranscript includes example transcript annotation
-pknox1_annotation
+pknox1_annotation \%>\% head()
 
 # extract exons
 pknox1_exons <- pknox1_annotation \%>\% dplyr::filter(type == "exon")
-pknox1_exons
+pknox1_exons \%>\% head()
 
 # to_intron() is a helper function included in ggtranscript
 # which is useful for converting exon co-ordinates to introns
 pknox1_introns <- pknox1_exons \%>\% to_intron(group_var = "transcript_name")
-pknox1_introns
+pknox1_introns \%>\% head()
 
 base <- pknox1_introns \%>\%
-  ggplot(aes(
-    xstart = start,
-    xend = end,
-    y = transcript_name
-        ))
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    ))
 
 # by default, geom_intron() assumes introns originate from the "+" strand
 base + geom_intron()
@@ -130,34 +129,34 @@ base + geom_intron(aes(strand = strand))
 # as a ggplot2 extension, ggtranscript geoms inherit the
 # the functionality from the parameters and aesthetics in ggplot2
 base + geom_intron(
-  aes(colour = transcript_name),
-  size = 1
-  )
+    aes(colour = transcript_name),
+    size = 1
+)
 
-# together, geom_range() and geom_range() are designed to visualize
+# together, geom_range() and geom_intron() are designed to visualize
 # the core components of transcript annotation
 pknox1_exons \%>\%
-  ggplot(aes(
-    xstart = start,
-    xend = end,
-    y = transcript_name
-  )) +
-  geom_range() +
-  geom_intron(
-    data = pknox1_introns
-  )
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range() +
+    geom_intron(
+        data = pknox1_introns
+    )
 
 # for short introns, sometimes strand arrows will overlap exons
 # to avoid this, users can set the arrow.min.intron.length parameter
 pknox1_exons \%>\%
-  ggplot(aes(
-    xstart = start,
-    xend = end,
-    y = transcript_name
-  )) +
-  geom_range() +
-  geom_intron(
-    data = pknox1_introns,
-    arrow.min.intron.length = 3500
-  )
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range() +
+    geom_intron(
+        data = pknox1_introns,
+        arrow.min.intron.length = 3500
+    )
 }

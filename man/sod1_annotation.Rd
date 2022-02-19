@@ -6,13 +6,13 @@
 \alias{pknox1_annotation}
 \title{Example transcript annotation}
 \format{
-A \code{tibble::tibble()} with 26 rows and 4 columns:
+A \code{tibble::tibble()}:
 \describe{
 \item{seqnames}{\code{factor()} chromosome.}
 \item{start}{\code{integer()} start position.}
 \item{end}{\code{integer()} end position.}
 \item{strand}{\code{factor()} strand.}
-\item{type}{\code{factor()} type of data, one of gene, transcript, exon or CDS.}
+\item{type}{\code{factor()} E.g.gene, transcript, exon or CDS.}
 \item{gene_name}{\code{character()} name of gene (GBA).}
 \item{transcript_name}{\code{character()} name of transcript.}
 \item{transcript_biotype}{\code{character()} biotype of transcript.}
@@ -29,7 +29,8 @@ sod1_annotation
 pknox1_annotation
 }
 \description{
-Co-ordinates (hg38) of the genes, transcripts, exons for an example genes
-(SOD1, PKNOX1) originating from Ensembl v105 reference annotation.
+Transcript annotation including the co-ordinates (hg38) of the genes,
+transcripts, exons and CDS regions for \emph{SOD1} and \emph{PKNOX1}, which
+originate from version 105 of the Ensembl reference annotation.
 }
 \keyword{datasets}

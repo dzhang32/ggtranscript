@@ -6,12 +6,12 @@
 \title{\code{ggtranscript}: Visualizing transcript structure and annotation using
 \code{ggplot2}}
 \description{
-The major goal of \code{ggtranscript} is the simplify the process of visualizing
-transcript structure and annotation. \code{ggtranscript} achieves by introducing 4
-geoms (\code{geom_range}, \code{geom_half_range}, \code{geom_intron} and \code{geom_junction})
-and several helper functions that are designed to visualize transcript
-annotation using \code{ggplot2}. As a \code{ggplot2} extension, \code{ggtranscript} inherits
-\code{ggplot2}'s familiarity and flexibility; users can intuitively adjust
-aesthetics and parameters as well as complement \code{ggtranscript} geoms with
-existing \code{ggplot2} geoms.
+The goal of \code{ggtranscript} is the simplify the process of visualizing
+transcript structure and annotation. To achieve this, \code{ggtranscript}
+introduces 5 new geoms (\code{geom_range()}, \code{geom_half_range()}, \code{geom_intron()},
+\code{geom_junction()} and \code{geom_junction_label_repel()}) as well as several
+helper functions. As a \code{ggplot2} extension, \code{ggtranscript} inherits
+\code{ggplot2}'s familiarity and flexibility, enabling users to intuitively adjust
+aesthetics, parameters, scales etc as well as complement \code{ggtranscript} geoms
+with existing \code{ggplot2} geoms to create informative, publication-ready plots.
 }

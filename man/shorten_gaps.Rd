@@ -12,9 +12,10 @@ transcripts differentiated by \code{group_var}.}
 
 \item{introns}{\code{data.frame()} the intron co-ordinates corresponding to the
 input \code{exons}. This can be created by applying \code{to_intron()} to the
-\code{exons}. If a user is not using \code{to_intron()}, they must make sure intron
-start/ends are defined precisely as the adjacent exon boundaries (rather
-than exon end + 1 and exon start - 1).}
+\code{exons}. If introns originate from multiple transcripts, they must be
+differentiated using \code{group_var}. If a user is not using \code{to_intron()},
+they must make sure intron start/ends are defined precisely as the adjacent
+exon boundaries (rather than exon end + 1 and exon start - 1).}
 
 \item{group_var}{\code{character()} if input data originates from more than 1
 transcript, \code{group_var} must specify the column that differentiates
@@ -48,78 +49,78 @@ library(ggplot2)
 
 # to illustrate the package's functionality
 # ggtranscript includes example transcript annotation
-pknox1_annotation
+pknox1_annotation \%>\% head()
 
 # extract exons
 pknox1_exons <- pknox1_annotation \%>\% dplyr::filter(type == "exon")
-pknox1_exons
+pknox1_exons \%>\% head()
 
 # to_intron() is a helper function included in ggtranscript
 # which is useful for converting exon co-ordinates to introns
 pknox1_introns <- pknox1_exons \%>\% to_intron(group_var = "transcript_name")
-pknox1_introns
+pknox1_introns \%>\% head()
 
 # for transcripts with long introns, the exons of interest
 # can be difficult to visualize clearly when using the default scale
 pknox1_exons \%>\%
-  ggplot(aes(
-    xstart = start,
-    xend = end,
-    y = transcript_name
-  )) +
-  geom_range() +
-  geom_intron(
-    data = pknox1_introns,
-    arrow.min.intron.length = 3500
-  )
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range() +
+    geom_intron(
+        data = pknox1_introns,
+        arrow.min.intron.length = 3500
+    )
 
 # in such cases it can be useful to rescale the exons and introns
 # using shorten_gaps() which shortens regions that do not overlap an exon
 pknox1_rescaled <-
-  shorten_gaps(pknox1_exons, pknox1_introns, group_var = "transcript_name")
+    shorten_gaps(pknox1_exons, pknox1_introns, group_var = "transcript_name")
 
-pknox1_rescaled
+pknox1_rescaled \%>\% head()
 
 # this allows us to visualize differences in exonic structure more clearly
 pknox1_rescaled \%>\%
-  dplyr::filter(type == "exon") \%>\%
-  ggplot(aes(
-    xstart = start,
-    xend = end,
-    y = transcript_name
-  )) +
-  geom_range() +
-  geom_intron(
-    data = pknox1_rescaled \%>\% dplyr::filter(type == "intron"),
-    arrow.min.intron.length = 300
-  )
+    dplyr::filter(type == "exon") \%>\%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range() +
+    geom_intron(
+        data = pknox1_rescaled \%>\% dplyr::filter(type == "intron"),
+        arrow.min.intron.length = 300
+    )
 
 # shorten_gaps() can be used in combination with to_diff()
 # to further highlight differences in exon structure
 # here, all other transcripts are compared to the MANE-select transcript
 pknox1_rescaled_diffs <- to_diff(
-  exons = pknox1_rescaled \%>\%
-    dplyr::filter(type == "exon", transcript_name != "PKNOX1-201"),
-  ref_exons = pknox1_rescaled \%>\%
-    dplyr::filter(type == "exon", transcript_name == "PKNOX1-201"),
-  group_var = "transcript_name"
+    exons = pknox1_rescaled \%>\%
+        dplyr::filter(type == "exon", transcript_name != "PKNOX1-201"),
+    ref_exons = pknox1_rescaled \%>\%
+        dplyr::filter(type == "exon", transcript_name == "PKNOX1-201"),
+    group_var = "transcript_name"
 )
 
 pknox1_rescaled \%>\%
-  dplyr::filter(type == "exon") \%>\%
-  ggplot(aes(
-    xstart = start,
-    xend = end,
-    y = transcript_name
-  )) +
-  geom_range() +
-  geom_intron(
-    data = pknox1_rescaled \%>\% dplyr::filter(type == "intron"),
-    arrow.min.intron.length = 300
-  ) +
-  geom_range(
-    data = pknox1_rescaled_diffs,
-    aes(fill = diff_type),
-    alpha = 0.2
-  )
+    dplyr::filter(type == "exon") \%>\%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range() +
+    geom_intron(
+        data = pknox1_rescaled \%>\% dplyr::filter(type == "intron"),
+        arrow.min.intron.length = 300
+    ) +
+    geom_range(
+        data = pknox1_rescaled_diffs,
+        aes(fill = diff_type),
+        alpha = 0.2
+    )
 }

@@ -36,22 +36,22 @@ library(ggplot2)
 
 # to illustrate the package's functionality
 # ggtranscript includes example transcript annotation
-sod1_annotation
+sod1_annotation \%>\% head()
 
 # extract exons
 sod1_exons <- sod1_annotation \%>\% dplyr::filter(type == "exon")
-sod1_exons
+sod1_exons \%>\% head()
 
 # add the exon number for each transcript
 sod1_exons <- sod1_exons \%>\% add_exon_number(group_var = "transcript_name")
-sod1_exons
+sod1_exons \%>\% head()
 
 base <- sod1_exons \%>\%
     ggplot(aes(
-            xstart = start,
-            xend = end,
-            y = transcript_name
-        )) +
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
     geom_range() +
     geom_intron(
         data = to_intron(sod1_exons, "transcript_name"),

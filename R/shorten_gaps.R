@@ -15,9 +15,10 @@
 #' @inheritParams to_diff
 #' @param introns `data.frame()` the intron co-ordinates corresponding to the
 #'   input `exons`. This can be created by applying `to_intron()` to the
-#'   `exons`. If a user is not using `to_intron()`, they must make sure intron
-#'   start/ends are defined precisely as the adjacent exon boundaries (rather
-#'   than exon end + 1 and exon start - 1).
+#'   `exons`. If introns originate from multiple transcripts, they must be
+#'   differentiated using `group_var`. If a user is not using `to_intron()`,
+#'   they must make sure intron start/ends are defined precisely as the adjacent
+#'   exon boundaries (rather than exon end + 1 and exon start - 1).
 #' @param target_gap_width `integer()` the width in base pairs to shorten the
 #'   gaps to.
 #'
@@ -32,16 +33,16 @@
 #'
 #' # to illustrate the package's functionality
 #' # ggtranscript includes example transcript annotation
-#' pknox1_annotation
+#' pknox1_annotation %>% head()
 #'
 #' # extract exons
 #' pknox1_exons <- pknox1_annotation %>% dplyr::filter(type == "exon")
-#' pknox1_exons
+#' pknox1_exons %>% head()
 #'
 #' # to_intron() is a helper function included in ggtranscript
 #' # which is useful for converting exon co-ordinates to introns
 #' pknox1_introns <- pknox1_exons %>% to_intron(group_var = "transcript_name")
-#' pknox1_introns
+#' pknox1_introns %>% head()
 #'
 #' # for transcripts with long introns, the exons of interest
 #' # can be difficult to visualize clearly when using the default scale
@@ -62,7 +63,7 @@
 #' pknox1_rescaled <-
 #'     shorten_gaps(pknox1_exons, pknox1_introns, group_var = "transcript_name")
 #'
-#' pknox1_rescaled
+#' pknox1_rescaled %>% head()
 #'
 #' # this allows us to visualize differences in exonic structure more clearly
 #' pknox1_rescaled %>%
