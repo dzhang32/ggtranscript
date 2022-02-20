@@ -27,26 +27,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-    ```{css style-settings, echo = FALSE}
-    blockquote {
-        padding: 10px 20px;
-        margin: 0 0 20px;
-        font-size: 10px;
-        border-left: 5px solid #eee;
-    }
-    ```
-
 ```{r load-ggtranscript}
 library(magrittr)
 library(ggtranscript)
 library(ggplot2)
 ```
 
-`ggtranscript` is a package designed to make it easy to visualize transcript structure and annotation using `ggplot2`. The intended users are those who work with genetic and transcriptomic data in `R`. Therefore, this vignette assumes a basic understanding of transcript annotation and also a familiarity with the standard `ggplot2` interface.
+`ggtranscript` is a package designed to make it easy to visualize transcript structure and annotation using `ggplot2`. The intended users are those who work with genetic and transcriptomic data in `R`. Therefore, this vignette assumes a basic understanding of genetic data (specifically transcript annotation) and also a familiarity with the standard `ggplot2` interface.
 
 In this vignette, we will work through the basics of using `ggtranscript`. In the end, you will be ready to use `ggtranscript` for your own plots as well as explore some of the [use cases](#use_cases) covered in the guides.
 
-## Basic use
+## Basic usage
 
 ### Required aesthetics
 
@@ -82,11 +73,11 @@ sod1_junctions
 
 ```
 
-### Plotting exons and introns
+### Plotting exons and introns {#plotting_exons_and_introns}
 
 In the simplest case, the core components of transcript structure are exons and introns, which can be plotted using `geom_range()` and `geom_intron()`. In order to facilitate this, `ggtranscript` also provides `to_intron()`, which converts exon co-ordinates into introns. Therefore, with only exons as input, users can plot transcript structures with just a few lines of code.
 
-As `ggtranscript` geoms share required aesthetics, to avoid code duplication it is recommended to set these via `ggplot()`, rather than in the individual `geom_*()` calls.
+> 📌Note: As `ggtranscript` geoms share required aesthetics, to avoid code duplication it is recommended to set these via `ggplot()`, rather than in the individual `geom_*()` calls.
 
 ```{r geom-range-intron}
 
@@ -113,7 +104,7 @@ sod1_exons %>%
 
 ```
 
-### Differentiating UTRs from the coding sequence 
+### Differentiating UTRs from the coding sequence
 
 As suggested by it's name, `geom_range()` is designed to visualize range-based transcript annotation. This includes but is not limited to exons. For instance, for protein coding transcripts it can be useful to visually distinguish the coding segments of a transcript from the UTRs. This can be achieved by adjusting the height and fill of `geom_range()` and overlaying the coding sequence (CDS) on top of the exons (including UTRs).
 
@@ -147,13 +138,15 @@ sod1_exons_prot_cod %>%
 
 ```
 
-### Plotting junctions 
+### Plotting junctions
 
 `geom_junction()` plots curved lines that are intended to represent junction reads. Junctions are reads obtained through RNA-sequencing (RNA-seq) data that map with gapped alignment to the genome. Often, this gap is indicative of a splicing event, but can also originate from other genomic events such as indels.
 
-It can be useful to visually overlay junctions on top of an existing transcript structure. For example, this can help to understand which existing transcripts are expressed in the RNA-seq sample and inform the location or interpretation of the novel splice sites.
+It can be useful to visually overlay junctions on top of an existing transcript structure. For example, this can help to understand which existing transcripts are expressed in the RNA-seq sample or inform the location or interpretation of the novel splice sites.
 
-```{r geom-junction}
+`geom_junction_label_repel()` adds labels to junction curves. This can useful for labeling junctions with a measure of their expression or support such as read counts or percent-spliced-in. Alternatively, you may choose to visually map this measure to the thickness of the junction curves by adjusting the the size `aes()`. Or, as shown below, both of these options can be combined.
+
+```{r geom-junction, fig.height = 3}
 
 # extract exons and cds for the MANE-select transcript
 sod1_201_exons <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-201")
@@ -179,24 +172,170 @@ sod1_201_exons %>%
     data = to_intron(sod1_201_exons, "transcript_name")
   ) + 
   geom_junction(
-    data = sod1_junctions %>% dplyr::mutate(transcript_name = "SOD1-201"),
+    data = sod1_junctions,
+    aes(size = mean_count),
     junction.y.max = 0.5
   ) +
   geom_junction_label_repel(
     data = sod1_junctions,
     aes(label = round(mean_count, 2)),
     junction.y.max = 0.5
-  )
+  ) + 
+  scale_size_continuous(range = c(0.1, 1))
 
 ```
 
 ## Visualizing transcript structure differences
 
+### Background
 
+One of the primary reasons for visualizing transcript structures is to better observe the differences between them. Although this can be achieved by simply plotting the exons and introns as shown in [basic usage](#plotting_exons_and_introns), for longer, more complex transcripts this may not be as straight forward. For example, let's take a look at the gene *PKNOX1*. 
+
+> 📌Note: For shorter introns, strand arrows may overlap exons. In such cases, the `arrow.min.intron.length` parameter of `geom_intron()` can be used to set the minimum intron length for a strand arrow to be plotted. 
+
+```{r transcript-diff-base}
+
+# extract exons
+pknox1_exons <- pknox1_annotation %>% dplyr::filter(type == "exon")
+
+pknox1_exons %>%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range(
+        aes(fill = transcript_biotype)
+    ) +
+    geom_intron(
+        data = to_intron(pknox1_exons, "transcript_name"),
+        aes(strand = strand), 
+        arrow.min.intron.length = 3500
+    )
+
+```
+
+*PKNOX1* has relatively long introns (compared to it's exons), which makes comparison between transcript structures more difficult, especially small differences in exons. 
+
+### Improving transcript structure visualisation using `shorten_gaps()`
+
+`ggtranscript` provides the helper function `shorten_gaps()`, which reduces the size of the gaps (regions that do not overlap an intron). `shorten_gaps()` then rescales the exon and intron co-ordinates, preserving the original exon alignment. This allows you to hone in the differences of interest, such as the exonic structure.
+
+> 📌Note: The rescaled co-ordinates returned by `shorten_gaps()` will not match the original genomic positions. Therefore, it is recommended that you restrict `shorten_gaps()` usage for visualization purposes only. 
+
+```{r shorten-gaps}
+
+# extract exons
+pknox1_exons <- pknox1_annotation %>% dplyr::filter(type == "exon")
+
+pknox1_rescaled <- shorten_gaps(
+  exons = pknox1_exons, 
+  introns = to_intron(pknox1_exons, "transcript_name"), 
+  group_var = "transcript_name"
+)
+
+# shorten_gaps() returns exons and introns all in one data.frame()
+# let's split these for plotting 
+pknox1_rescaled_exons <- pknox1_rescaled %>% dplyr::filter(type == "exon") 
+pknox1_rescaled_introns <- pknox1_rescaled %>% dplyr::filter(type == "intron") 
+
+pknox1_rescaled_exons %>% 
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range(
+        aes(fill = transcript_biotype)
+    ) +
+    geom_intron(
+        data = pknox1_rescaled_introns,
+        aes(strand = strand), 
+        arrow.min.intron.length = 300
+    )
+
+```
+
+### Comparing between two transcripts using `geom_half_range()`
+
+If you are interested specifically in the differences between two transcripts, you can use `geom_half_range()` whilst adjusting `range.orientation` to plot the exons from each on the opposite sides of the transcript structure. This can reveal small differences in exon structure, such as those observed here at the 3' ends of *PKNOX1-201* and *PKNOX1-203*. 
+
+```{r geom-half-range, fig.height = 3}
+
+# extract the two transcripts to be compared
+pknox1_rescaled_201_exons <- pknox1_rescaled_exons %>% 
+  dplyr::filter(transcript_name == "PKNOX1-201")
+pknox1_rescaled_203_exons <- pknox1_rescaled_exons %>% 
+  dplyr::filter(transcript_name == "PKNOX1-203")
+
+pknox1_rescaled_201_exons %>%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = "PKNOX1-201/202"
+    )) +
+    geom_half_range() +
+    geom_intron(
+        data = to_intron(pknox1_rescaled_201_exons, "transcript_name"), 
+        arrow.min.intron.length = 300
+    ) +
+    geom_half_range(
+        data = pknox1_rescaled_203_exons,
+        range.orientation = "top", 
+        fill = "purple"
+    ) +
+    geom_intron(
+        data = to_intron(pknox1_rescaled_203_exons, "transcript_name"), 
+        arrow.min.intron.length = 300
+    )
+
+```
+
+### Comparing many transcripts to a single reference transcript using `to_diff()`
+
+Sometimes, it can be useful to visualize the differences of several transcripts with respect to one transcript. For example, you may be interested in how other transcripts differ in structure to the MANE-select transcript. This exploration can reveal whether certain important regions are missing or novel regions are added, hinting at differences in transcript function. 
+
+`to_diff()` is a helper function designed for this situation. Here, we apply this to *PKNOX1*, finding the differences between all other transcripts and the MANE-select transcript (*PKNOX1-201*). 
+
+> 📌Note: Although below, we apply `to_diff()` to the rescaled exons and intron (outputted by `shorten_gaps()`), `to_diff()` can also be applied to the original, unscaled transcripts with the same effect. 
+
+```{r to-diff}
+
+mane <- pknox1_rescaled_201_exons
+
+not_mane <- pknox1_rescaled_exons %>% 
+  dplyr::filter(transcript_name != "PKNOX1-201")
+
+pknox1_rescaled_diffs <- to_diff(
+    exons = not_mane,
+    ref_exons = mane,
+    group_var = "transcript_name"
+)
+
+pknox1_rescaled_exons %>%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range() +
+    geom_intron(
+        data = pknox1_rescaled_introns,
+        arrow.min.intron.length = 300
+    ) +
+    geom_range(
+        data = pknox1_rescaled_diffs,
+        aes(fill = diff_type),
+        alpha = 0.2
+    )
+
+```
 
 ## Integrating existing `ggplot2` functionality
 
-## Use cases
+
+
+## Use cases {#use_cases}
 
 If you're interested in using `ggtranscript`, you may find one of the following guides useful. Although far from exhaustive, these are intended to detail some common use cases:
 
