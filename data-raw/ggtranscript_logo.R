@@ -118,8 +118,14 @@ ggtranscript_logo <- ggtranscript_logo +
         axis.text = element_blank(),
         axis.ticks = element_blank(),
         axis.title = element_blank(),
-        panel.grid.major = element_line(size = size, colour = ggpubr::get_palette("Greys", 10)[2]),
-        panel.grid.minor = element_line(size = size, colour = ggpubr::get_palette("Greys", 10)[2])
+        panel.grid.major = element_line(
+            size = size,
+            colour = ggpubr::get_palette("Greys", 10)[2]
+        ),
+        panel.grid.minor = element_line(
+            size = size,
+            colour = ggpubr::get_palette("Greys", 10)[2]
+        )
     )
 
 ggtranscript_logo
@@ -160,4 +166,6 @@ ggtranscript_logo_hex <- hexSticker::sticker(
     white_around_sticker = TRUE
 )
 
+# here::here("man", "figures", "ggtranscript_logo.png") is then
+# manually cropped to remove the white background in Inkscape
 plot(ggtranscript_logo_hex)
