@@ -3,7 +3,6 @@
 
 library(tidyverse)
 library(snapcount)
-library(recount)
 library(SummarizedExperiment)
 
 # Main --------------------------------------------------------------------
