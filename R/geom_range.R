@@ -127,7 +127,7 @@
 #'     geom_half_range(
 #'         data = sod1_202_cds,
 #'         range.orientation = "top",
-#'         fill = "red"
+#'         fill = "purple"
 #'     ) +
 #'     geom_intron(
 #'         data = to_intron(sod1_202_exons, "transcript_name")
