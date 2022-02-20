@@ -187,7 +187,7 @@ sod1_201_exons %>%
 
 ## Visualizing transcript structure differences
 
-### Background
+### Context
 
 One of the primary reasons for visualizing transcript structures is to better observe the differences between them. Although this can be achieved by simply plotting the exons and introns as shown in [basic usage](#plotting_exons_and_introns), for longer, more complex transcripts this may not be as straight forward. For example, let's take a look at the gene *PKNOX1*. 
 
@@ -333,7 +333,14 @@ pknox1_rescaled_exons %>%
 
 ## Integrating existing `ggplot2` functionality
 
+As a `ggplot2` extension, `ggtranscript` inherits `ggplot2`'s familiarity and flexibility, enabling users to intuitively adjust aesthetics, parameters, scales etc as well as complement `ggtranscript` geoms with existing `ggplot2` geoms to create informative, publication-ready plots.
 
+Below is a list outlining some examples of complementing `ggtranscript` with existing `ggplot2` functionality that we have found useful: 
+
+  - Adding exon annotation such as [exon number/order](https://dzhang32.github.io/ggtranscript/reference/add_exon_number.html) using `geom_text()`
+  - Zooming in on areas of interest using `coord_cartesian()`
+  - Plotting mutations using `geom_point()`
+  - Beautifying plots using themes
 
 ## Use cases {#use_cases}
 
@@ -341,3 +348,17 @@ If you're interested in using `ggtranscript`, you may find one of the following 
 
 -   Novel transcript discovery: To be added
 -   Sashimi plots: To be added
+
+## Session info
+
+<details>
+  <summary>Show/hide</summary>
+```{r session-info, echo = FALSE}
+
+library("sessioninfo")
+
+options(width = 120)
+
+session_info()
+```
+</details> 
