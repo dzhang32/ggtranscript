@@ -164,7 +164,7 @@ the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 \code{geom_junction_label_repel()} labels junction curves at their midpoint using
 \code{ggrepel::geom_label_repel()}. This can be useful to label and compare
 junctions (plotted using \code{geom_junction()}) with metrics of their usage (e.g.
-count or percent-spliced-in).
+read counts or percent-spliced-in).
 }
 \details{
 \code{geom_junction_label_repel()} requires the following \code{aes()}; \code{xstart},

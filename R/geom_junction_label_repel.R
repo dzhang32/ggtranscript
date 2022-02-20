@@ -3,7 +3,7 @@
 #' `geom_junction_label_repel()` labels junction curves at their midpoint using
 #' `ggrepel::geom_label_repel()`. This can be useful to label and compare
 #' junctions (plotted using `geom_junction()`) with metrics of their usage (e.g.
-#' count or percent-spliced-in).
+#' read counts or percent-spliced-in).
 #'
 #' `geom_junction_label_repel()` requires the following `aes()`; `xstart`,
 #' `xend`, `y` (e.g. transcript name) and `label`. Under the hood,
