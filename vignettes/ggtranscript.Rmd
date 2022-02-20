@@ -37,6 +37,8 @@ library(ggplot2)
 
 In this vignette, we will work through the basics of using `ggtranscript`. In the end, you will be ready to use `ggtranscript` for your own plots as well as explore some of the [use cases](#use_cases) covered in the guides.
 
+<br>
+
 ## Basic usage
 
 ### Required aesthetics
@@ -185,6 +187,8 @@ sod1_201_exons %>%
 
 ```
 
+<br>
+
 ## Visualizing transcript structure differences
 
 ### Context
@@ -272,7 +276,7 @@ pknox1_rescaled_201_exons %>%
     ggplot(aes(
         xstart = start,
         xend = end,
-        y = "PKNOX1-201/202"
+        y = "PKNOX1-201/203"
     )) +
     geom_half_range() +
     geom_intron(
@@ -331,6 +335,8 @@ pknox1_rescaled_exons %>%
 
 ```
 
+<br>
+
 ## Integrating existing `ggplot2` functionality
 
 As a `ggplot2` extension, `ggtranscript` inherits `ggplot2`'s familiarity and flexibility, enabling users to intuitively adjust aesthetics, parameters, scales etc as well as complement `ggtranscript` geoms with existing `ggplot2` geoms to create informative, publication-ready plots.
@@ -341,6 +347,8 @@ Below is a list outlining some examples of complementing `ggtranscript` with exi
   - Zooming in on areas of interest using `coord_cartesian()`
   - Plotting mutations using `geom_point()`
   - Beautifying plots using themes
+  
+<br>
 
 ## Use cases {#use_cases}
 
@@ -348,6 +356,8 @@ If you're interested in using `ggtranscript`, you may find one of the following 
 
 -   Novel transcript discovery: To be added
 -   Sashimi plots: To be added
+
+<br>
 
 ## Session info
 
