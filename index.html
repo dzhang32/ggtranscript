@@ -82,11 +82,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h2>
 <p><code>ggtranscript</code> is a <code>ggplot2</code> extension that makes it to easy to visualize transcript structure and annotation.</p>
-</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -141,8 +137,7 @@
     <span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="reference/geom_intron.html">geom_intron</a></span><span class="op">(</span>
         data <span class="op">=</span> <span class="fu"><a href="reference/to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">sod1_exons</span>, <span class="st">"transcript_name"</span><span class="op">)</span>,
-        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>strand <span class="op">=</span> <span class="va">strand</span><span class="op">)</span>,
-        arrow.min.intron.length <span class="op">=</span> <span class="fl">500</span>,
+        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>strand <span class="op">=</span> <span class="va">strand</span><span class="op">)</span>
     <span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-geom-range-intron-1.png" width="100%"></p>
 <p><code><a href="reference/geom_range.html">geom_range()</a></code> can be used for any range-based genomic annotation. For example, when plotting protein-coding transcripts, users may find it helpful to visually distinguish the coding segments from UTRs.</p>
