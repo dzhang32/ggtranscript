@@ -22,17 +22,24 @@ transcript structure and annotation.
 ## Installation
 
 ``` r
+# you can install the development version of ggtranscript from GitHub:
+# install.packages("devtools")
 devtools::install_github("dzhang32/ggtranscript")
 ```
 
-## Examples
+## Usage
 
-`ggtranscript` introduces 3 new `geom`s designed to visualise transcript
-annotation; `geom_range()`, `geom_intron()` and `geom_junction()`.
+`ggtranscript` introduces 5 new `geom`s (`geom_range()`,
+`geom_half_range()`, `geom_intron()`, `geom_junction()` and
+`geom_junction_label_repel()`) and several helper functions designed to
+visualize transcript structure and annotation.
 
 `geom_range()` and `geom_intron()` enable the plotting of exons and
-introns. `ggtranscript` also provides a useful helpful function
-`to_intron` to convert exon co-ordinates to the corresponding introns.
+introns, the core components of transcript annotation. `ggtranscript`
+also provides `to_intron()`, which convert exon co-ordinates to the
+corresponding introns. Together, `ggtranscript` enables users to plot
+transcript structures with only exons as the required input and a few
+lines of code.
 
 ``` r
 library(magrittr)
@@ -48,7 +55,8 @@ library(dplyr)
 library(ggplot2)
 library(ggtranscript)
 
-# gene annotation for the an example gene (SOD1)
+# to illustrate the package's functionality
+# ggtranscript includes example transcript annotation
 sod1_annotation %>% head()
 #> # A tibble: 6 × 8
 #>   seqnames  start    end strand type  gene_name transcript_name transcript_biot…
@@ -60,9 +68,8 @@ sod1_annotation %>% head()
 #> 5 21       3.17e7 3.17e7 +      star… SOD1      SOD1-202        protein_coding  
 #> 6 21       3.17e7 3.17e7 +      exon  SOD1      SOD1-202        protein_coding
 
-# obtain exons
-sod1_exons <- sod1_annotation %>%
-    dplyr::filter(type == "exon")
+# extract exons
+sod1_exons <- sod1_annotation %>% dplyr::filter(type == "exon")
 
 sod1_exons %>%
     ggplot(aes(
@@ -80,20 +87,19 @@ sod1_exons %>%
     )
 ```
 
-<img src="man/figures/README-tx-annot-base-1.png" width="100%" />
+<img src="man/figures/README-geom-range-intron-1.png" width="100%" />
 
-`geom_range` can be used for any genomic range based annotation. For
-example, when plotting protein-coding transcripts, it can be useful to
-visually distinguish the coding segments from UTRs.
+`geom_range()` is designed to be used for any range-based genomic
+annotation. For example, when plotting protein-coding transcripts, this
+can be used to visually distinguish the coding segments from UTRs.
 
 ``` r
-# keeping only the exons from protein coding transcripts
+# filter for exons from protein coding transcripts
 sod1_exons_prot_cod <- sod1_exons %>%
     dplyr::filter(transcript_biotype == "protein_coding")
 
 # obtain cds
-sod1_cds <- sod1_annotation %>%
-    dplyr::filter(type == "CDS")
+sod1_cds <- sod1_annotation %>% dplyr::filter(type == "CDS")
 
 sod1_exons_prot_cod %>%
     ggplot(aes(
@@ -115,59 +121,157 @@ sod1_exons_prot_cod %>%
     )
 ```
 
-<img src="man/figures/README-tx-annot-w-cds-1.png" width="100%" />
+<img src="man/figures/README-geom-range-intron-w-cds-1.png" width="100%" />
 
-When working with short-read RNA-sequencing data, it can be useful to
-check whether a known transcript structure has junction support using
-`geom_junction()`.
+`geom_half_range()` takes advantage of the vertical symmetry of
+transcript annotation by plotting only half of a range on the top or
+bottom of a transcript structure. This can be useful for visualizing the
+differences between transcript structure.
 
 ``` r
-# using two transcripts as an example
-sod1_201_exons <- sod1_exons %>%
-    dplyr::filter(transcript_name == c("SOD1-201"))
+# geom_half_range() can be useful for comparing between two transcripts
+# enabling visualization of one transcript on the top, other on the bottom
+sod1_201_exons <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-201")
+sod1_201_cds <- sod1_cds %>% dplyr::filter(transcript_name == "SOD1-201")
+sod1_202_exons <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-202")
+sod1_202_cds <- sod1_cds %>% dplyr::filter(transcript_name == "SOD1-202")
 
-sod1_201_cds <- sod1_cds %>%
-    dplyr::filter(transcript_name == "SOD1-201")
-
-# simulate junction data, randomly keeping half of the junctions
-sod1_201_introns <- sod1_201_exons %>%
-    to_intron("transcript_name")
-
-set.seed(32)
-
-sod1_201_junctions <-
-    sod1_201_introns[sample(seq_len(nrow(sod1_201_introns)), 3), ]
-
-sod1_201_exons %>%
+sod1_201_202_plot <- sod1_201_exons %>%
     ggplot(aes(
         xstart = start,
         xend = end,
-        y = transcript_name
+        y = "SOD1-201/202"
     )) +
-    geom_range(
+    geom_half_range(
         fill = "white",
-        height = 0.25
+        height = 0.125
     ) +
-    geom_range(
+    geom_half_range(
         data = sod1_201_cds
     ) +
     geom_intron(
-        data = sod1_201_introns,
-        aes(strand = strand),
-        arrow.min.intron.length = 500,
+        data = to_intron(sod1_201_exons, "transcript_name")
     ) +
-    geom_junction(
-        data = sod1_201_junctions,
-        colour = "red",
-        junction.y.max = 0.5
+    geom_half_range(
+        data = sod1_202_exons,
+        range.orientation = "top",
+        fill = "white",
+        height = 0.125
+    ) +
+    geom_half_range(
+        data = sod1_202_cds,
+        range.orientation = "top",
+        fill = "purple"
+    ) +
+    geom_intron(
+        data = to_intron(sod1_202_exons, "transcript_name")
     )
+
+sod1_201_202_plot
 ```
 
-<img src="man/figures/README-tx-annot-w-junction-1.png" width="100%" />
+<img src="man/figures/README-geom-half-range-1.png" width="100%" />
+
+As a `ggplot2` extension, `ggtranscript` geoms inherit the the
+functionality of `ggplot2`. For instance, by leveraging
+`coord_cartesian()`, it can be useful to zoom in on areas of interest.
+
+``` r
+sod1_201_202_plot + coord_cartesian(xlim = c(31659500, 31660000))
+```
+
+<img src="man/figures/README-geom-half-range-zoomed-1.png" width="100%" />
+
+`geom_junction()` enables to plotting of junction curves, which can be
+useful to overlay across transcript structures. `geom_junction_repel()`
+labels junction curves, for example with their counts.
+
+``` r
+# ggtranscript includes a set of example (unannotated) junctions
+# originating from GTEx and downloaded via the Bioconductor package snapcount
+sod1_junctions
+#> # A tibble: 5 × 5
+#>   seqnames    start      end strand mean_count
+#>   <fct>       <int>    <int> <fct>       <dbl>
+#> 1 chr21    31659787 31666448 +           0.463
+#> 2 chr21    31659842 31660554 +           0.831
+#> 3 chr21    31659842 31663794 +           0.316
+#> 4 chr21    31659842 31667257 +           4.35 
+#> 5 chr21    31660351 31663789 +           0.324
+
+# add transcript_name to junctions for plotting
+sod1_junctions <- sod1_junctions %>%
+    dplyr::mutate(transcript_name = "SOD1-201")
+
+sod1_201_exons %>%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range(
+    fill = "white", 
+    height = 0.25
+  ) +
+  geom_range(
+    data = sod1_201_cds
+  ) + 
+  geom_intron(
+    data = to_intron(sod1_201_exons, "transcript_name")
+  ) + 
+  geom_junction(
+    data = sod1_junctions,
+    junction.y.max = 0.5
+  ) +
+  geom_junction_label_repel(
+    data = sod1_junctions,
+    aes(label = round(mean_count, 2)),
+    junction.y.max = 0.5
+  )
+```
+
+<img src="man/figures/README-geom-junction-1.png" width="100%" />
+
+Alternatively, users may prefer to map the count to the thickness of the
+junction line. As a `ggplot2` extension, this can be done intuitively as
+well as the modification of scales and themes which together, allow
+users to easily create informative, publication-ready plots.
+
+``` r
+sod1_201_exons %>%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range(
+    fill = "white", 
+    height = 0.25
+  ) +
+  geom_range(
+    data = sod1_201_cds
+  ) + 
+  geom_intron(
+    data = to_intron(sod1_201_exons, "transcript_name")
+  ) + 
+  geom_junction(
+    data = sod1_junctions,
+    aes(size = mean_count),
+    junction.y.max = 0.5, 
+    ncp = 30, 
+    colour = "purple"
+  ) + 
+  scale_size_continuous(range = c(0.1, 1), guide = "none") + 
+  xlab("Genomic position (chr21)") + 
+  ylab("Transcript name") + 
+  theme_bw()
+```
+
+<img src="man/figures/README-geom-junction-pub-1.png" width="100%" />
 
 ## Code of Conduct
 
-Please note that the `ggtranscript` project is released with a
+Please note that the `ggtranscript` package is released with a
 [Contributor Code of
 Conduct](http://bioconductor.org/about/code-of-conduct/). By
 contributing to this project, you agree to abide by its terms.
