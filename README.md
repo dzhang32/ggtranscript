@@ -16,8 +16,8 @@ coverage](https://codecov.io/gh/dzhang32/ggtranscript/branch/main/graph/badge.sv
 
 ## Overview
 
-`ggtranscript` is a `ggplot2` extension that makes it easy visualize
-transcript structure and annotation.
+`ggtranscript` is a `ggplot2` extension that makes it to easy to
+visualize transcript structure and annotation.
 
 ## Installation
 
@@ -29,17 +29,17 @@ devtools::install_github("dzhang32/ggtranscript")
 
 ## Usage
 
-`ggtranscript` introduces 5 new `geom`s (`geom_range()`,
+`ggtranscript` introduces 5 new geoms (`geom_range()`,
 `geom_half_range()`, `geom_intron()`, `geom_junction()` and
 `geom_junction_label_repel()`) and several helper functions designed to
-visualize transcript structure and annotation.
+facilitate the visualization of transcript structure and annotation.
 
 `geom_range()` and `geom_intron()` enable the plotting of exons and
 introns, the core components of transcript annotation. `ggtranscript`
-also provides `to_intron()`, which convert exon co-ordinates to the
+also provides `to_intron()`, which converts exon co-ordinates to the
 corresponding introns. Together, `ggtranscript` enables users to plot
-transcript structures with only exons as the required input and a few
-lines of code.
+transcript structures with only exons as the required input and just a
+few lines of code.
 
 ``` r
 library(magrittr)
@@ -89,12 +89,12 @@ sod1_exons %>%
 
 <img src="man/figures/README-geom-range-intron-1.png" width="100%" />
 
-`geom_range()` is designed to be used for any range-based genomic
-annotation. For example, when plotting protein-coding transcripts, this
-can be used to visually distinguish the coding segments from UTRs.
+`geom_range()` can be used for any range-based genomic annotation. For
+example, when plotting protein-coding transcripts, users may find it
+helpful to visually distinguish the coding segments from UTRs.
 
 ``` r
-# filter for exons from protein coding transcripts
+# filter for only exons from protein coding transcripts
 sod1_exons_prot_cod <- sod1_exons %>%
     dplyr::filter(transcript_biotype == "protein_coding")
 
@@ -125,12 +125,11 @@ sod1_exons_prot_cod %>%
 
 `geom_half_range()` takes advantage of the vertical symmetry of
 transcript annotation by plotting only half of a range on the top or
-bottom of a transcript structure. This can be useful for visualizing the
-differences between transcript structure.
+bottom of a transcript structure. One use case of `geom_half_range()` is
+to visualize the differences between transcript structure more clearly.
 
 ``` r
-# geom_half_range() can be useful for comparing between two transcripts
-# enabling visualization of one transcript on the top, other on the bottom
+# extract exons and cds for the two transcripts to be compared
 sod1_201_exons <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-201")
 sod1_201_cds <- sod1_cds %>% dplyr::filter(transcript_name == "SOD1-201")
 sod1_202_exons <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-202")
@@ -172,9 +171,9 @@ sod1_201_202_plot
 
 <img src="man/figures/README-geom-half-range-1.png" width="100%" />
 
-As a `ggplot2` extension, `ggtranscript` geoms inherit the the
-functionality of `ggplot2`. For instance, by leveraging
-`coord_cartesian()`, it can be useful to zoom in on areas of interest.
+As a `ggplot2` extension, `ggtranscript` inherits the the familiarity
+and functionality of `ggplot2`. For instance, by leveraging
+`coord_cartesian()` users can zoom in on regions of interest.
 
 ``` r
 sod1_201_202_plot + coord_cartesian(xlim = c(31659500, 31660000))
@@ -183,8 +182,9 @@ sod1_201_202_plot + coord_cartesian(xlim = c(31659500, 31660000))
 <img src="man/figures/README-geom-half-range-zoomed-1.png" width="100%" />
 
 `geom_junction()` enables to plotting of junction curves, which can be
-useful to overlay across transcript structures. `geom_junction_repel()`
-labels junction curves, for example with their counts.
+overlaid across transcript structures. `geom_junction_label_repel()`
+adds a label to junction curves, which can often be useful to mark
+junctions with a metric of their usage such as read counts.
 
 ``` r
 # ggtranscript includes a set of example (unannotated) junctions
@@ -232,10 +232,11 @@ sod1_201_exons %>%
 
 <img src="man/figures/README-geom-junction-1.png" width="100%" />
 
-Alternatively, users may prefer to map the count to the thickness of the
-junction line. As a `ggplot2` extension, this can be done intuitively as
-well as the modification of scales and themes which together, allow
-users to easily create informative, publication-ready plots.
+Alternatively, users may prefer to map junction read counts to the
+thickness of the junction curves. As a `ggplot2` extension, this can be
+done intuitively by modifying the size `aes()` of `geom_junction()`. In
+addition, by modifying `ggplot2` scales and themes, users can easily
+create informative, publication-ready plots.
 
 ``` r
 sod1_201_exons %>%
@@ -269,34 +270,15 @@ sod1_201_exons %>%
 
 <img src="man/figures/README-geom-junction-pub-1.png" width="100%" />
 
-## Code of Conduct
+## Contributing
 
-Please note that the `ggtranscript` package is released with a
-[Contributor Code of
-Conduct](http://bioconductor.org/about/code-of-conduct/). By
+Interested in contributing? Check out the [contributing
+guidelines](.github/CONTRIBUTING.md). Please note that this project is
+released with a [Code of
+Conduct](https://bioconductor.github.io/bioc_coc_multilingual/). By
 contributing to this project, you agree to abide by its terms.
 
-## Development tools
+## Credits
 
--   Continuous code testing is possible thanks to [GitHub
-    actions](https://www.tidyverse.org/blog/2020/04/usethis-1-6-0/)
-    through *[usethis](https://CRAN.R-project.org/package=usethis)*,
-    *[remotes](https://CRAN.R-project.org/package=remotes)*, and
-    *[rcmdcheck](https://CRAN.R-project.org/package=rcmdcheck)*
-    customized to use [Bioconductor’s docker
-    containers](https://www.bioconductor.org/help/docker/) and
-    *[BiocCheck](https://bioconductor.org/packages/3.14/BiocCheck)*.
--   Code coverage assessment is possible thanks to
-    [codecov](https://codecov.io/gh) and
-    *[covr](https://CRAN.R-project.org/package=covr)*.
--   The [documentation website](http://dzhang32.github.io/ggtranscript)
-    is automatically updated thanks to
-    *[pkgdown](https://CRAN.R-project.org/package=pkgdown)*.
--   The code is styled automatically thanks to
-    *[styler](https://CRAN.R-project.org/package=styler)*.
--   The documentation is formatted thanks to
-    *[devtools](https://CRAN.R-project.org/package=devtools)* and
-    *[roxygen2](https://CRAN.R-project.org/package=roxygen2)*.
-
-This package was developed using
-*[biocthis](https://bioconductor.org/packages/3.14/biocthis)*.
+-   `ggtranscript` was developed using
+    *[biocthis](https://bioconductor.org/packages/3.14/biocthis)*.
