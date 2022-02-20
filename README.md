@@ -14,8 +14,6 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 coverage](https://codecov.io/gh/dzhang32/ggtranscript/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dzhang32/ggtranscript?branch=main)
 <!-- badges: end -->
 
-## Overview
-
 `ggtranscript` is a `ggplot2` extension that makes it to easy to
 visualize transcript structure and annotation.
 
@@ -82,8 +80,7 @@ sod1_exons %>%
     ) +
     geom_intron(
         data = to_intron(sod1_exons, "transcript_name"),
-        aes(strand = strand),
-        arrow.min.intron.length = 500,
+        aes(strand = strand)
     )
 ```
 

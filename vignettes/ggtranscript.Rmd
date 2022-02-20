@@ -1,5 +1,5 @@
 ---
-title: "Introduction to ggtranscript"
+title: "Getting started"
 author: 
   - name: David Zhang
     affiliation:
@@ -12,7 +12,6 @@ output:
     toc_float: true
     toc_depth: 2
     code_folding: show
-date: "`r doc_date()`"
 package: "`r pkg_ver('ggtranscript')`"
 vignette: >
   %\VignetteIndexEntry{Introduction to ggtranscript}
@@ -28,21 +27,178 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Basics
+    ```{css style-settings, echo = FALSE}
+    blockquote {
+        padding: 10px 20px;
+        margin: 0 0 20px;
+        font-size: 10px;
+        border-left: 5px solid #eee;
+    }
+    ```
 
-To be completed...
-
-## Install `ggtranscript`
-
-`R` is an open-source statistical environment which can be easily modified to enhance its functionality via packages. `r Biocpkg("ggtranscript")` is a `R` package available via the [Bioconductor](http://bioconductor.org) repository for packages. `R` can be installed on any operating system from [CRAN](https://cran.r-project.org/) after which you can install `r Biocpkg("ggtranscript")` by using the following commands in your `R` session:
-
-```{r "install", eval = FALSE}
-if (!requireNamespace("BiocManager", quietly = TRUE)) {
-    install.packages("BiocManager")
-}
-
-BiocManager::install("ggtranscript")
-
-## Check that you have a valid Bioconductor installation
-BiocManager::valid()
+```{r load-ggtranscript}
+library(magrittr)
+library(ggtranscript)
+library(ggplot2)
 ```
+
+`ggtranscript` is a package designed to make it easy to visualize transcript structure and annotation using `ggplot2`. The intended users are those who work with genetic and transcriptomic data in `R`. Therefore, this vignette assumes a basic understanding of transcript annotation and also a familiarity with the standard `ggplot2` interface.
+
+In this vignette, we will work through the basics of using `ggtranscript`. In the end, you will be ready to use `ggtranscript` for your own plots as well as explore some of the [use cases](#use_cases) covered in the guides.
+
+## Basic use
+
+### Required aesthetics
+
+`ggtranscript` introduces 5 new geoms designed to simplify the visualization of transcript structure and annotation; `geom_range()`, `geom_half_range()`, `geom_intron()`, `geom_junction()` and `geom_junction_label_repel()`. The required aesthetics for these geoms are designed to match the data formats which are widely adopted in genetic and transcriptomic analyses:
+
+```{r geom-aes, echo = FALSE}
+
+dplyr::tribble(
+    ~`Required aes()`, ~Type, ~Description, ~`Required by`,
+    #-------|-----|----|--------
+    "xstart", "integer", "Start position in base pairs", "All geoms", 
+    "xend", "integer", "End position in base pairs", "All geoms", 
+    "y", "charactor or factor", "The group used for the y axis, most often a transcript id or name ", "All geoms",
+    "label", "integer or charactor", "Variable used to label junction curves", "Only geom_junction_label_repel()",
+) %>% 
+  knitr::kable()
+
+```
+
+### Example data
+
+In order to showcase the package's functionality, `ggtranscript` includes example transcript annotation for the genes *SOD1* and *PKNOX1*, as well as a set of unannotated junctions associated with *SOD1*. These specific genes are unimportant, chosen arbitrarily for illustration. However, it worth noting that the input data for `ggtranscript`, as a `ggplot2` extension, is required be a [`data.frame`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame) or [`tibble`](https://tibble.tidyverse.org).
+
+You may be asking, what if I have `GenomicRanges` object? If not, feel free to ignore this. Almost always, you can easily transform `GenomicRanges` into a `data.frame` using a helper function such as `as.data.frame()`.
+
+```{r example-data}
+
+sod1_annotation %>% head()
+
+pknox1_annotation %>% head()
+
+sod1_junctions
+
+```
+
+### Plotting exons and introns
+
+In the simplest case, the core components of transcript structure are exons and introns, which can be plotted using `geom_range()` and `geom_intron()`. In order to facilitate this, `ggtranscript` also provides `to_intron()`, which converts exon co-ordinates into introns. Therefore, with only exons as input, users can plot transcript structures with just a few lines of code.
+
+As `ggtranscript` geoms share required aesthetics, to avoid code duplication it is recommended to set these via `ggplot()`, rather than in the individual `geom_*()` calls.
+
+```{r geom-range-intron}
+
+# to illustrate the package's functionality
+# ggtranscript includes example transcript annotation
+sod1_annotation %>% head()
+
+# extract exons
+sod1_exons <- sod1_annotation %>% dplyr::filter(type == "exon")
+
+sod1_exons %>%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range(
+        aes(fill = transcript_biotype)
+    ) +
+    geom_intron(
+        data = to_intron(sod1_exons, "transcript_name"),
+        aes(strand = strand)
+    )
+
+```
+
+### Differentiating UTRs from the coding sequence 
+
+As suggested by it's name, `geom_range()` is designed to visualize range-based transcript annotation. This includes but is not limited to exons. For instance, for protein coding transcripts it can be useful to visually distinguish the coding segments of a transcript from the UTRs. This can be achieved by adjusting the height and fill of `geom_range()` and overlaying the coding sequence (CDS) on top of the exons (including UTRs).
+
+```{r geom-range-intron-w-cds}
+
+# filter for only exons from protein coding transcripts
+sod1_exons_prot_cod <- sod1_exons %>%
+    dplyr::filter(transcript_biotype == "protein_coding")
+
+# obtain cds
+sod1_cds <- sod1_annotation %>% dplyr::filter(type == "CDS")
+
+sod1_exons_prot_cod %>%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range(
+        fill = "white",
+        height = 0.25
+    ) +
+    geom_range(
+        data = sod1_cds
+    ) +
+    geom_intron(
+        data = to_intron(sod1_exons_prot_cod, "transcript_name"),
+        aes(strand = strand),
+        arrow.min.intron.length = 500,
+    )
+
+```
+
+### Plotting junctions 
+
+`geom_junction()` plots curved lines that are intended to represent junction reads. Junctions are reads obtained through RNA-sequencing (RNA-seq) data that map with gapped alignment to the genome. Often, this gap is indicative of a splicing event, but can also originate from other genomic events such as indels.
+
+It can be useful to visually overlay junctions on top of an existing transcript structure. For example, this can help to understand which existing transcripts are expressed in the RNA-seq sample and inform the location or interpretation of the novel splice sites.
+
+```{r geom-junction}
+
+# extract exons and cds for the MANE-select transcript
+sod1_201_exons <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-201")
+sod1_201_cds <- sod1_cds %>% dplyr::filter(transcript_name == "SOD1-201")
+
+# add transcript name column to junctions for plotting
+sod1_junctions <- sod1_junctions %>% dplyr::mutate(transcript_name = "SOD1-201")
+
+sod1_201_exons %>%
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range(
+    fill = "white", 
+    height = 0.25
+  ) +
+  geom_range(
+    data = sod1_201_cds
+  ) + 
+  geom_intron(
+    data = to_intron(sod1_201_exons, "transcript_name")
+  ) + 
+  geom_junction(
+    data = sod1_junctions %>% dplyr::mutate(transcript_name = "SOD1-201"),
+    junction.y.max = 0.5
+  ) +
+  geom_junction_label_repel(
+    data = sod1_junctions,
+    aes(label = round(mean_count, 2)),
+    junction.y.max = 0.5
+  )
+
+```
+
+## Visualizing transcript structure differences
+
+
+
+## Integrating existing `ggplot2` functionality
+
+## Use cases
+
+If you're interested in using `ggtranscript`, you may find one of the following guides useful. Although far from exhaustive, these are intended to detail some common use cases:
+
+-   Novel transcript discovery: To be added
+-   Sashimi plots: To be added
