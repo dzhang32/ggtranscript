@@ -1,5 +1,5 @@
 ---
-title: "Getting started"
+title: "Getting started with `ggtranscript`"
 author: 
   - name: David Zhang
     affiliation:
@@ -33,9 +33,11 @@ library(ggtranscript)
 library(ggplot2)
 ```
 
-`ggtranscript` is a package designed to make it easy to visualize transcript structure and annotation using `ggplot2`. The intended users are those who work with genetic and transcriptomic data in `R`. Therefore, this vignette assumes a basic understanding of genetic data (specifically transcript annotation) and also a familiarity with the standard `ggplot2` interface.
+`ggtranscript` is designed to make it easy to visualize transcript structure and annotation using `ggplot2`. 
 
-In this vignette, we will work through the basics of using `ggtranscript`. In the end, you will be ready to use `ggtranscript` for your own plots as well as explore some of the [use cases](#use_cases) covered in the guides.
+As the intended users are those who work with genetic and/or transcriptomic data in `R`, this tutorial assumes a basic understanding of transcript annotation and familiarity with `ggplot2`. 
+
+In this vignette, we will work through the fundamentals of using `ggtranscript`. By the end, you will be ready to use `ggtranscript` to create your own plots as well as explore some of the [use cases](#use_cases) covered in the guides.
 
 <br>
 
@@ -43,7 +45,7 @@ In this vignette, we will work through the basics of using `ggtranscript`. In th
 
 ### Required aesthetics
 
-`ggtranscript` introduces 5 new geoms designed to simplify the visualization of transcript structure and annotation; `geom_range()`, `geom_half_range()`, `geom_intron()`, `geom_junction()` and `geom_junction_label_repel()`. The required aesthetics for these geoms are designed to match the data formats which are widely adopted in genetic and transcriptomic analyses:
+`ggtranscript` introduces 5 new geoms designed to simplify the visualization of transcript structure and annotation; `geom_range()`, `geom_half_range()`, `geom_intron()`, `geom_junction()` and `geom_junction_label_repel()`. The required aesthetics (`aes()`) for these geoms are designed to match the data formats which are widely used in genetic and transcriptomic analyses:
 
 ```{r geom-aes, echo = FALSE}
 
@@ -51,7 +53,7 @@ dplyr::tribble(
     ~`Required aes()`, ~Type, ~Description, ~`Required by`,
     #-------|-----|----|--------
     "xstart", "integer", "Start position in base pairs", "All geoms", 
-    "xend", "integer", "End position in base pairs", "All geoms", 
+    "xend", "integer", "End Geonmic position in base pairs", "All geoms", 
     "y", "charactor or factor", "The group used for the y axis, most often a transcript id or name ", "All geoms",
     "label", "integer or charactor", "Variable used to label junction curves", "Only geom_junction_label_repel()",
 ) %>% 
@@ -59,7 +61,7 @@ dplyr::tribble(
 
 ```
 
-### Example data
+### Input data
 
 In order to showcase the package's functionality, `ggtranscript` includes example transcript annotation for the genes *SOD1* and *PKNOX1*, as well as a set of unannotated junctions associated with *SOD1*. These specific genes are unimportant, chosen arbitrarily for illustration. However, it worth noting that the input data for `ggtranscript`, as a `ggplot2` extension, is required be a [`data.frame`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame) or [`tibble`](https://tibble.tidyverse.org).
 
@@ -77,9 +79,9 @@ sod1_junctions
 
 ### Plotting exons and introns {#plotting_exons_and_introns}
 
-In the simplest case, the core components of transcript structure are exons and introns, which can be plotted using `geom_range()` and `geom_intron()`. In order to facilitate this, `ggtranscript` also provides `to_intron()`, which converts exon co-ordinates into introns. Therefore, with only exons as input, users can plot transcript structures with just a few lines of code.
+In the simplest case, the core components of transcript structure are exons and introns, which can be plotted using `geom_range()` and `geom_intron()`. In order to facilitate this, `ggtranscript` also provides `to_intron()`, which converts exon co-ordinates into introns. Therefore, you can plot transcript structures with only exons as input and just a few lines of code.
 
-> 📌Note: As `ggtranscript` geoms share required aesthetics, to avoid code duplication it is recommended to set these via `ggplot()`, rather than in the individual `geom_*()` calls.
+> 📌: As `ggtranscript` geoms share required aesthetics, it is recommended to set these via `ggplot()`, rather than in the individual `geom_*()` calls to avoid code duplication.
 
 ```{r geom-range-intron}
 
@@ -108,7 +110,7 @@ sod1_exons %>%
 
 ### Differentiating UTRs from the coding sequence
 
-As suggested by it's name, `geom_range()` is designed to visualize range-based transcript annotation. This includes but is not limited to exons. For instance, for protein coding transcripts it can be useful to visually distinguish the coding segments of a transcript from the UTRs. This can be achieved by adjusting the height and fill of `geom_range()` and overlaying the coding sequence (CDS) on top of the exons (including UTRs).
+As suggested by it's name, `geom_range()` is designed to visualize range-based transcript annotation. This includes but is not limited to exons. For instance, for protein coding transcripts it can be useful to visually distinguish the coding sequence (CDS) of a transcript from it's UTRs. This can be achieved by adjusting the height and fill of `geom_range()` and overlaying the CDS on top of the exons (including UTRs).
 
 ```{r geom-range-intron-w-cds}
 
@@ -225,7 +227,7 @@ pknox1_exons %>%
 
 `ggtranscript` provides the helper function `shorten_gaps()`, which reduces the size of the gaps (regions that do not overlap an intron). `shorten_gaps()` then rescales the exon and intron co-ordinates, preserving the original exon alignment. This allows you to hone in the differences of interest, such as the exonic structure.
 
-> 📌Note: The rescaled co-ordinates returned by `shorten_gaps()` will not match the original genomic positions. Therefore, it is recommended that you restrict `shorten_gaps()` usage for visualization purposes only. 
+> 📌: The rescaled co-ordinates returned by `shorten_gaps()` will not match the original genomic positions. Therefore, it is recommended that you restrict `shorten_gaps()` usage for visualization purposes only. 
 
 ```{r shorten-gaps}
 
@@ -297,11 +299,11 @@ pknox1_rescaled_201_exons %>%
 
 ### Comparing many transcripts to a single reference transcript using `to_diff()`
 
-Sometimes, it can be useful to visualize the differences of several transcripts with respect to one transcript. For example, you may be interested in how other transcripts differ in structure to the MANE-select transcript. This exploration can reveal whether certain important regions are missing or novel regions are added, hinting at differences in transcript function. 
+Sometimes, it can be useful to visualize the differences of several transcripts with respect to one transcript. For example, you may be interested in how other transcripts differ in structure to the MANE-select transcript. This exploration can reveal whether certain important regions are missing or novel regions are added, hinting at differences in transcript function.
 
 `to_diff()` is a helper function designed for this situation. Here, we apply this to *PKNOX1*, finding the differences between all other transcripts and the MANE-select transcript (*PKNOX1-201*). 
 
-> 📌Note: Although below, we apply `to_diff()` to the rescaled exons and intron (outputted by `shorten_gaps()`), `to_diff()` can also be applied to the original, unscaled transcripts with the same effect. 
+> 📌: Although below, we apply `to_diff()` to the rescaled exons and intron (outputted by `shorten_gaps()`), `to_diff()` can also be applied to the original, unscaled transcripts with the same effect. 
 
 ```{r to-diff}
 
@@ -346,7 +348,8 @@ Below is a list outlining some examples of complementing `ggtranscript` with exi
   - Adding exon annotation such as [exon number/order](https://dzhang32.github.io/ggtranscript/reference/add_exon_number.html) using `geom_text()`
   - Zooming in on areas of interest using `coord_cartesian()`
   - Plotting mutations using `geom_point()`
-  - Beautifying plots using themes
+  - Plotting coverage using `geom_polygon()`
+  - Beautifying plots using themes and scales
   
 <br>
 
