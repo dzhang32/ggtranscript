@@ -1,5 +1,5 @@
 ---
-title: "Getting started with `ggtranscript`"
+title: "Getting started"
 author: 
   - name: David Zhang
     affiliation:
