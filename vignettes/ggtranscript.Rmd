@@ -37,8 +37,6 @@ library(ggplot2)
 
 As the intended users are those who work with genetic and/or transcriptomic data in `R`, this tutorial assumes a basic understanding of transcript annotation and familiarity with `ggplot2`. 
 
-In this vignette, we will work through the fundamentals of using `ggtranscript`. By the end, you will be ready to use `ggtranscript` to create your own plots as well as explore some of the [use cases](#use_cases) covered in the guides.
-
 <br>
 
 ## Basic usage
@@ -351,15 +349,6 @@ Below is a list outlining some examples of complementing `ggtranscript` with exi
   - Plotting coverage using `geom_polygon()`
   - Beautifying plots using themes and scales
   
-<br>
-
-## Use cases {#use_cases}
-
-If you're interested in using `ggtranscript`, you may find one of the following guides useful. Although far from exhaustive, these are intended to detail some common use cases:
-
--   Novel transcript discovery: To be added
--   Sashimi plots: To be added
-
 <br>
 
 ## Session info
