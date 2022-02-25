@@ -91,6 +91,45 @@ testthat::test_that(
     }
 )
 
+##### .check_type #####
+
+testthat::test_that(".get_type() works correctly", {
+    added_type_exons <- pknox1_exons %>%
+        dplyr::select(-type) %>%
+        .get_type("exons") %>%
+        .[["type"]]
+    added_type_introns <- pknox1_exons %>%
+        dplyr::select(-type) %>%
+        .get_type("introns") %>%
+        .[["type"]]
+
+    expect_true(
+        all(added_type_exons == "exon")
+    )
+    expect_true(
+        all(added_type_introns == "intron")
+    )
+    expect_identical(
+        .get_type(pknox1_exons, "exons"),
+        pknox1_exons
+    )
+    expect_identical(
+        .get_type(pknox1_introns, "introns"),
+        pknox1_introns
+    )
+})
+
+testthat::test_that(".get_type() catches user input errors", {
+    expect_error(
+        .get_type(pknox1_exons, "introns"),
+        "values in the 'type' column of introns must be one of:"
+    )
+    expect_error(
+        .get_type(pknox1_introns, "exons"),
+        "values in the 'type' column of exons must be one of:"
+    )
+})
+
 ##### .check_target_gap_width #####
 
 testthat::test_that(".check_target_gap_width() catches user input errors", {
@@ -100,9 +139,9 @@ testthat::test_that(".check_target_gap_width() catches user input errors", {
     )
 })
 
-
 ##### shorten_gaps #####
 
+# also using this to test drop_orig_coords
 pknox1_rescaled_tx <- shorten_gaps(
     pknox1_exons,
     pknox1_introns,
@@ -159,9 +198,18 @@ testthat::test_that("shorten_gaps(drop_orig_coords = x) works correctly", {
     expect_true(is.null(pknox1_rescaled_1_tx[["end_orig"]]))
 })
 
-testthat::test_that("shorten_gaps() handles type column correctly", {
-    expect_true(!is.null(pknox1_rescaled_tx[["type"]]))
+testthat::test_that("shorten_gaps() takes user inputted type", {
+
+    # for test, we modify all exons types to "utr"
+    all_utr <- shorten_gaps(
+        pknox1_exons %>% dplyr::mutate(type = "utr"),
+        pknox1_introns,
+        group_var = "transcript_name",
+        target_gap_width = 100L,
+        drop_orig_coords = FALSE
+    )
     expect_true(all(pknox1_rescaled_tx[["type"]] %in% c("exon", "intron")))
+    expect_true(all(all_utr[["type"]] %in% c("utr", "intron")))
 })
 
 test_shorten_gaps <- function(exons, rescaled_tx) {

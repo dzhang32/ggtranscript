@@ -123,6 +123,10 @@ shorten_gaps <- function(exons,
     .check_group_var(introns, group_var)
     target_gap_width <- .check_target_gap_width(target_gap_width)
 
+    # check type column, create if not present
+    exons <- .get_type(exons, "exons")
+    introns <- .get_type(introns, "introns")
+
     # to_intron() defines introns using the exon boundaries
     # we need to convert this to the actual gap definition to make sure
     # comparison to GenomicRanges::gaps() when using "equal" works correctly
@@ -370,6 +374,36 @@ shorten_gaps <- function(exons,
     return(y_shortened)
 }
 
+#' Add a type column if it is not present already
+#'
+#' @keywords internal
+#' @noRd
+.get_type <- function(x, exons_introns) {
+    if (!is.null(x[["type"]])) {
+        # if there is a type, we check that it contains allowed types
+
+        if (exons_introns == "exons") {
+            allowed_types <- c("exon", "utr")
+        } else {
+            allowed_types <- "intron"
+        }
+
+        if (!all(x[["type"]] %in% allowed_types)) {
+            stop(
+                "values in the 'type' column of ", exons_introns, " must be one of: ",
+                allowed_types %>% paste0("'", ., "'") %>% paste(collapse = ", ")
+            )
+        }
+    } else {
+        # if there isn't, we add a default type column
+        default_type <- ifelse(exons_introns == "exons", "exon", "intron")
+
+        x <- x %>% dplyr::mutate(type = default_type)
+    }
+
+    return(x)
+}
+
 #' @keywords internal
 #' @noRd
 .get_rescaled_txs <- function(exons,
@@ -381,15 +415,13 @@ shorten_gaps <- function(exons,
     # calculate the rescaled exon/intron start/ends using
     # the widths of the exons and reduced introns
     rescaled_tx <- exons %>% dplyr::mutate(
-        type = "exon",
         width = (end - start) + 1
     )
 
     # bind together exons and introns and arrange into genomic order
     rescaled_tx <- rescaled_tx %>%
         dplyr::bind_rows(
-            introns_shortened %>%
-                dplyr::mutate(type = "intron")
+            introns_shortened
         ) %>%
         dplyr::arrange_at(.vars = c(group_var, "start", "end"))
 
@@ -439,7 +471,7 @@ shorten_gaps <- function(exons,
             )
         )
 
-    # keep original start/end (renamed) if drop_orig_coords = FALSE
+    # keep (renamed) original start/end if drop_orig_coords = FALSE
     if (drop_orig_coords) {
         rescaled_tx <- rescaled_tx %>% dplyr::select(-start, -end)
     } else {
