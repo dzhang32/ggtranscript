@@ -11,11 +11,6 @@ pknox1_exons <- pknox1_annotation %>% dplyr::filter(type == "exon")
 pknox1_introns <- pknox1_exons %>%
     to_intron("transcript_name")
 
-pknox1_cds_utr <-
-    pknox1_annotation %>% dplyr::filter(
-        type == "CDS" | grepl("utr", type)
-    )
-
 ##### .get_gaps #####
 
 # need to create gaps globally for downstream tests

@@ -374,6 +374,8 @@ shorten_gaps <- function(exons,
             )
 
         # now actually do reduction for introns with "pure_within" gaps
+        y_shortened[["sum_shortened_gap_diff"]] <- NA_integer_
+
         y_shortened[["sum_shortened_gap_diff"]][sum_gap_diff[["intron_indexes"]]] <-
             sum_gap_diff[["sum_shortened_gap_diff"]]
 
