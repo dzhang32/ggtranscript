@@ -21,9 +21,6 @@
 #'   exon boundaries (rather than exon end + 1 and exon start - 1).
 #' @param target_gap_width `integer()` the width in base pairs to shorten the
 #'   gaps to.
-#' @param drop_orig_coords `logical()` whether to drop the original start and
-#'   end columns of `exons` and `introns`. If `FALSE`, output will include
-#'   columns "start_orig" and "end_orig".
 #'
 #' @return `data.frame()` contains the re-scaled co-ordinates of `introns` and
 #'   `exons` of each input transcript with shortened gaps.

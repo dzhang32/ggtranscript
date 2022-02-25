@@ -4,13 +4,7 @@
 \alias{shorten_gaps}
 \title{Improve transcript structure visualization by shortening gaps}
 \usage{
-shorten_gaps(
-  exons,
-  introns,
-  group_var = NULL,
-  target_gap_width = 100L,
-  drop_orig_coords = TRUE
-)
+shorten_gaps(exons, introns, group_var = NULL, target_gap_width = 100L)
 }
 \arguments{
 \item{exons}{\code{data.frame()} contains exons which can originate from multiple
@@ -29,10 +23,6 @@ transcripts (e.g. "transcript_id").}
 
 \item{target_gap_width}{\code{integer()} the width in base pairs to shorten the
 gaps to.}
-
-\item{drop_orig_coords}{\code{logical()} whether to drop the original start and
-end columns of \code{exons} and \code{introns}. If \code{FALSE}, output will include
-columns "start_orig" and "end_orig".}
 }
 \value{
 \code{data.frame()} contains the re-scaled co-ordinates of \code{introns} and
