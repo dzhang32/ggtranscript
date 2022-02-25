@@ -6,6 +6,8 @@
 #' @param cds `data.frame()` contains the coding sequence which can originate
 #'   from multiple transcripts differentiated by `group_var`.
 #'
+#' @return `data.frame()` contains ranges with CDS and UTRs labelled.
+#'
 #' @export
 #' @examples
 #'

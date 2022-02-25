@@ -17,4 +17,5 @@ NULL
 #' @importFrom rlang %||%
 #' @importFrom magrittr %>%
 #' @importFrom ggplot2 aes
+#' @import ggrepel
 NULL

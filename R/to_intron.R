@@ -11,6 +11,8 @@
 #'
 #' @inheritParams to_diff
 #'
+#' @return `data.frame()` contains the intron co-ordinates.
+#'
 #' @export
 #' @examples
 #' library(magrittr)

@@ -14,6 +14,9 @@ transcripts differentiated by \code{group_var}.}
 transcript, \code{group_var} must specify the column that differentiates
 transcripts (e.g. "transcript_id").}
 }
+\value{
+\code{data.frame()} contains the intron co-ordinates.
+}
 \description{
 Given a set of \code{exons}, \code{to_intron()} will return the corresponding introns.
 If \code{exons} contains data originating from more than 1 transcript, \code{group_var}
