@@ -48,6 +48,7 @@ Imports:
     ggrepel
 Collate: 
     'add_exon_number.R'
+    'add_utr.R'
     'data.R'
     'geom_range.R'
     'geom_half_range.R'
