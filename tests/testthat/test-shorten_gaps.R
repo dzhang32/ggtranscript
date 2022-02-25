@@ -11,6 +11,11 @@ pknox1_exons <- pknox1_annotation %>% dplyr::filter(type == "exon")
 pknox1_introns <- pknox1_exons %>%
     to_intron("transcript_name")
 
+pknox1_cds_utr <-
+    pknox1_annotation %>% dplyr::filter(
+        type == "CDS" | grepl("utr", type)
+    )
+
 ##### .get_gaps #####
 
 # need to create gaps globally for downstream tests
@@ -142,8 +147,7 @@ pknox1_rescaled_tx <- shorten_gaps(
     pknox1_exons,
     pknox1_introns,
     group_var = "transcript_name",
-    target_gap_width = 100L,
-    drop_orig_coords = FALSE
+    target_gap_width = 100L
 )
 
 pknox1_exons_1_tx <- pknox1_exons %>%
@@ -179,21 +183,6 @@ testthat::test_that("shorten_gaps() keeps existing columns", {
     ))
 })
 
-testthat::test_that("shorten_gaps(drop_orig_coords = x) works correctly", {
-    expect_true(!is.null(pknox1_rescaled_tx[["start_orig"]]))
-    expect_true(!is.null(pknox1_rescaled_tx[["end_orig"]]))
-    expect_equal(
-        pknox1_rescaled_tx[["start_orig"]] %>% sort(),
-        dplyr::bind_rows(pknox1_exons, pknox1_introns)[["start"]] %>% sort()
-    )
-    expect_equal(
-        pknox1_rescaled_tx[["end_orig"]] %>% sort(),
-        dplyr::bind_rows(pknox1_exons, pknox1_introns)[["end"]] %>% sort()
-    )
-    expect_true(is.null(pknox1_rescaled_1_tx[["start_orig"]]))
-    expect_true(is.null(pknox1_rescaled_1_tx[["end_orig"]]))
-})
-
 testthat::test_that("shorten_gaps() takes user inputted type", {
 
     # for test, we modify all exons types to "utr"
@@ -201,8 +190,7 @@ testthat::test_that("shorten_gaps() takes user inputted type", {
         pknox1_exons %>% dplyr::mutate(type = "utr"),
         pknox1_introns,
         group_var = "transcript_name",
-        target_gap_width = 100L,
-        drop_orig_coords = FALSE
+        target_gap_width = 100L
     )
     expect_true(all(pknox1_rescaled_tx[["type"]] %in% c("exon", "intron")))
     expect_true(all(all_utr[["type"]] %in% c("utr", "intron")))

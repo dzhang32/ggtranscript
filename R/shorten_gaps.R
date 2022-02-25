@@ -113,8 +113,7 @@
 shorten_gaps <- function(exons,
                          introns,
                          group_var = NULL,
-                         target_gap_width = 100L,
-                         drop_orig_coords = TRUE) {
+                         target_gap_width = 100L) {
 
     # input checks
     .check_coord_object(exons, check_seqnames = TRUE, check_strand = TRUE)
@@ -177,8 +176,7 @@ shorten_gaps <- function(exons,
         exons,
         introns_shortened,
         tx_start_gaps_shortened,
-        group_var,
-        drop_orig_coords
+        group_var
     )
 
     return(rescaled_tx)
@@ -409,8 +407,7 @@ shorten_gaps <- function(exons,
 .get_rescaled_txs <- function(exons,
                               introns_shortened,
                               tx_start_gaps_shortened,
-                              group_var,
-                              drop_orig_coords) {
+                              group_var) {
 
     # calculate the rescaled exon/intron start/ends using
     # the widths of the exons and reduced introns
@@ -471,15 +468,8 @@ shorten_gaps <- function(exons,
             )
         )
 
-    # keep (renamed) original start/end if drop_orig_coords = FALSE
-    if (drop_orig_coords) {
-        rescaled_tx <- rescaled_tx %>% dplyr::select(-start, -end)
-    } else {
-        rescaled_tx <- rescaled_tx %>% dplyr::rename(
-            start_orig = start,
-            end_orig = end
-        )
-    }
+    # remove original start/end
+    rescaled_tx <- rescaled_tx %>% dplyr::select(-start, -end)
 
     rescaled_tx <- rescaled_tx %>%
         dplyr::select(
