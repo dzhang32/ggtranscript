@@ -21,6 +21,9 @@
 #'   exon boundaries (rather than exon end + 1 and exon start - 1).
 #' @param target_gap_width `integer()` the width in base pairs to shorten the
 #'   gaps to.
+#' @param drop_orig_coords `logical()` whether to drop the original start and
+#'   end columns of `exons` and `introns`. If `FALSE`, output will include
+#'   columns "start_orig" and "end_orig".
 #'
 #' @return `data.frame()` contains the re-scaled co-ordinates of `introns` and
 #'   `exons` of each input transcript with shortened gaps.
@@ -110,7 +113,8 @@
 shorten_gaps <- function(exons,
                          introns,
                          group_var = NULL,
-                         target_gap_width = 100L) {
+                         target_gap_width = 100L,
+                         drop_orig_coords = TRUE) {
 
     # input checks
     .check_coord_object(exons, check_seqnames = TRUE, check_strand = TRUE)
@@ -122,6 +126,7 @@ shorten_gaps <- function(exons,
     # to_intron() defines introns using the exon boundaries
     # we need to convert this to the actual gap definition to make sure
     # comparison to GenomicRanges::gaps() when using "equal" works correctly
+    # this is converted back in .get_rescaled_txs()
     introns <- introns %>%
         dplyr::mutate(
             start = start + 1,
@@ -168,15 +173,9 @@ shorten_gaps <- function(exons,
         exons,
         introns_shortened,
         tx_start_gaps_shortened,
-        group_var
+        group_var,
+        drop_orig_coords
     )
-
-    # convert introns back to be defined by exon boundaries
-    rescaled_tx <- rescaled_tx %>%
-        dplyr::mutate(
-            start = ifelse(type == "intron", start - 1, start),
-            end = ifelse(type == "intron", end + 1, end)
-        )
 
     return(rescaled_tx)
 }
@@ -376,7 +375,8 @@ shorten_gaps <- function(exons,
 .get_rescaled_txs <- function(exons,
                               introns_shortened,
                               tx_start_gaps_shortened,
-                              group_var) {
+                              group_var,
+                              drop_orig_coords) {
 
     # calculate the rescaled exon/intron start/ends using
     # the widths of the exons and reduced introns
@@ -424,7 +424,32 @@ shorten_gaps <- function(exons,
             rescaled_end = rescaled_end + width_tx_start,
             rescaled_start = rescaled_start + width_tx_start
         ) %>%
-        dplyr::select(-dplyr::contains("width"), -start, -end) %>%
+        dplyr::select(-dplyr::contains("width"))
+
+    # convert introns back to be defined by exon boundaries, match to_intron()
+    rescaled_tx <- rescaled_tx %>%
+        dplyr::mutate(
+            start = ifelse(type == "intron", start - 1, start),
+            end = ifelse(type == "intron", end + 1, end),
+            rescaled_start = ifelse(
+                type == "intron", rescaled_start - 1, rescaled_start
+            ),
+            rescaled_end = ifelse(
+                type == "intron", rescaled_end + 1, rescaled_end
+            )
+        )
+
+    # keep original start/end (renamed) if drop_orig_coords = FALSE
+    if (drop_orig_coords) {
+        rescaled_tx <- rescaled_tx %>% dplyr::select(-start, -end)
+    } else {
+        rescaled_tx <- rescaled_tx %>% dplyr::rename(
+            start_orig = start,
+            end_orig = end
+        )
+    }
+
+    rescaled_tx <- rescaled_tx %>%
         dplyr::select(
             seqnames,
             start = rescaled_start,
