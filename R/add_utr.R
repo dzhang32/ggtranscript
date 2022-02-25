@@ -33,6 +33,7 @@ add_utr <- function(exons,
         cds_gr_curr <- cds_gr %>%
             .[GenomicRanges::mcols(cds_gr)[[group_var]] == groups[i]]
 
+        # use setdiff to get regions in exon but not in cds (i.e. the utrs)
         utrs_curr <- GenomicRanges::setdiff(exons_gr_curr, cds_gr_curr)
         GenomicRanges::mcols(utrs_curr)[[group_var]] <- groups[i]
 
