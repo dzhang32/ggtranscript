@@ -17,6 +17,11 @@ test_introns <-
         type = "intron"
     )
 
+pknox1_cds_utr <-
+    pknox1_annotation %>% dplyr::filter(
+        type == "CDS" | grepl("utr", type)
+    )
+
 ##### to_intron #####
 
 testthat::test_that("to_intron() obtains introns correctly", {

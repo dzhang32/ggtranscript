@@ -46,9 +46,7 @@ to_intron <- function(exons, group_var = NULL) {
     .check_coord_object(exons)
     .check_group_var(exons, group_var)
 
-    # TODO - add functionality to check warn if exons overlap
-    # as this should could break the function
-    # which expects exons in each group_var to originate from a single tx
+    # TODO - switch this to using GenomicRanges::gaps()?
 
     if (!is.null(group_var)) {
         exons <- exons %>% dplyr::group_by_at(.vars = group_var)
@@ -59,7 +57,7 @@ to_intron <- function(exons, group_var = NULL) {
         dplyr::arrange(start, end)
 
     # obtain intron start and ends
-    exons <- exons %>%
+    introns <- exons %>%
         dplyr::mutate(
             intron_start := dplyr::lag(end),
             intron_end := start,
@@ -67,13 +65,16 @@ to_intron <- function(exons, group_var = NULL) {
         ) %>%
         dplyr::select(-start, -end)
 
-    # for each group, output N of introns should be N - 1 the inputted exons
     # remove the introduced artifact NAs
-    # rename intron_start/intron_end to
-    exons <- exons %>%
+    introns <- introns %>%
         dplyr::ungroup() %>%
-        dplyr::filter(!is.na(intron_start) & !is.na(intron_end)) %>%
-        dplyr::rename(start = intron_start, end = intron_end)
+        dplyr::filter(!is.na(intron_start) & !is.na(intron_end))
 
-    return(exons)
+    # filter out introns with a width of 1, this should only happen when
+    # utrs are included and are directly adjacent to end of cds
+    introns <- introns %>% dplyr::filter(abs(intron_end - intron_start) != 1)
+
+    introns <- introns %>% dplyr::rename(start = intron_start, end = intron_end)
+
+    return(introns)
 }
