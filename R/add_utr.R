@@ -1,5 +1,100 @@
-#' @keywords internal
-#' @noRd
+#' Add utrs as ranges
+#'
+#' Placeholder
+#'
+#' @inheritParams to_diff
+#' @param cds `data.frame()` contains the coding sequence which can originate
+#'   from multiple transcripts differentiated by `group_var`.
+#'
+#' @export
+#' @examples
+#'
+#' library(magrittr)
+#' library(ggplot2)
+#'
+#' # to illustrate the package's functionality
+#' # ggtranscript includes example transcript annotation
+#' pknox1_annotation %>% head()
+#'
+#' # extract exons
+#' pknox1_exons <- pknox1_annotation %>% dplyr::filter(type == "exon")
+#' pknox1_exons %>% head()
+#'
+#' # extract cds
+#' pknox1_cds <- pknox1_annotation %>% dplyr::filter(type == "CDS")
+#' pknox1_cds %>% head()
+#'
+#' # need to make sure that the CDS definition includes the stop codon
+#' # as the ensembl CDS definition does not include the stop codon
+#' # here, we add 3 base pairs to the end of the the CDS of each transcript
+#' pknox1_cds_w_stop <- pknox1_cds %>%
+#'     dplyr::group_by(transcript_name) %>%
+#'     dplyr::mutate(
+#'         end = ifelse(end == max(end), end + 3, end)
+#'     ) %>%
+#'     dplyr::ungroup()
+#'
+#' # add utr adds ranges that represent the utr
+#' pknox1_cds_utr <- add_utr(
+#'     pknox1_exons,
+#'     pknox1_cds_w_stop,
+#'     group_var = "transcript_name"
+#' )
+#'
+#' pknox1_cds_utr %>% head()
+#'
+#' # this can be useful to visualize the utrs
+#' pknox1_cds_utr %>%
+#'     dplyr::filter(type == "CDS") %>%
+#'     ggplot(aes(
+#'         xstart = start,
+#'         xend = end,
+#'         y = transcript_name
+#'     )) +
+#'     geom_range() +
+#'     geom_range(
+#'         data = pknox1_cds_utr %>% dplyr::filter(type == "UTR"),
+#'         height = 0.25,
+#'         fill = "white"
+#'     ) +
+#'     geom_intron(
+#'         data = to_intron(
+#'             pknox1_cds_utr %>%
+#'                 dplyr::filter(type != "intron"),
+#'             "transcript_name"
+#'         ),
+#'     )
+#'
+#' # add utrs can be most useful when combined with shorten_gaps()
+#' pknox1_cds_utr_rescaled <-
+#'     shorten_gaps(
+#'         exons = pknox1_cds_utr,
+#'         introns = to_intron(pknox1_cds_utr, "transcript_name"),
+#'         group_var = "transcript_name"
+#'     )
+#'
+#' # so that you can plot the shorten_gap() output together with utrs
+#' pknox1_cds_utr_rescaled %>%
+#'     dplyr::filter(type == "CDS") %>%
+#'     ggplot(aes(
+#'         xstart = start,
+#'         xend = end,
+#'         y = transcript_name
+#'     )) +
+#'     geom_range() +
+#'     geom_range(
+#'         data = pknox1_cds_utr_rescaled %>% dplyr::filter(type == "UTR"),
+#'         height = 0.25,
+#'         fill = "white"
+#'     ) +
+#'     geom_intron(
+#'         data = to_intron(
+#'             pknox1_cds_utr_rescaled %>%
+#'                 dplyr::filter(type != "intron"),
+#'             "transcript_name"
+#'         ),
+#'         arrow.min.intron.length = 100
+#'     )
 add_utr <- function(exons,
                     cds,
                     group_var = NULL) {
