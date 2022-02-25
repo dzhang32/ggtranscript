@@ -124,10 +124,6 @@ testthat::test_that(".get_type() catches user input errors", {
         .get_type(pknox1_exons, "introns"),
         "values in the 'type' column of introns must be one of:"
     )
-    expect_error(
-        .get_type(pknox1_introns, "exons"),
-        "values in the 'type' column of exons must be one of:"
-    )
 })
 
 ##### .check_target_gap_width #####

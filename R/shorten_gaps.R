@@ -184,6 +184,36 @@ shorten_gaps <- function(exons,
     return(rescaled_tx)
 }
 
+#' Add a type column if it is not present already
+#'
+#' @keywords internal
+#' @noRd
+.get_type <- function(x, exons_introns) {
+    if (!is.null(x[["type"]])) {
+        # if there is an existing type column for introns
+        # need to make sure this is all "intron" for downstream functions
+        # don't check for exons, as this can be variable (e.g. "five_prime_utr")
+
+        if (exons_introns == "introns") {
+            allowed_types <- "intron"
+
+            if (!all(x[["type"]] %in% allowed_types)) {
+                stop(
+                    "values in the 'type' column of ", exons_introns, " must be one of: ",
+                    allowed_types %>% paste0("'", ., "'") %>% paste(collapse = ", ")
+                )
+            }
+        }
+    } else {
+        # if there isn't, we add a default type column
+        default_type <- ifelse(exons_introns == "exons", "exon", "intron")
+
+        x <- x %>% dplyr::mutate(type = default_type)
+    }
+
+    return(x)
+}
+
 #' @keywords internal
 #' @noRd
 .get_gaps <- function(exons_gr) {
@@ -372,36 +402,6 @@ shorten_gaps <- function(exons,
         )
 
     return(y_shortened)
-}
-
-#' Add a type column if it is not present already
-#'
-#' @keywords internal
-#' @noRd
-.get_type <- function(x, exons_introns) {
-    if (!is.null(x[["type"]])) {
-        # if there is a type, we check that it contains allowed types
-
-        if (exons_introns == "exons") {
-            allowed_types <- c("exon", "utr")
-        } else {
-            allowed_types <- "intron"
-        }
-
-        if (!all(x[["type"]] %in% allowed_types)) {
-            stop(
-                "values in the 'type' column of ", exons_introns, " must be one of: ",
-                allowed_types %>% paste0("'", ., "'") %>% paste(collapse = ", ")
-            )
-        }
-    } else {
-        # if there isn't, we add a default type column
-        default_type <- ifelse(exons_introns == "exons", "exon", "intron")
-
-        x <- x %>% dplyr::mutate(type = default_type)
-    }
-
-    return(x)
 }
 
 #' @keywords internal
