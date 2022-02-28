@@ -285,14 +285,14 @@ citation("ggtranscript")
 #> 
 #> To cite package 'ggtranscript' in publications use:
 #> 
-#>   David Zhang and Emil Gustavsson (2021). ggtranscript: Visualising
+#>   David Zhang and Emil Gustavsson (2021). ggtranscript: Visualizing
 #>   transcript structure and annotation using ggplot2. R package version
 #>   0.99.2. https://github.com/dzhang32/ggtranscript
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
-#>     title = {ggtranscript: Visualising transcript structure and annotation using ggplot2},
+#>     title = {ggtranscript: Visualizing transcript structure and annotation using ggplot2},
 #>     author = {David Zhang and Emil Gustavsson},
 #>     year = {2021},
 #>     note = {R package version 0.99.2},
