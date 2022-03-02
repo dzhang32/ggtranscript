@@ -51,7 +51,7 @@ dplyr::tribble(
     ~`Required aes()`, ~Type, ~Description, ~`Required by`,
     #-------|-----|----|--------
     "xstart", "integer", "Start position in base pairs", "All geoms", 
-    "xend", "integer", "End Geonmic position in base pairs", "All geoms", 
+    "xend", "integer", "End position in base pairs", "All geoms", 
     "y", "charactor or factor", "The group used for the y axis, most often a transcript id or name ", "All geoms",
     "label", "integer or charactor", "Variable used to label junction curves", "Only geom_junction_label_repel()",
 ) %>% 
