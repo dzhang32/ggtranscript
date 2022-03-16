@@ -1,12 +1,21 @@
-#' Add utrs as ranges
+#' Add untranslated regions (UTRs)
 #'
-#' Placeholder
+#' Given a set of `exons` (encompassing the CDS and UTRs) and `cds` regions,
+#' `add_utr()` will calculate and add the corresponding UTR regions as ranges.
+#' This can be useful when combined with `shorten_gaps()` to visualize
+#' transcripts with long introns, whilst differentiating UTRs from CDS regions.
+#'
+#' The definition of the inputted `cds` regions are expected to range from the
+#' beginning of the start codon to the end of the stop codon. Sometimes, for
+#' example in the case of Ensembl, reference annotation will omit the stop
+#' codons from the CDS definition. In such cases, users should manually ensure
+#' that `cds` includes both the start and stop codons.
 #'
 #' @inheritParams to_diff
-#' @param cds `data.frame()` contains the coding sequence which can originate
-#'   from multiple transcripts differentiated by `group_var`.
+#' @param cds `data.frame()` contains coding sequence ranges for the transcripts
+#'   in `exons`.
 #'
-#' @return `data.frame()` contains ranges with CDS and UTRs labelled.
+#' @return `data.frame()` contains differentiated CDS and UTR ranges.
 #'
 #' @export
 #' @examples
@@ -26,9 +35,10 @@
 #' pknox1_cds <- pknox1_annotation %>% dplyr::filter(type == "CDS")
 #' pknox1_cds %>% head()
 #'
-#' # need to make sure that the CDS definition includes the stop codon
-#' # as the ensembl CDS definition does not include the stop codon
-#' # here, we add 3 base pairs to the end of the the CDS of each transcript
+#' # the CDS definition originating from the Ensembl reference annotation
+#' # does not include the stop codon
+#' # we must incorporate the stop codons into the CDS manually
+#' # by adding 3 base pairs to the end of the CDS of each transcript
 #' pknox1_cds_w_stop <- pknox1_cds %>%
 #'     dplyr::group_by(transcript_name) %>%
 #'     dplyr::mutate(
@@ -36,7 +46,7 @@
 #'     ) %>%
 #'     dplyr::ungroup()
 #'
-#' # add utr adds ranges that represent the utr
+#' # add_utr() adds ranges that represent the UTRs
 #' pknox1_cds_utr <- add_utr(
 #'     pknox1_exons,
 #'     pknox1_cds_w_stop,
@@ -45,29 +55,8 @@
 #'
 #' pknox1_cds_utr %>% head()
 #'
-#' # this can be useful to visualize the utrs
-#' pknox1_cds_utr %>%
-#'     dplyr::filter(type == "CDS") %>%
-#'     ggplot(aes(
-#'         xstart = start,
-#'         xend = end,
-#'         y = transcript_name
-#'     )) +
-#'     geom_range() +
-#'     geom_range(
-#'         data = pknox1_cds_utr %>% dplyr::filter(type == "UTR"),
-#'         height = 0.25,
-#'         fill = "white"
-#'     ) +
-#'     geom_intron(
-#'         data = to_intron(
-#'             pknox1_cds_utr %>%
-#'                 dplyr::filter(type != "intron"),
-#'             "transcript_name"
-#'         ),
-#'     )
-#'
-#' # add utrs can be most useful when combined with shorten_gaps()
+#' # this can be useful when combined with shorten_gaps()
+#' # to visualize transcripts with long introns whilst differentiating UTRs
 #' pknox1_cds_utr_rescaled <-
 #'     shorten_gaps(
 #'         exons = pknox1_cds_utr,
@@ -75,7 +64,6 @@
 #'         group_var = "transcript_name"
 #'     )
 #'
-#' # so that you can plot the shorten_gap() output together with utrs
 #' pknox1_cds_utr_rescaled %>%
 #'     dplyr::filter(type == "CDS") %>%
 #'     ggplot(aes(
@@ -91,11 +79,10 @@
 #'     ) +
 #'     geom_intron(
 #'         data = to_intron(
-#'             pknox1_cds_utr_rescaled %>%
-#'                 dplyr::filter(type != "intron"),
+#'             pknox1_cds_utr_rescaled %>% dplyr::filter(type != "intron"),
 #'             "transcript_name"
 #'         ),
-#'         arrow.min.intron.length = 100
+#'         arrow.min.intron.length = 110
 #'     )
 add_utr <- function(exons,
                     cds,
