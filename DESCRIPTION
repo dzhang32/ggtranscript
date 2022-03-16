@@ -35,7 +35,7 @@ Suggests:
     rmarkdown,
     sessioninfo,
     testthat (>= 3.0.0),
-    vdiffr (== 1.0.2)
+    vdiffr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Depends: 
