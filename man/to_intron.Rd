@@ -24,7 +24,7 @@ must specify the column that differentiates transcripts (e.g.
 "transcript_id").
 }
 \details{
-It is important to note that, for visualisation purposes, \code{to_intron()}
+It is important to note that, for visualization purposes, \code{to_intron()}
 defines introns precisely as the exon boundaries, rather than the intron
 start/end being (exon end + 1)/(exon start - 1).
 }
