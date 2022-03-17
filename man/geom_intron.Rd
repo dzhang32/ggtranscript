@@ -86,11 +86,12 @@ these geoms form the core components for visualizing transcript annotation.
 }
 \details{
 \code{geom_intron()} requires the following \code{aes()}; \code{xstart}, \code{xend} and \code{y}
-(e.g. transcript name). The \code{strand} option (one of "+" or "-") adjusts the
-arrow direction to match the direction of transcription. The
-\code{arrow.min.intron.length} parameter can be useful to remove strand arrows
-that overlap exons, which can be a problem if plotted introns include those
-that are relatively short.
+(e.g. transcript name). If users do not have intron co-ordinates, these can
+be generated from the corresponding exons using \code{to_intron()}. The \code{strand}
+option (one of "+" or "-") adjusts the arrow direction to match the direction
+of transcription. The \code{arrow.min.intron.length} parameter can be useful to
+remove strand arrows that overlap exons, which can be a problem if plotted
+introns include those that are relatively short.
 }
 \examples{
 

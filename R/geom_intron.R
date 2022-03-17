@@ -5,11 +5,12 @@
 #' these geoms form the core components for visualizing transcript annotation.
 #'
 #' `geom_intron()` requires the following `aes()`; `xstart`, `xend` and `y`
-#' (e.g. transcript name). The `strand` option (one of "+" or "-") adjusts the
-#' arrow direction to match the direction of transcription. The
-#' `arrow.min.intron.length` parameter can be useful to remove strand arrows
-#' that overlap exons, which can be a problem if plotted introns include those
-#' that are relatively short.
+#' (e.g. transcript name). If users do not have intron co-ordinates, these can
+#' be generated from the corresponding exons using `to_intron()`. The `strand`
+#' option (one of "+" or "-") adjusts the arrow direction to match the direction
+#' of transcription. The `arrow.min.intron.length` parameter can be useful to
+#' remove strand arrows that overlap exons, which can be a problem if plotted
+#' introns include those that are relatively short.
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
