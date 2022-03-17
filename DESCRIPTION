@@ -7,9 +7,11 @@ Authors@R:
     person("David", "Zhang", , "dyzhang32@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2382-8460")), 
     person("Emil", "Gustavsson", , "e.gustavsson@ucl.ac.uk", role = c("aut"),
-           comment = c(ORCID = "0000-0003-0541-7537")), 
+           comment = c(ORCID = "0000-0003-0541-7537")),
     person("Regina", "Reynolds", , "regina.reynolds.16@ucl.ac.uk", 
-           role = c("ctb"), comment = c(ORCID = "0000-0001-6470-7919"))
+           role = c("ctb"), comment = c(ORCID = "0000-0001-6470-7919")), 
+    person("Sonia", "Ruiz", , "s.ruiz@ucl.ac.uk", 
+           role = c("ctb"))
     )
 Description: The goal of ggtranscript is the simplify the process of visualizing 
     transcript structure and annotation. To achieve this, ggtranscript 
