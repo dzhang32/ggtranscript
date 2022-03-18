@@ -161,9 +161,9 @@ noting that the input data for <code>ggtranscript</code>, as a
 <code>ggplot2</code> extension, is required be a <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame" class="external-link"><code>data.frame</code></a>
 or <a href="https://tibble.tidyverse.org" class="external-link"><code>tibble</code></a>.</p>
 <p>You may be asking, what if I have <code>GenomicRanges</code> object?
-If not, feel free to ignore this. Almost always, you can easily
-transform <code>GenomicRanges</code> into a <code>data.frame</code>
-using a helper function such as <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>.</p>
+Almost always, you can easily transform <code>GenomicRanges</code> into
+a <code>data.frame</code> using a helper function such as
+<code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">sod1_annotation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span>
@@ -352,16 +352,16 @@ combined.</p>
 <h3 id="context">Context<a class="anchor" aria-label="anchor" href="#context"></a>
 </h3>
 <p>One of the primary reasons for visualizing transcript structures is
-to better observe the differences between them. Although this can be
-achieved by simply plotting the exons and introns as shown in <a href="#plotting_exons_and_introns">basic usage</a>, for longer, more
-complex transcripts this may not be as straight forward. For example,
-let’s take a look at the gene <em>PKNOX1</em>.</p>
-<blockquote>
-<p>📌Note: For shorter introns, strand arrows may overlap exons. In such
+to better observe the differences between them. Often this can be
+achieved by simply plotting the exons and introns as shown in <a href="#plotting_exons_and_introns">basic usage</a>. However, for longer,
+complex transcripts this may not be as straight forward.</p>
+<p>For example, the transcripts of <em>PKNOX1</em> have relatively long
+introns, which makes the comparison between transcript structures
+(especially small differences in exons) more difficult. &gt; 📌: For
+relatively short introns, strand arrows may overlap exons. In such
 cases, the <code>arrow.min.intron.length</code> parameter of
 <code><a href="../reference/geom_intron.html">geom_intron()</a></code> can be used to set the minimum intron length
 for a strand arrow to be plotted.</p>
-</blockquote>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># extract exons</span>
@@ -382,9 +382,6 @@ for a strand arrow to be plotted.</p>
         arrow.min.intron.length <span class="op">=</span> <span class="fl">3500</span>
     <span class="op">)</span></code></pre></div>
 <p><img src="ggtranscript_files/figure-html/transcript-diff-base-1.png" width="700"></p>
-<p><em>PKNOX1</em> has relatively long introns (compared to it’s exons),
-which makes comparison between transcript structures more difficult,
-especially small differences in exons.</p>
 </div>
 <div class="section level3">
 <h3 id="improving-transcript-structure-visualisation-using-shorten_gaps">Improving transcript structure visualisation using
@@ -399,8 +396,8 @@ as the exonic structure.</p>
 <blockquote>
 <p>📌: The rescaled co-ordinates returned by <code><a href="../reference/shorten_gaps.html">shorten_gaps()</a></code>
 will not match the original genomic positions. Therefore, it is
-recommended that you restrict <code><a href="../reference/shorten_gaps.html">shorten_gaps()</a></code> usage for
-visualization purposes only.</p>
+recommended that <code><a href="../reference/shorten_gaps.html">shorten_gaps()</a></code> is used for visualizations
+purposes only.</p>
 </blockquote>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -438,11 +435,11 @@ visualization purposes only.</p>
 <h3 id="comparing-between-two-transcripts-using-geom_half_range">Comparing between two transcripts using
 <code>geom_half_range()</code><a class="anchor" aria-label="anchor" href="#comparing-between-two-transcripts-using-geom_half_range"></a>
 </h3>
-<p>If you are interested specifically in the differences between two
-transcripts, you can use <code><a href="../reference/geom_range.html">geom_half_range()</a></code> whilst adjusting
+<p>If you are interested in the differences between two transcripts, you
+can use <code><a href="../reference/geom_range.html">geom_half_range()</a></code> whilst adjusting
 <code>range.orientation</code> to plot the exons from each on the
 opposite sides of the transcript structure. This can reveal small
-differences in exon structure, such as those observed here at the 3’
+differences in exon structure, such as those observed here at the 5’
 ends of <em>PKNOX1-201</em> and <em>PKNOX1-203</em>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -543,8 +540,8 @@ functionality that we have found useful:</p>
 <li>Adding exon annotation such as <a href="https://dzhang32.github.io/ggtranscript/reference/add_exon_number.html" class="external-link">exon
 number/order</a> using <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code>
 </li>
-<li>Zooming in on areas of interest using
-<code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code>
+<li>Zooming in on areas of interest using <code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code>
+or <code>ggforce::facet_zoom()</code>
 </li>
 <li>Plotting mutations using <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code>
 </li>
@@ -569,7 +566,7 @@ Show/hide
 <span class="co">#&gt;  collate  en_US.UTF-8</span>
 <span class="co">#&gt;  ctype    en_US.UTF-8</span>
 <span class="co">#&gt;  tz       UTC</span>
-<span class="co">#&gt;  date     2022-03-17</span>
+<span class="co">#&gt;  date     2022-03-18</span>
 <span class="co">#&gt;  pandoc   2.17.1.1 @ /usr/local/bin/ (via rmarkdown)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
@@ -599,7 +596,7 @@ Show/hide
 <span class="co">#&gt;  GenomicRanges      1.46.1   <span style="color: #555555;">2021-11-18</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
 <span class="co">#&gt;  ggplot2          * 3.3.5    <span style="color: #555555;">2021-06-25</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.1.0)</span></span>
 <span class="co">#&gt;  ggrepel            0.9.1    <span style="color: #555555;">2021-01-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.1.0)</span></span>
-<span class="co">#&gt;  ggtranscript     * 0.99.2   <span style="color: #555555;">2022-03-17</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
+<span class="co">#&gt;  ggtranscript     * 0.99.2   <span style="color: #555555;">2022-03-18</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
 <span class="co">#&gt;  glue               1.6.2    <span style="color: #555555;">2022-02-24</span> <span style="color: #555555;">[2]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.1.0)</span></span>
 <span class="co">#&gt;  gtable             0.3.0    <span style="color: #555555;">2019-03-25</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.1.0)</span></span>
 <span class="co">#&gt;  highr              0.9      <span style="color: #555555;">2021-04-16</span> <span style="color: #555555;">[2]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.1.0)</span></span>
