@@ -8,3 +8,4 @@
 ^data-raw$
 ^_pkgdown.yml$
 ^tests/testthat/_snaps/*
+^LICENSE\.md$

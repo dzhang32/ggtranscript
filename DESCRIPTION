@@ -21,7 +21,7 @@ Description: The goal of ggtranscript is the simplify the process of visualizing
     familiarity and flexibility, enabling users to intuitively adjust 
     aesthetics, parameters, scales etc as well as complement ggtranscript geoms
     with existing ggplot2 geoms to create informative, publication-ready plots.
-License: Artistic-2.0
+License: MIT + file LICENSE
 URL: https://github.com/dzhang32/ggtranscript
 BugReports: https://github.com/dzhang32/ggtranscript/issues
 biocViews: Software, Visualization, Annotation, Transcriptomics, 
