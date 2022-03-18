@@ -8,7 +8,7 @@
 #' To note, a "strand" column must be present within `exons`. The strand is used
 #' to differentiate whether exon numbers should be calculated according to
 #' ascending ("+") or descending ("-") genomic co-ordinates. For ambiguous
-#' strands ("*"), `add_exon_number()` will be assumed the strand be "+".
+#' strands ("*"), `add_exon_number()` will be assume the strand be "+".
 #'
 #' @inheritParams to_diff
 #'

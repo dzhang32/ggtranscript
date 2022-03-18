@@ -91,15 +91,15 @@ where the half ranges will be plotted with respect to each transcript
 \code{geom_range()} and \code{geom_half_range()} draw tiles that are designed to
 represent range-based genomic features, such as exons. In combination with
 \code{geom_intron()}, these geoms form the core components for visualizing
-transcript annotation.
+transcript structures.
 }
 \details{
 \code{geom_range()} and \code{geom_half_range()} require the following \code{aes()};
 \code{xstart}, \code{xend} and \code{y} (e.g. transcript name). \code{geom_half_range()} takes
 advantage of the vertical symmetry of transcript annotation by plotting only
 half of a range on the top or bottom of a transcript structure. This can be
-useful to free up plotting space for other transcript annotations (e.g.
-\code{geom_junction()}).
+useful for comparing between two transcripts or free up plotting space for
+other transcript annotations (e.g. \code{geom_junction()}).
 }
 \examples{
 

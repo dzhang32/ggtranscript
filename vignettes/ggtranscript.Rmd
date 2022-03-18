@@ -63,7 +63,7 @@ dplyr::tribble(
 
 In order to showcase the package's functionality, `ggtranscript` includes example transcript annotation for the genes *SOD1* and *PKNOX1*, as well as a set of unannotated junctions associated with *SOD1*. These specific genes are unimportant, chosen arbitrarily for illustration. However, it worth noting that the input data for `ggtranscript`, as a `ggplot2` extension, is required be a [`data.frame`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame) or [`tibble`](https://tibble.tidyverse.org).
 
-You may be asking, what if I have `GenomicRanges` object? If not, feel free to ignore this. Almost always, you can easily transform `GenomicRanges` into a `data.frame` using a helper function such as `as.data.frame()`.
+You may be asking, what if I have `GenomicRanges` object? Almost always, you can easily transform `GenomicRanges` into a `data.frame` using a helper function such as `as.data.frame()`.
 
 ```{r example-data}
 
@@ -193,9 +193,10 @@ sod1_201_exons %>%
 
 ### Context
 
-One of the primary reasons for visualizing transcript structures is to better observe the differences between them. Although this can be achieved by simply plotting the exons and introns as shown in [basic usage](#plotting_exons_and_introns), for longer, more complex transcripts this may not be as straight forward. For example, let's take a look at the gene *PKNOX1*. 
+One of the primary reasons for visualizing transcript structures is to better observe the differences between them. Often this can be achieved by simply plotting the exons and introns as shown in [basic usage](#plotting_exons_and_introns). However, for longer, complex transcripts this may not be as straight forward. 
 
-> 📌Note: For shorter introns, strand arrows may overlap exons. In such cases, the `arrow.min.intron.length` parameter of `geom_intron()` can be used to set the minimum intron length for a strand arrow to be plotted. 
+For example, the transcripts of *PKNOX1* have relatively long introns, which makes the comparison between transcript structures (especially small differences in exons) more difficult. 
+> 📌: For relatively short introns, strand arrows may overlap exons. In such cases, the `arrow.min.intron.length` parameter of `geom_intron()` can be used to set the minimum intron length for a strand arrow to be plotted. 
 
 ```{r transcript-diff-base}
 
@@ -219,13 +220,11 @@ pknox1_exons %>%
 
 ```
 
-*PKNOX1* has relatively long introns (compared to it's exons), which makes comparison between transcript structures more difficult, especially small differences in exons. 
-
 ### Improving transcript structure visualisation using `shorten_gaps()`
 
 `ggtranscript` provides the helper function `shorten_gaps()`, which reduces the size of the gaps (regions that do not overlap an intron). `shorten_gaps()` then rescales the exon and intron co-ordinates, preserving the original exon alignment. This allows you to hone in the differences of interest, such as the exonic structure.
 
-> 📌: The rescaled co-ordinates returned by `shorten_gaps()` will not match the original genomic positions. Therefore, it is recommended that you restrict `shorten_gaps()` usage for visualization purposes only. 
+> 📌: The rescaled co-ordinates returned by `shorten_gaps()` will not match the original genomic positions. Therefore, it is recommended that `shorten_gaps()` is used for visualizations purposes only. 
 
 ```{r shorten-gaps}
 
@@ -262,7 +261,7 @@ pknox1_rescaled_exons %>%
 
 ### Comparing between two transcripts using `geom_half_range()`
 
-If you are interested specifically in the differences between two transcripts, you can use `geom_half_range()` whilst adjusting `range.orientation` to plot the exons from each on the opposite sides of the transcript structure. This can reveal small differences in exon structure, such as those observed here at the 3' ends of *PKNOX1-201* and *PKNOX1-203*. 
+If you are interested in the differences between two transcripts, you can use `geom_half_range()` whilst adjusting `range.orientation` to plot the exons from each on the opposite sides of the transcript structure. This can reveal small differences in exon structure, such as those observed here at the 5' ends of *PKNOX1-201* and *PKNOX1-203*. 
 
 ```{r geom-half-range, fig.height = 3}
 
@@ -344,7 +343,7 @@ As a `ggplot2` extension, `ggtranscript` inherits `ggplot2`'s familiarity and fl
 Below is a list outlining some examples of complementing `ggtranscript` with existing `ggplot2` functionality that we have found useful: 
 
   - Adding exon annotation such as [exon number/order](https://dzhang32.github.io/ggtranscript/reference/add_exon_number.html) using `geom_text()`
-  - Zooming in on areas of interest using `coord_cartesian()`
+  - Zooming in on areas of interest using `coord_cartesian()` or `ggforce::facet_zoom()`
   - Plotting mutations using `geom_point()`
   - Plotting coverage using `geom_polygon()`
   - Beautifying plots using themes and scales

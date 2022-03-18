@@ -9,7 +9,7 @@
 #' beginning of the start codon to the end of the stop codon. Sometimes, for
 #' example in the case of Ensembl, reference annotation will omit the stop
 #' codons from the CDS definition. In such cases, users should manually ensure
-#' that `cds` includes both the start and stop codons.
+#' that the `cds` includes both the start and stop codons.
 #'
 #' @inheritParams to_diff
 #' @param cds `data.frame()` contains coding sequence ranges for the transcripts

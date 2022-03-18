@@ -19,9 +19,6 @@ transcripts (e.g. "transcript_id").}
 }
 \description{
 Given a set of \code{exons}, \code{to_intron()} will return the corresponding introns.
-If \code{exons} contains data originating from more than 1 transcript, \code{group_var}
-must specify the column that differentiates transcripts (e.g.
-"transcript_id").
 }
 \details{
 It is important to note that, for visualization purposes, \code{to_intron()}

@@ -82,7 +82,7 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \description{
 \code{geom_intron()} draws horizontal lines with central arrows that are designed
 to represent introns. In combination with \code{geom_range()}/\code{geom_half_range()},
-these geoms form the core components for visualizing transcript annotation.
+these geoms form the core components for visualizing transcript structures.
 }
 \details{
 \code{geom_intron()} requires the following \code{aes()}; \code{xstart}, \code{xend} and \code{y}

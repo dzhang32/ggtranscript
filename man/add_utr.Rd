@@ -31,7 +31,7 @@ The definition of the inputted \code{cds} regions are expected to range from the
 beginning of the start codon to the end of the stop codon. Sometimes, for
 example in the case of Ensembl, reference annotation will omit the stop
 codons from the CDS definition. In such cases, users should manually ensure
-that \code{cds} includes both the start and stop codons.
+that the \code{cds} includes both the start and stop codons.
 }
 \examples{
 

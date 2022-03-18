@@ -2,7 +2,7 @@
 #'
 #' `geom_intron()` draws horizontal lines with central arrows that are designed
 #' to represent introns. In combination with `geom_range()`/`geom_half_range()`,
-#' these geoms form the core components for visualizing transcript annotation.
+#' these geoms form the core components for visualizing transcript structures.
 #'
 #' `geom_intron()` requires the following `aes()`; `xstart`, `xend` and `y`
 #' (e.g. transcript name). If users do not have intron co-ordinates, these can

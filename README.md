@@ -31,8 +31,8 @@ devtools::install_github("dzhang32/ggtranscript")
 `geom_half_range()`, `geom_intron()`, `geom_junction()` and
 `geom_junction_label_repel()`) and several helper functions designed to
 facilitate the visualization of transcript structure and annotation. The
-following guide takes you on a whistle stop tour of using these geoms,
-for a more extensive overview see the [Getting Started
+following guide takes you on a quick tour of using these geoms, for a
+more detailed overview see the [Getting Started
 tutorial](https://dzhang32.github.io/ggtranscript/articles/ggtranscript.html).
 
 `geom_range()` and `geom_intron()` enable the plotting of exons and
@@ -303,4 +303,4 @@ citation("ggtranscript")
 ## Credits
 
 -   `ggtranscript` was developed using
-    *[biocthis](https://bioconductor.org/packages/3.14/biocthis)* .
+    *[biocthis](https://bioconductor.org/packages/3.14/biocthis)*.

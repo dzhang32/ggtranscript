@@ -1,9 +1,6 @@
 #' Convert exon co-ordinates to introns
 #'
 #' Given a set of `exons`, `to_intron()` will return the corresponding introns.
-#' If `exons` contains data originating from more than 1 transcript, `group_var`
-#' must specify the column that differentiates transcripts (e.g.
-#' "transcript_id").
 #'
 #' It is important to note that, for visualization purposes, `to_intron()`
 #' defines introns precisely as the exon boundaries, rather than the intron

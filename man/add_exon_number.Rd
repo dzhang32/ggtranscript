@@ -28,7 +28,7 @@ specific exons of interest.
 To note, a "strand" column must be present within \code{exons}. The strand is used
 to differentiate whether exon numbers should be calculated according to
 ascending ("+") or descending ("-") genomic co-ordinates. For ambiguous
-strands ("*"), \code{add_exon_number()} will be assumed the strand be "+".
+strands ("*"), \code{add_exon_number()} will be assume the strand be "+".
 }
 \examples{
 library(magrittr)
