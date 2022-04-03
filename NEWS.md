@@ -1,4 +1,20 @@
-# ggtranscript 0.99.3
+# ggtranscript 0.99.6
+
+NEW FEATURES
+
+* Add `@return` documentation for `geom_*` functions for `BiocCheck`.
+
+# ggtranscript 0.99.5
+
+NEW FEATURES
+
+* Change branch to naming from main to master to match BBS.
+
+# ggtranscript 0.99.4
+
+NEW FEATURES
+
+* Change email to UCL email for Bioconductor submission. 
 
 NEW FEATURES
 
@@ -6,6 +22,7 @@ NEW FEATURES
 work with `shorten_gaps()`, enabling shortening of gaps whilst visually 
 differentiating UTRs from the CDS.
 * Allow `to_intron()` to take CDS and UTRs ranges as input. 
+* Submit to Bioconductor.
 
 # ggtranscript 0.99.2
 
