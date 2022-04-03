@@ -87,6 +87,12 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 where the half ranges will be plotted with respect to each transcript
 (\code{y}).}
 }
+\value{
+the return value of a \verb{geom_*} function is not intended to be
+directly handled by users. Therefore, \verb{geom_*} functions should never be
+executed in isolation, rather used in combination with a
+\code{ggplot2::ggplot()} call.
+}
 \description{
 \code{geom_range()} and \code{geom_half_range()} draw tiles that are designed to
 represent range-based genomic features, such as exons. In combination with

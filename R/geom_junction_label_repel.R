@@ -18,6 +18,11 @@
 #' @inheritParams grid::curveGrob
 #' @inheritParams geom_junction
 #'
+#' @return the return value of a `geom_*` function is not intended to be
+#'   directly handled by users. Therefore, `geom_*` functions should never be
+#'   executed in isolation, rather used in combination with a
+#'   `ggplot2::ggplot()` call.
+#'
 #' @export
 #' @examples
 #' library(magrittr)

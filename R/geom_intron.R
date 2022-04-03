@@ -19,6 +19,11 @@
 #'   intron for a strand arrow to be drawn. This can be useful to remove strand
 #'   arrows on short introns that overlap adjacent exons.
 #'
+#' @return the return value of a `geom_*` function is not intended to be
+#'   directly handled by users. Therefore, `geom_*` functions should never be
+#'   executed in isolation, rather used in combination with a
+#'   `ggplot2::ggplot()` call.
+#'
 #' @export
 #' @examples
 #'

@@ -88,6 +88,12 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
 }
+\value{
+the return value of a \verb{geom_*} function is not intended to be
+directly handled by users. Therefore, \verb{geom_*} functions should never be
+executed in isolation, rather used in combination with a
+\code{ggplot2::ggplot()} call.
+}
 \description{
 \code{geom_junction()} draws curves that are designed to represent junction reads
 from RNA-sequencing data. It can be useful to overlay junction data on

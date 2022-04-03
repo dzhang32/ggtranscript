@@ -160,6 +160,12 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
+\value{
+the return value of a \verb{geom_*} function is not intended to be
+directly handled by users. Therefore, \verb{geom_*} functions should never be
+executed in isolation, rather used in combination with a
+\code{ggplot2::ggplot()} call.
+}
 \description{
 \code{geom_junction_label_repel()} labels junction curves at their midpoint using
 \code{ggrepel::geom_label_repel()}. This can be useful to label and compare
