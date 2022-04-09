@@ -16,7 +16,7 @@ transcript structures."><!-- mathjax --><script src="https://cdnjs.cloudflare.co
     
     <a class="navbar-brand me-2" href="../index.html">ggtranscript</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -145,6 +145,13 @@ the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.or
 where the half ranges will be plotted with respect to each transcript
 (<code>y</code>).</p></dd>
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>the return value of a <code>geom_*</code> function is not intended to be
+directly handled by users. Therefore, <code>geom_*</code> functions should never be
+executed in isolation, rather used in combination with a
+<code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot2::ggplot()</a></code> call.</p>
+    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>geom_range()</code> and <code>geom_half_range()</code> require the following <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>;
