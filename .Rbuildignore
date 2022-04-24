@@ -9,3 +9,4 @@
 ^_pkgdown.yml$
 ^tests/testthat/_snaps/*
 ^LICENSE\.md$
+^cran-comments\.md$
