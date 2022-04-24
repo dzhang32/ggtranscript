@@ -196,6 +196,7 @@ sod1_201_exons %>%
 One of the primary reasons for visualizing transcript structures is to better observe the differences between them. Often this can be achieved by simply plotting the exons and introns as shown in [basic usage](#plotting_exons_and_introns). However, for longer, complex transcripts this may not be as straight forward. 
 
 For example, the transcripts of *PKNOX1* have relatively long introns, which makes the comparison between transcript structures (especially small differences in exons) more difficult. 
+
 > 📌: For relatively short introns, strand arrows may overlap exons. In such cases, the `arrow.min.intron.length` parameter of `geom_intron()` can be used to set the minimum intron length for a strand arrow to be plotted. 
 
 ```{r transcript-diff-base}
