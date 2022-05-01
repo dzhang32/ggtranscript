@@ -1,3 +1,9 @@
+# ggtranscript 0.99.8
+
+## NEW FEATURES
+
+* Address CRAN feedback; changing ggplot2 -> 'ggplot2', remove biocViews and contributing, removing Date field in DESCRIPTION.
+
 # ggtranscript 0.99.7
 
 ## NEW FEATURES

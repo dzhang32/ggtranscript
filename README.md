@@ -274,20 +274,22 @@ sod1_201_exons %>%
 
 ``` r
 citation("ggtranscript")
+#> Warning in citation("ggtranscript"): no date field in DESCRIPTION file of
+#> package 'ggtranscript'
 #> 
 #> To cite package 'ggtranscript' in publications use:
 #> 
-#>   David Zhang and Emil Gustavsson (2021). ggtranscript: Visualizing
+#>   David Zhang and Emil Gustavsson (2022). ggtranscript: Visualizing
 #>   Transcript Structure and Annotation using 'ggplot2'. R package
-#>   version 0.99.7. https://github.com/dzhang32/ggtranscript
+#>   version 0.99.8. https://github.com/dzhang32/ggtranscript
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
 #>     title = {ggtranscript: Visualizing Transcript Structure and Annotation using 'ggplot2'},
 #>     author = {David Zhang and Emil Gustavsson},
-#>     year = {2021},
-#>     note = {R package version 0.99.7},
+#>     year = {2022},
+#>     note = {R package version 0.99.8},
 #>     url = {https://github.com/dzhang32/ggtranscript},
 #>   }
 ```
