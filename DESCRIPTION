@@ -1,7 +1,6 @@
 Package: ggtranscript
 Title: Visualizing Transcript Structure and Annotation using 'ggplot2'
 Version: 0.99.7
-Date: 2021-04-24
 Authors@R:
     c(
     person("David", "Zhang", , "dyzhang32@gmail.com", 
