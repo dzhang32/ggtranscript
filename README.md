@@ -270,14 +270,6 @@ sod1_201_exons %>%
 
 <img src="man/figures/README-geom-junction-pub-1.png" width="100%" />
 
-## Contributing
-
-Interested in contributing? Check out the [contributing
-guidelines](.github/CONTRIBUTING.md). Please note that this project is
-released with a [Code of
-Conduct](https://bioconductor.github.io/bioc_coc_multilingual/). By
-contributing to this project, you agree to abide by its terms.
-
 ## Citation
 
 ``` r
@@ -286,13 +278,13 @@ citation("ggtranscript")
 #> To cite package 'ggtranscript' in publications use:
 #> 
 #>   David Zhang and Emil Gustavsson (2021). ggtranscript: Visualizing
-#>   transcript structure and annotation using ggplot2. R package version
-#>   0.99.7. https://github.com/dzhang32/ggtranscript
+#>   Transcript Structure and Annotation using 'ggplot2'. R package
+#>   version 0.99.7. https://github.com/dzhang32/ggtranscript
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
-#>     title = {ggtranscript: Visualizing transcript structure and annotation using ggplot2},
+#>     title = {ggtranscript: Visualizing Transcript Structure and Annotation using 'ggplot2'},
 #>     author = {David Zhang and Emil Gustavsson},
 #>     year = {2021},
 #>     note = {R package version 0.99.7},
