@@ -1,5 +1,5 @@
 Package: ggtranscript
-Title: Visualizing Transcript Structure and Annotation using ggplot2
+Title: Visualizing Transcript Structure and Annotation using 'ggplot2'
 Version: 0.99.7
 Date: 2021-04-24
 Authors@R:
@@ -18,10 +18,11 @@ Description: The goal of ggtranscript is the simplify the process of visualizing
     transcript structure and annotation. To achieve this, ggtranscript 
     introduces 5 new geoms (geom_range(), geom_half_range(), geom_intron(), 
     geom_junction() and geom_junction_label_repel()) as well as several helper 
-    functions. As a ggplot2 extension, ggtranscript inherits ggplot2's 
+    functions. As a 'ggplot2' extension, ggtranscript inherits 'ggplot2's 
     familiarity and flexibility, enabling users to intuitively adjust 
     aesthetics, parameters, scales etc as well as complement ggtranscript geoms
-    with existing ggplot2 geoms to create informative, publication-ready plots.
+    with existing 'ggplot2' geoms to create informative, publication-ready 
+    plots.
 License: MIT + file LICENSE
 URL: https://github.com/dzhang32/ggtranscript
 BugReports: https://github.com/dzhang32/ggtranscript/issues
