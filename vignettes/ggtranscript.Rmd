@@ -29,8 +29,10 @@ knitr::opts_chunk$set(
 
 ```{r load-ggtranscript}
 library(magrittr)
+library(dplyr)
 library(ggtranscript)
 library(ggplot2)
+library(rtracklayer)
 ```
 
 `ggtranscript` is designed to make it easy to visualize transcript structure and annotation using `ggplot2`. 
@@ -63,8 +65,6 @@ dplyr::tribble(
 
 In order to showcase the package's functionality, `ggtranscript` includes example transcript annotation for the genes *SOD1* and *PKNOX1*, as well as a set of unannotated junctions associated with *SOD1*. These specific genes are unimportant, chosen arbitrarily for illustration. However, it worth noting that the input data for `ggtranscript`, as a `ggplot2` extension, is required be a [`data.frame`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame) or [`tibble`](https://tibble.tidyverse.org).
 
-You may be asking, what if I have `GenomicRanges` object? Almost always, you can easily transform `GenomicRanges` into a `data.frame` using a helper function such as `as.data.frame()`.
-
 ```{r example-data}
 
 sod1_annotation %>% head()
@@ -72,6 +72,71 @@ sod1_annotation %>% head()
 pknox1_annotation %>% head()
 
 sod1_junctions
+
+```
+
+### Plotting data from a .gtf file
+
+You may be asking, what if I have a `gtf` file or a `GenomicRanges` object? The below demonstrates how to wrangle a `gtf` into the required format for `ggtranscript` and extract the relevant annotation for a particular gene of interest. 
+
+For the purposes of the vignette, here we download a `gtf` (Ensembl version 105), then load the `gtf` into `R` using `rtracklayer::import()`.
+
+```{r import-gtf-data}
+
+# download ens 105 gtf into a temporary directory
+gtf_path <- file.path(tempdir(), "Homo_sapiens.GRCh38.105.chr.gtf.gz")
+
+download.file(
+    paste0(
+        "http://ftp.ensembl.org/pub/release-105/gtf/homo_sapiens/",
+        "Homo_sapiens.GRCh38.105.chr.gtf.gz"
+    ),
+    destfile = gtf_path
+)
+
+gtf <- rtracklayer::import(gtf_path)
+
+class(gtf)
+
+```
+
+To note, the loaded `gtf` is a `GenomicRanges` class object. The input data for `ggtranscript`, as a `ggplot2` extension, is required be a [`data.frame`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame) or [`tibble`](https://tibble.tidyverse.org). We can convert a `GenomicRanges` to a `data.frame` using `as.data.frame` or a `tibble` via `dplyr::as_tibble()`. Either is fine with respect to `ggtranscript`, however we prefer `tibble`s over `data.frame`s for several [reasons](https://r4ds.had.co.nz/tibbles.html#tibbles-vs.-data.frame). 
+
+```{r convert-gtf-df}
+
+gtf <- gtf %>% dplyr::as_tibble()
+
+class(gtf)
+
+```
+
+Now that the `gtf` is a `tibble` (or `data.frame` object), we can `dplyr::filter()` rows and `dplyr::select()` columns to keep the annotation columns required for any specific gene of interest. Here, we illustrate how you would obtain the annotation for the gene *SOD1*, ready for plotting with `ggtranscript`.
+
+```{r get-sod1-annot}
+
+# filter your gtf for the gene of interest, here "SOD1"
+gene_of_interest <- "SOD1"
+
+sod1_annotation_from_gtf <- gtf %>% 
+  dplyr::filter(
+    !is.na(gene_name), 
+    gene_name == gene_of_interest
+  ) 
+
+# extract the required annotation columns
+sod1_annotation_from_gtf <- sod1_annotation_from_gtf %>% 
+  dplyr::select(
+    seqnames,
+    start,
+    end,
+    strand,
+    type,
+    gene_name,
+    transcript_name,
+    transcript_biotype
+  )
+
+sod1_annotation_from_gtf %>% head()
 
 ```
 
