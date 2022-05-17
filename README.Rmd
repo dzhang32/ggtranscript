@@ -66,6 +66,34 @@ sod1_exons %>%
     )
 ```
 
+`ggtranscript` provides the helper function `shorten_gaps()`, which reduces the size of the gaps. `shorten_gaps()` then rescales the exon and intron co-ordinates to preserve the original exon alignment. This allows you to hone in the differences in the exonic structure, which can be particularly useful if the transcript has relatively long introns. 
+
+```{r shorten-gaps}
+
+sod1_rescaled <- shorten_gaps(
+  sod1_exons, 
+  to_intron(sod1_exons, "transcript_name"), 
+  group_var = "transcript_name"
+  )
+
+sod1_rescaled %>%
+    dplyr::filter(type == "exon") %>%
+    ggplot(aes(
+        xstart = start,
+        xend = end,
+        y = transcript_name
+    )) +
+    geom_range(
+      aes(fill = transcript_biotype)
+    ) +
+    geom_intron(
+        data = sod1_rescaled %>% dplyr::filter(type == "intron"), 
+        arrow.min.intron.length = 200
+    )
+
+```
+
+
 `geom_range()` can be used for any range-based genomic annotation. For example, when plotting protein-coding transcripts, users may find it helpful to visually distinguish the coding segments from UTRs. 
 
 ```{r geom-range-intron-w-cds}
