@@ -223,7 +223,7 @@ pknox1_exons %>%
 
 ### Improving transcript structure visualisation using `shorten_gaps()`
 
-`ggtranscript` provides the helper function `shorten_gaps()`, which reduces the size of the gaps (regions that do not overlap an intron). `shorten_gaps()` then rescales the exon and intron co-ordinates, preserving the original exon alignment. This allows you to hone in the differences of interest, such as the exonic structure.
+`ggtranscript` provides the helper function `shorten_gaps()`, which reduces the size of the gaps (regions that do not overlap an exon). `shorten_gaps()` then rescales the exon and intron co-ordinates, preserving the original exon alignment. This allows you to hone in the differences of interest, such as the exonic structure.
 
 > 📌: The rescaled co-ordinates returned by `shorten_gaps()` will not match the original genomic positions. Therefore, it is recommended that `shorten_gaps()` is used for visualizations purposes only. 
 
