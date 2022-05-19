@@ -274,10 +274,23 @@ jobs:
       - name: Install package
         if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: R CMD INSTALL .
+        
+      - name: Get R package info
+        if: runner.os == 'Linux'
+        run: |
+          #### DockerHub repos must be lowercase (,,) ####
+          name=$(grep '^Package:' DESCRIPTION | cut -d\   -f2)
+          echo "packageNameOrig=${name}" >> $GITHUB_ENV
+          echo $name
+          version=$(grep Version DESCRIPTION | grep -o "[0-9.]\+")
+          echo "packageVersion=${version}" >> $GITHUB_ENV
+          echo $version
+        shell: bash {0}
 
       - name: Build and deploy pkgdown site
         if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
+          git config --global --add safe.directory /__w/${{env.packageNameOrig}}/${{env.packageNameOrig}} 
           git config --local user.name "$GITHUB_ACTOR"
           git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
           Rscript -e "pkgdown::deploy_to_branch(new_process = FALSE)"
