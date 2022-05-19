@@ -144,63 +144,10 @@ understanding of transcript annotation and familiarity with
 <code>ggplot2</code>.</p>
 <p><br></p>
 <div class="section level2">
-<h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+<h2 id="input-data">Input data<a class="anchor" aria-label="anchor" href="#input-data"></a>
 </h2>
 <div class="section level3">
-<h3 id="required-aesthetics">Required aesthetics<a class="anchor" aria-label="anchor" href="#required-aesthetics"></a>
-</h3>
-<p><code>ggtranscript</code> introduces 5 new geoms designed to simplify
-the visualization of transcript structure and annotation;
-<code><a href="../reference/geom_range.html">geom_range()</a></code>, <code><a href="../reference/geom_range.html">geom_half_range()</a></code>,
-<code><a href="../reference/geom_intron.html">geom_intron()</a></code>, <code><a href="../reference/geom_junction.html">geom_junction()</a></code> and
-<code><a href="../reference/geom_junction_label_repel.html">geom_junction_label_repel()</a></code>. The required aesthetics
-(<code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>) for these geoms are designed to match the data
-formats which are widely used in genetic and transcriptomic
-analyses:</p>
-<table class="table">
-<colgroup>
-<col width="11%">
-<col width="15%">
-<col width="48%">
-<col width="24%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Required aes()</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-<th align="left">Required by</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">xstart</td>
-<td align="left">integer</td>
-<td align="left">Start position in base pairs</td>
-<td align="left">All geoms</td>
-</tr>
-<tr class="even">
-<td align="left">xend</td>
-<td align="left">integer</td>
-<td align="left">End position in base pairs</td>
-<td align="left">All geoms</td>
-</tr>
-<tr class="odd">
-<td align="left">y</td>
-<td align="left">charactor or factor</td>
-<td align="left">The group used for the y axis, most often a transcript
-id or name</td>
-<td align="left">All geoms</td>
-</tr>
-<tr class="even">
-<td align="left">label</td>
-<td align="left">integer or charactor</td>
-<td align="left">Variable used to label junction curves</td>
-<td align="left">Only geom_junction_label_repel()</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level3">
-<h3 id="input-data">Input data<a class="anchor" aria-label="anchor" href="#input-data"></a>
+<h3 id="example-data">Example data<a class="anchor" aria-label="anchor" href="#example-data"></a>
 </h3>
 <p>In order to showcase the package’s functionality,
 <code>ggtranscript</code> includes example transcript annotation for the
@@ -245,7 +192,7 @@ or <a href="https://tibble.tidyverse.org" class="external-link"><code>tibble</co
 <span class="co">#&gt; <span style="color: #BCBCBC;">5</span> chr21    31<span style="text-decoration: underline;">660</span>351 31<span style="text-decoration: underline;">663</span>789 +           0.324</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="plotting-data-from-a--gtf-file">Plotting data from a .gtf file<a class="anchor" aria-label="anchor" href="#plotting-data-from-a--gtf-file"></a>
+<h3 id="importing-data-from-a-gtf">Importing data from a gtf<a class="anchor" aria-label="anchor" href="#importing-data-from-a-gtf"></a>
 </h3>
 <p>You may be asking, what if I have a <code>gtf</code> file or a
 <code>GenomicRanges</code> object? The below demonstrates how to wrangle
@@ -329,6 +276,68 @@ for plotting with <code>ggtranscript</code>.</p>
 <span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      CDS   SOD1      SOD1-202        protein_coding  </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      star… SOD1      SOD1-202        protein_coding  </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      exon  SOD1      SOD1-202        protein_coding</span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="importing-data-from-a-bed-file">Importing data from a bed file<a class="anchor" aria-label="anchor" href="#importing-data-from-a-bed-file"></a>
+</h2>
+<p><br></p>
+</div>
+<div class="section level2">
+<h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+</h2>
+<div class="section level3">
+<h3 id="required-aesthetics">Required aesthetics<a class="anchor" aria-label="anchor" href="#required-aesthetics"></a>
+</h3>
+<p><code>ggtranscript</code> introduces 5 new geoms designed to simplify
+the visualization of transcript structure and annotation;
+<code><a href="../reference/geom_range.html">geom_range()</a></code>, <code><a href="../reference/geom_range.html">geom_half_range()</a></code>,
+<code><a href="../reference/geom_intron.html">geom_intron()</a></code>, <code><a href="../reference/geom_junction.html">geom_junction()</a></code> and
+<code><a href="../reference/geom_junction_label_repel.html">geom_junction_label_repel()</a></code>. The required aesthetics
+(<code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>) for these geoms are designed to match the data
+formats which are widely used in genetic and transcriptomic
+analyses:</p>
+<table class="table">
+<colgroup>
+<col width="11%">
+<col width="15%">
+<col width="48%">
+<col width="24%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Required aes()</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+<th align="left">Required by</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">xstart</td>
+<td align="left">integer</td>
+<td align="left">Start position in base pairs</td>
+<td align="left">All geoms</td>
+</tr>
+<tr class="even">
+<td align="left">xend</td>
+<td align="left">integer</td>
+<td align="left">End position in base pairs</td>
+<td align="left">All geoms</td>
+</tr>
+<tr class="odd">
+<td align="left">y</td>
+<td align="left">charactor or factor</td>
+<td align="left">The group used for the y axis, most often a transcript
+id or name</td>
+<td align="left">All geoms</td>
+</tr>
+<tr class="even">
+<td align="left">label</td>
+<td align="left">integer or charactor</td>
+<td align="left">Variable used to label junction curves</td>
+<td align="left">Only geom_junction_label_repel()</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="plotting_exons_and_introns">Plotting exons and introns<a class="anchor" aria-label="anchor" href="#plotting_exons_and_introns"></a>
@@ -672,17 +681,87 @@ plots.</p>
 functionality that we have found useful:</p>
 <ul>
 <li>Adding exon annotation such as <a href="https://dzhang32.github.io/ggtranscript/reference/add_exon_number.html" class="external-link">exon
-number/order</a> using <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code>
+number/order</a> using <code><a href="../reference/add_exon_number.html">add_exon_number()</a></code> and
+<code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code>
 </li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">base_sod1_plot</span> <span class="op">&lt;-</span> <span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>
+    xstart <span class="op">=</span> <span class="va">start</span>,
+    xend <span class="op">=</span> <span class="va">end</span>,
+    y <span class="op">=</span> <span class="va">transcript_name</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/geom_range.html">geom_range</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">transcript_biotype</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="../reference/geom_intron.html">geom_intron</a></span><span class="op">(</span>
+    data <span class="op">=</span> <span class="fu"><a href="../reference/to_intron.html">to_intron</a></span><span class="op">(</span><span class="va">sod1_exons</span>, <span class="st">"transcript_name"</span><span class="op">)</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>strand <span class="op">=</span> <span class="va">strand</span><span class="op">)</span>
+  <span class="op">)</span> 
+
+<span class="va">base_sod1_plot</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span>
+    data <span class="op">=</span> <span class="fu"><a href="../reference/add_exon_number.html">add_exon_number</a></span><span class="op">(</span><span class="va">sod1_exons</span>, <span class="st">"transcript_name"</span><span class="op">)</span>,
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>
+      x <span class="op">=</span> <span class="op">(</span><span class="va">start</span> <span class="op">+</span> <span class="va">end</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>, <span class="co"># plot label at midpoint of exon</span>
+      label <span class="op">=</span> <span class="va">exon_number</span>
+    <span class="op">)</span>,
+    size <span class="op">=</span> <span class="fl">3.5</span>,
+    nudge_y <span class="op">=</span> <span class="fl">0.4</span>
+  <span class="op">)</span></code></pre></div>
+<p><img src="ggtranscript_files/figure-html/exon-num-ex-1.png" width="700"></p>
+<ul>
 <li>Zooming in on areas of interest using <code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code>
 or <code>ggforce::facet_zoom()</code>
 </li>
-<li>Plotting mutations using <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point()</a></code>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">base_sod1_plot</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">31665500</span>, <span class="fl">31669000</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="ggtranscript_files/figure-html/zoom-ex-1.png" width="700"></p>
+<ul>
+<li>Plotting mutations using <code><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline()</a></code>
 </li>
-<li>Plotting coverage using <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon()</a></code>
-</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">example_mutation</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
+  transcript_name <span class="op">=</span> <span class="st">"SOD1-204"</span>, 
+  position <span class="op">=</span> <span class="fl">31661600</span>
+<span class="op">)</span>
+
+<span class="co"># xstart and xend are set here to override the default aes()</span>
+<span class="va">base_sod1_plot</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>
+    data <span class="op">=</span> <span class="va">example_mutation</span>, 
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>
+      y <span class="op">=</span> <span class="va">transcript_name</span>, 
+      xintercept <span class="op">=</span> <span class="va">position</span>, 
+      xstart <span class="op">=</span> <span class="cn">NULL</span>,
+      xend <span class="op">=</span> <span class="cn">NULL</span>
+      <span class="op">)</span>, 
+    linetype <span class="op">=</span> <span class="fl">2</span>,
+    colour <span class="op">=</span> <span class="st">"red"</span>
+  <span class="op">)</span>
+<span class="co">#&gt; Warning: Ignoring unknown aesthetics: y</span></code></pre></div>
+<p><img src="ggtranscript_files/figure-html/mutation-ex-1.png" width="700"></p>
+<ul>
 <li>Beautifying plots using themes and scales</li>
 </ul>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">base_sod1_plot</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Position"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_y_discrete</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Transcript name"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete</a></span><span class="op">(</span>
+    name <span class="op">=</span> <span class="st">"Transcript biotype"</span>,
+    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Processed transcript"</span>, <span class="st">"Protein-coding"</span><span class="op">)</span>
+    <span class="op">)</span></code></pre></div>
+<p><img src="ggtranscript_files/figure-html/beautify-ex-1.png" width="700"></p>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -708,7 +787,7 @@ Show/hide
 <span class="co">#&gt;  Biobase                2.56.0   <span style="color: #555555;">2022-04-26</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
 <span class="co">#&gt;  BiocGenerics         * 0.42.0   <span style="color: #555555;">2022-04-26</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
 <span class="co">#&gt;  BiocIO                 1.6.0    <span style="color: #555555;">2022-04-26</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
-<span class="co">#&gt;  BiocManager            1.30.17  <span style="color: #555555;">2022-04-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.2.0)</span></span>
+<span class="co">#&gt;  BiocManager            1.30.18  <span style="color: #555555;">2022-05-18</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.2.0)</span></span>
 <span class="co">#&gt;  BiocParallel           1.30.2   <span style="color: #555555;">2022-05-15</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
 <span class="co">#&gt;  BiocStyle            * 2.24.0   <span style="color: #555555;">2022-04-26</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
 <span class="co">#&gt;  Biostrings             2.64.0   <span style="color: #555555;">2022-04-26</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
