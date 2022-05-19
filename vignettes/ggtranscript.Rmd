@@ -471,7 +471,6 @@ base_sod1_plot +
   geom_vline(
     data = example_mutation, 
     aes(
-      y = transcript_name, 
       xintercept = position, 
       xstart = NULL,
       xend = NULL
