@@ -417,11 +417,85 @@ As a `ggplot2` extension, `ggtranscript` inherits `ggplot2`'s familiarity and fl
 
 Below is a list outlining some examples of complementing `ggtranscript` with existing `ggplot2` functionality that we have found useful: 
 
-  - Adding exon annotation such as [exon number/order](https://dzhang32.github.io/ggtranscript/reference/add_exon_number.html) using `geom_text()`
+  - Adding exon annotation such as [exon number/order](https://dzhang32.github.io/ggtranscript/reference/add_exon_number.html) using `add_exon_number()` and `geom_text()`
+  
+```{r exon-num-ex}
+
+base_sod1_plot <- sod1_exons %>% 
+  ggplot(aes(
+    xstart = start,
+    xend = end,
+    y = transcript_name
+  )) +
+  geom_range(
+    aes(fill = transcript_biotype)
+  ) +
+  geom_intron(
+    data = to_intron(sod1_exons, "transcript_name"),
+    aes(strand = strand)
+  ) 
+
+base_sod1_plot + 
+  geom_text(
+    data = add_exon_number(sod1_exons, "transcript_name"),
+    aes(
+      x = (start + end) / 2, # plot label at midpoint of exon
+      label = exon_number
+    ),
+    size = 3.5,
+    nudge_y = 0.4
+  )
+
+```
+  
   - Zooming in on areas of interest using `coord_cartesian()` or `ggforce::facet_zoom()`
-  - Plotting mutations using `geom_point()`
-  - Plotting coverage using `geom_polygon()`
+  
+```{r zoom-ex}
+
+base_sod1_plot + 
+  coord_cartesian(xlim = c(31665500, 31669000))
+
+```
+  
+  - Plotting mutations using `geom_vline()`
+  
+```{r mutation-ex}
+
+example_mutation <- dplyr::tibble(
+  transcript_name = "SOD1-204", 
+  position = 31661600
+)
+
+# xstart and xend are set here to override the default aes()
+base_sod1_plot + 
+  geom_vline(
+    data = example_mutation, 
+    aes(
+      y = transcript_name, 
+      xintercept = position, 
+      xstart = NULL,
+      xend = NULL
+      ), 
+    linetype = 2,
+    colour = "red"
+  )
+
+```
+
   - Beautifying plots using themes and scales
+  
+```{r beautify-ex}
+
+base_sod1_plot + 
+  theme_bw() + 
+  scale_x_continuous(name = "Position") + 
+  scale_y_discrete(name = "Transcript name") + 
+  scale_fill_discrete(
+    name = "Transcript biotype",
+    labels = c("Processed transcript", "Protein-coding")
+    )
+  
+```
   
 <br>
 
