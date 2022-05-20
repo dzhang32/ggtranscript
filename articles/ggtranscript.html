@@ -195,10 +195,10 @@ or <a href="https://tibble.tidyverse.org" class="external-link"><code>tibble</co
 <h3 id="importing-data-from-a-gtf">Importing data from a gtf<a class="anchor" aria-label="anchor" href="#importing-data-from-a-gtf"></a>
 </h3>
 <p>You may be asking, what if I have a <code>gtf</code> file or a
-<code>GenomicRanges</code> object? The below demonstrates how to wrangle
-a <code>gtf</code> into the required format for
-<code>ggtranscript</code> and extract the relevant annotation for a
-particular gene of interest.</p>
+<code>GRanges</code> object? The below demonstrates how to wrangle a
+<code>gtf</code> into the required format for <code>ggtranscript</code>
+and extract the relevant annotation for a particular gene of
+interest.</p>
 <p>For the purposes of the vignette, here we download a <code>gtf</code>
 (Ensembl version 105), then load the <code>gtf</code> into
 <code>R</code> using <code>rtracklayer::import()</code>.</p>
@@ -221,12 +221,12 @@ particular gene of interest.</p>
 <span class="co">#&gt; [1] "GRanges"</span>
 <span class="co">#&gt; attr(,"package")</span>
 <span class="co">#&gt; [1] "GenomicRanges"</span></code></pre></div>
-<p>To note, the loaded <code>gtf</code> is a <code>GenomicRanges</code>
-class object. The input data for <code>ggtranscript</code>, as a
+<p>To note, the loaded <code>gtf</code> is a <code>GRanges</code> class
+object. The input data for <code>ggtranscript</code>, as a
 <code>ggplot2</code> extension, is required be a <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame" class="external-link"><code>data.frame</code></a>
 or <a href="https://tibble.tidyverse.org" class="external-link"><code>tibble</code></a>. We
-can convert a <code>GenomicRanges</code> to a <code>data.frame</code>
-using <code>as.data.frame</code> or a <code>tibble</code> via
+can convert a <code>GRanges</code> to a <code>data.frame</code> using
+<code>as.data.frame</code> or a <code>tibble</code> via
 <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">dplyr::as_tibble()</a></code>. Either is fine with respect to
 <code>ggtranscript</code>, however we prefer <code>tibble</code>s over
 <code>data.frame</code>s for several <a href="https://r4ds.had.co.nz/tibbles.html#tibbles-vs.-data.frame" class="external-link">reasons</a>.</p>
@@ -277,11 +277,47 @@ for plotting with <code>ggtranscript</code>.</p>
 <span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      star… SOD1      SOD1-202        protein_coding  </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 21       3.17<span style="color: #949494;">e</span>7 3.17<span style="color: #949494;">e</span>7 +      exon  SOD1      SOD1-202        protein_coding</span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="importing-data-from-a-bed-file">Importing data from a bed file<a class="anchor" aria-label="anchor" href="#importing-data-from-a-bed-file"></a>
-</h2>
+<div class="section level3">
+<h3 id="importing-data-from-a-bed-file">Importing data from a bed file<a class="anchor" aria-label="anchor" href="#importing-data-from-a-bed-file"></a>
+</h3>
+<p>If users would like to plot ranges from a <code>bed</code> file using
+<code>ggtranscript</code>, they can first import the <code>bed</code>
+file into <code>R</code> using <code><a href="https://rdrr.io/pkg/rtracklayer/man/BEDFile-class.html" class="external-link">rtracklayer::import.bed()</a></code>.
+This method will create a <code>UCSCData</code> object.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="co"># for the example, we'll use the test bed file provided by rtracklayer </span>
+<span class="va">test_bed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tests/test.bed"</span>, package <span class="op">=</span> <span class="st">"rtracklayer"</span><span class="op">)</span>
+
+<span class="va">bed</span> <span class="op">&lt;-</span> <span class="fu">rtracklayer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rtracklayer/man/BEDFile-class.html" class="external-link">import.bed</a></span><span class="op">(</span><span class="va">test_bed</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">bed</span><span class="op">)</span>
+<span class="co">#&gt; [1] "UCSCData"</span>
+<span class="co">#&gt; attr(,"package")</span>
+<span class="co">#&gt; [1] "rtracklayer"</span></code></pre></div>
+<p>A <code>UCSCData</code> object can be coerced into a
+<code>tibble</code>, a data structure which can be plotted using
+<code>ggplot2</code>/<code>ggtranscript</code>, using
+<code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">dplyr::as_tibble()</a></code>.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">bed</span> <span class="op">&lt;-</span> <span class="va">bed</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">bed</span><span class="op">)</span>
+<span class="co">#&gt; [1] "tbl_df"     "tbl"        "data.frame"</span>
+
+<span class="va">bed</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 12</span></span>
+<span class="co">#&gt;   seqnames   start    end width strand name  score itemRgb thick.start thick.end</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> chr7      1.27<span style="color: #949494;">e</span>8 1.27<span style="color: #949494;">e</span>8  <span style="text-decoration: underline;">1</span>167 +      Pos1      0 #FF0000   127<span style="text-decoration: underline;">471</span>197 127<span style="text-decoration: underline;">472</span>363</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> chr7      1.27<span style="color: #949494;">e</span>8 1.27<span style="color: #949494;">e</span>8  <span style="text-decoration: underline;">1</span>167 +      Pos2      2 #FF0000   127<span style="text-decoration: underline;">472</span>364 127<span style="text-decoration: underline;">473</span>530</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> chr7      1.27<span style="color: #949494;">e</span>8 1.27<span style="color: #949494;">e</span>8  <span style="text-decoration: underline;">1</span>167 -      Neg1      0 #FF0000   127<span style="text-decoration: underline;">473</span>531 127<span style="text-decoration: underline;">474</span>697</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> chr9      1.27<span style="color: #949494;">e</span>8 1.27<span style="color: #949494;">e</span>8  <span style="text-decoration: underline;">1</span>167 +      Pos3      5 #FF0000   127<span style="text-decoration: underline;">474</span>698 127<span style="text-decoration: underline;">475</span>864</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> chr9      1.27<span style="color: #949494;">e</span>8 1.27<span style="color: #949494;">e</span>8  <span style="text-decoration: underline;">1</span>167 -      Neg2      5 #0000FF   127<span style="text-decoration: underline;">475</span>865 127<span style="text-decoration: underline;">477</span>031</span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 2 more variables: thick.width &lt;int&gt;, blocks &lt;list&gt;</span></span></code></pre></div>
 <p><br></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
@@ -355,7 +391,7 @@ is recommended to set these via <code><a href="https://ggplot2.tidyverse.org/ref
 the individual <code>geom_*()</code> calls to avoid code
 duplication.</p>
 </blockquote>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># to illustrate the package's functionality</span>
 <span class="co"># ggtranscript includes example transcript annotation</span>
@@ -398,7 +434,7 @@ useful to visually distinguish the coding sequence (CDS) of a transcript
 from it’s UTRs. This can be achieved by adjusting the height and fill of
 <code><a href="../reference/geom_range.html">geom_range()</a></code> and overlaying the CDS on top of the exons
 (including UTRs).</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># filter for only exons from protein coding transcripts</span>
 <span class="va">sod1_exons_prot_cod</span> <span class="op">&lt;-</span> <span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -446,7 +482,7 @@ Alternatively, you may choose to visually map this measure to the
 thickness of the junction curves by adjusting the the size
 <code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code>. Or, as shown below, both of these options can be
 combined.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># extract exons and cds for the MANE-select transcript</span>
 <span class="va">sod1_201_exons</span> <span class="op">&lt;-</span> <span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">transcript_name</span> <span class="op">==</span> <span class="st">"SOD1-201"</span><span class="op">)</span>
@@ -505,7 +541,7 @@ such cases, the <code>arrow.min.intron.length</code> parameter of
 <code><a href="../reference/geom_intron.html">geom_intron()</a></code> can be used to set the minimum intron length
 for a strand arrow to be plotted.</p>
 </blockquote>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># extract exons</span>
 <span class="va">pknox1_exons</span> <span class="op">&lt;-</span> <span class="va">pknox1_annotation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span>
@@ -542,7 +578,7 @@ will not match the original genomic positions. Therefore, it is
 recommended that <code><a href="../reference/shorten_gaps.html">shorten_gaps()</a></code> is used for visualizations
 purposes only.</p>
 </blockquote>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># extract exons</span>
 <span class="va">pknox1_exons</span> <span class="op">&lt;-</span> <span class="va">pknox1_annotation</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"exon"</span><span class="op">)</span>
@@ -584,7 +620,7 @@ can use <code><a href="../reference/geom_range.html">geom_half_range()</a></code
 opposite sides of the transcript structure. This can reveal small
 differences in exon structure, such as those observed here at the 5’
 ends of <em>PKNOX1-201</em> and <em>PKNOX1-203</em>.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># extract the two transcripts to be compared</span>
 <span class="va">pknox1_rescaled_201_exons</span> <span class="op">&lt;-</span> <span class="va">pknox1_rescaled_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
@@ -634,7 +670,7 @@ exons and intron (outputted by <code><a href="../reference/shorten_gaps.html">sh
 <code><a href="../reference/to_diff.html">to_diff()</a></code> can also be applied to the original, unscaled
 transcripts with the same effect.</p>
 </blockquote>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">mane</span> <span class="op">&lt;-</span> <span class="va">pknox1_rescaled_201_exons</span>
 
@@ -685,7 +721,7 @@ number/order</a> using <code><a href="../reference/add_exon_number.html">add_exo
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code>
 </li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">base_sod1_plot</span> <span class="op">&lt;-</span> <span class="va">sod1_exons</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>
@@ -717,7 +753,7 @@ number/order</a> using <code><a href="../reference/add_exon_number.html">add_exo
 or <code>ggforce::facet_zoom()</code>
 </li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">base_sod1_plot</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">31665500</span>, <span class="fl">31669000</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -726,7 +762,7 @@ or <code>ggforce::facet_zoom()</code>
 <li>Plotting mutations using <code><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline()</a></code>
 </li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">example_mutation</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   transcript_name <span class="op">=</span> <span class="st">"SOD1-204"</span>, 
@@ -738,20 +774,18 @@ or <code>ggforce::facet_zoom()</code>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>
     data <span class="op">=</span> <span class="va">example_mutation</span>, 
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>
-      y <span class="op">=</span> <span class="va">transcript_name</span>, 
       xintercept <span class="op">=</span> <span class="va">position</span>, 
       xstart <span class="op">=</span> <span class="cn">NULL</span>,
       xend <span class="op">=</span> <span class="cn">NULL</span>
       <span class="op">)</span>, 
     linetype <span class="op">=</span> <span class="fl">2</span>,
     colour <span class="op">=</span> <span class="st">"red"</span>
-  <span class="op">)</span>
-<span class="co">#&gt; Warning: Ignoring unknown aesthetics: y</span></code></pre></div>
+  <span class="op">)</span></code></pre></div>
 <p><img src="ggtranscript_files/figure-html/mutation-ex-1.png" width="700"></p>
 <ul>
 <li>Beautifying plots using themes and scales</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">base_sod1_plot</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
@@ -779,7 +813,7 @@ Show/hide
 <span class="co">#&gt;  collate  en_US.UTF-8</span>
 <span class="co">#&gt;  ctype    en_US.UTF-8</span>
 <span class="co">#&gt;  tz       UTC</span>
-<span class="co">#&gt;  date     2022-05-19</span>
+<span class="co">#&gt;  date     2022-05-20</span>
 <span class="co">#&gt;  pandoc   2.17.1.1 @ /usr/local/bin/ (via rmarkdown)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
@@ -815,7 +849,7 @@ Show/hide
 <span class="co">#&gt;  GenomicRanges        * 1.48.0   <span style="color: #555555;">2022-04-26</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span>
 <span class="co">#&gt;  ggplot2              * 3.3.6    <span style="color: #555555;">2022-05-03</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.2.0)</span></span>
 <span class="co">#&gt;  ggrepel                0.9.1    <span style="color: #555555;">2021-01-15</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.1.0)</span></span>
-<span class="co">#&gt;  ggtranscript         * 0.99.8   <span style="color: #555555;">2022-05-19</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">local</span></span>
+<span class="co">#&gt;  ggtranscript         * 0.99.8   <span style="color: #555555;">2022-05-20</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">local</span></span>
 <span class="co">#&gt;  glue                   1.6.2    <span style="color: #555555;">2022-02-24</span> <span style="color: #555555;">[2]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.2.0)</span></span>
 <span class="co">#&gt;  gtable                 0.3.0    <span style="color: #555555;">2019-03-25</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.1.0)</span></span>
 <span class="co">#&gt;  highr                  0.9      <span style="color: #555555;">2021-04-16</span> <span style="color: #555555;">[2]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM (R 4.2.0)</span></span>
