@@ -1,3 +1,9 @@
+# ggtranscript 0.99.9
+
+## NEW FEATURES
+
+* Address ggtranscript reviews; update docs with examples of using gtf/bed files, integration with `ggplot2` extensions and add usage of `shorten_gaps()` to README.
+
 # ggtranscript 0.99.8
 
 ## NEW FEATURES

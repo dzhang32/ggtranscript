@@ -312,7 +312,7 @@ citation("ggtranscript")
 #> 
 #>   David Zhang and Emil Gustavsson (2022). ggtranscript: Visualizing
 #>   Transcript Structure and Annotation using 'ggplot2'. R package
-#>   version 0.99.8. https://github.com/dzhang32/ggtranscript
+#>   version 0.99.9. https://github.com/dzhang32/ggtranscript
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -320,7 +320,7 @@ citation("ggtranscript")
 #>     title = {ggtranscript: Visualizing Transcript Structure and Annotation using 'ggplot2'},
 #>     author = {David Zhang and Emil Gustavsson},
 #>     year = {2022},
-#>     note = {R package version 0.99.8},
+#>     note = {R package version 0.99.9},
 #>     url = {https://github.com/dzhang32/ggtranscript},
 #>   }
 ```
