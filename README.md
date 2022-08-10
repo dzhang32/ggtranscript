@@ -305,23 +305,23 @@ sod1_201_exons %>%
 
 ``` r
 citation("ggtranscript")
-#> Warning in citation("ggtranscript"): no date field in DESCRIPTION file of
-#> package 'ggtranscript'
 #> 
-#> To cite package 'ggtranscript' in publications use:
-#> 
-#>   David Zhang and Emil Gustavsson (2022). ggtranscript: Visualizing
-#>   Transcript Structure and Annotation using 'ggplot2'. R package
-#>   version 0.99.9. https://github.com/dzhang32/ggtranscript
+#> Gustavsson EK, Zhang D, Reynolds RH, Garcia-Ruiz S, Ryten M (2022).
+#> "ggtranscript: an R package for the visualization and interpretation of
+#> transcript isoforms using ggplot2." _Bioinformatics_. doi:
+#> 10.1093/bioinformatics/btac409 (URL:
+#> https://doi.org/10.1093/bioinformatics/btac409), <URL:
+#> https://academic.oup.com/bioinformatics/article/38/15/3844/6617821>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
-#>   @Manual{,
-#>     title = {ggtranscript: Visualizing Transcript Structure and Annotation using 'ggplot2'},
-#>     author = {David Zhang and Emil Gustavsson},
+#>   @Article{,
+#>     title = {ggtranscript: an R package for the visualization and interpretation of transcript isoforms using ggplot2},
+#>     author = {Emil K Gustavsson and David Zhang and Regina H Reynolds and Sonia Garcia-Ruiz and Mina Ryten},
 #>     year = {2022},
-#>     note = {R package version 0.99.9},
-#>     url = {https://github.com/dzhang32/ggtranscript},
+#>     journal = {Bioinformatics},
+#>     doi = {https://doi.org/10.1093/bioinformatics/btac409},
+#>     url = {https://academic.oup.com/bioinformatics/article/38/15/3844/6617821},
 #>   }
 ```
 

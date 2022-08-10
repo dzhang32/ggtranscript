@@ -1,0 +1,22 @@
+pkgVer <- function(pkg) {
+    if (!exists("meta") || is.null(meta)) meta <- packageDescription(pkg)
+    ver <- meta$Version
+    paste0('https://github.com/dzhang32/', pkg, ' - R package version ', ver)
+}
+
+c(
+    bibentry(bibtype="article",
+        title = "ggtranscript: an R package for the visualization and interpretation of transcript isoforms using ggplot2",
+        author = personList(
+            as.person("Emil K Gustavsson"), 
+            as.person("David Zhang"),
+            as.person("Regina H Reynolds"), 
+            as.person("Sonia Garcia-Ruiz"),
+            as.person("Mina Ryten")
+        ),
+        year = 2022,
+        journal = "Bioinformatics",
+        doi = "https://doi.org/10.1093/bioinformatics/btac409",
+        url = "https://academic.oup.com/bioinformatics/article/38/15/3844/6617821"
+    )
+)
