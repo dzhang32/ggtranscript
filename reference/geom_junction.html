@@ -90,6 +90,8 @@ support from RNA-sequencing data.</p>
 <code><a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
 default), it is combined with the default mapping at the top level of the
 plot. You must supply <code>mapping</code> if there is no plot mapping.</p></dd>
+
+
 <dt>data</dt>
 <dd><p>The data to be displayed in this layer. There are three
 options:</p>
@@ -102,57 +104,82 @@ data. All objects will be fortified to produce a data frame. See
 the plot data. The return value must be a <code>data.frame</code>, and
 will be used as the layer data. A <code>function</code> can be created
 from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></dd>
+
+
 <dt>stat</dt>
 <dd><p>The statistical transformation to use on the data for this
 layer, as a string.</p></dd>
+
+
 <dt>position</dt>
 <dd><p>Position adjustment, either as a string, or the result of
 a call to a position adjustment function.</p></dd>
+
+
 <dt>junction.orientation</dt>
 <dd><p><code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code> one of "alternating", "top" or
 "bottom", specifying where the junctions will be plotted with respect to
 each transcript (<code>y</code>).</p></dd>
+
+
 <dt>junction.y.max</dt>
 <dd><p><code><a href="https://rdrr.io/r/base/double.html" class="external-link">double()</a></code> the max y-value of each junction curve. It
 can be useful to adjust this parameter when junction curves overlap with
 one another/other transcripts or extend beyond the plot margins.</p></dd>
+
+
 <dt>angle</dt>
 <dd><p>A numeric value between 0 and 180,
     giving an amount to skew the control
     points of the curve.  Values less than 90 skew the curve towards
     the start point and values greater than 90 skew the curve
     towards the end point.</p></dd>
+
+
 <dt>ncp</dt>
 <dd><p>The number of control points used to draw the curve.
     More control points creates a smoother curve.</p></dd>
+
+
 <dt>na.rm</dt>
 <dd><p>If <code>FALSE</code>, the default, missing values are removed with
 a warning. If <code>TRUE</code>, missing values are silently removed.</p></dd>
+
+
 <dt>orientation</dt>
 <dd><p>The orientation of the layer. The default (<code>NA</code>)
 automatically determines the orientation from the aesthetic mapping. In the
 rare event that this fails it can be given explicitly by setting <code>orientation</code>
 to either <code>"x"</code> or <code>"y"</code>. See the <em>Orientation</em> section for more detail.</p></dd>
+
+
 <dt>show.legend</dt>
 <dd><p>logical. Should this layer be included in the legends?
 <code>NA</code>, the default, includes if any aesthetics are mapped.
 <code>FALSE</code> never includes, and <code>TRUE</code> always includes.
 It can also be a named logical vector to finely select the aesthetics to
 display.</p></dd>
+
+
 <dt>inherit.aes</dt>
 <dd><p>If <code>FALSE</code>, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.org/reference/borders.html" class="external-link">borders()</a></code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Other arguments passed on to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer()</a></code>. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 <code>colour = "red"</code> or <code>size = 3</code>. They may also be parameters
 to the paired geom/stat.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>the return value of a <code>geom_*</code> function is not intended to be
+    
+
+<p>the return value of a <code>geom_*</code> function is not intended to be
 directly handled by users. Therefore, <code>geom_*</code> functions should never be
 executed in isolation, rather used in combination with a
 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot2::ggplot()</a></code> call.</p>
@@ -309,7 +336,7 @@ each transcript (<code>y</code>), however this can be modified via
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

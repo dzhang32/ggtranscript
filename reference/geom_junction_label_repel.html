@@ -107,18 +107,28 @@ read counts or percent-spliced-in).</p>
 default), is combined with the default mapping at the top level of the
 plot. You only need to supply <code>mapping</code> if there isn't a mapping
 defined for the plot.</p></dd>
+
+
 <dt>data</dt>
 <dd><p>A data frame. If specified, overrides the default data frame
 defined at the top level of the plot.</p></dd>
+
+
 <dt>stat</dt>
 <dd><p>The statistical transformation to use on the data for this
 layer, as a string.</p></dd>
+
+
 <dt>position</dt>
 <dd><p>Position adjustment, either as a string, or the result of
 a call to a position adjustment function.</p></dd>
+
+
 <dt>parse</dt>
 <dd><p>If TRUE, the labels will be parsed into expressions and
 displayed as described in ?plotmath</p></dd>
+
+
 <dt>...</dt>
 <dd><p>other arguments passed on to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer</a></code>. There are
   three types of arguments you can use here:</p>
@@ -128,101 +138,156 @@ displayed as described in ?plotmath</p></dd>
       default <code>stat</code> associated with the layer.</p></li>
 <li><p>Other arguments passed on to the stat.</p></li>
 </ul></dd>
+
+
 <dt>junction.orientation</dt>
 <dd><p><code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code> one of "alternating", "top" or
 "bottom", specifying where the junctions will be plotted with respect to
 each transcript (<code>y</code>).</p></dd>
+
+
 <dt>junction.y.max</dt>
 <dd><p><code><a href="https://rdrr.io/r/base/double.html" class="external-link">double()</a></code> the max y-value of each junction curve. It
 can be useful to adjust this parameter when junction curves overlap with
 one another/other transcripts or extend beyond the plot margins.</p></dd>
+
+
 <dt>angle</dt>
 <dd><p>A numeric value between 0 and 180,
     giving an amount to skew the control
     points of the curve.  Values less than 90 skew the curve towards
     the start point and values greater than 90 skew the curve
     towards the end point.</p></dd>
+
+
 <dt>ncp</dt>
 <dd><p>The number of control points used to draw the curve.
     More control points creates a smoother curve.</p></dd>
+
+
 <dt>box.padding</dt>
 <dd><p>Amount of padding around bounding box, as unit or number.
 Defaults to 0.25. (Default unit is lines, but other units can be specified
 by passing <code>unit(x, "units")</code>).</p></dd>
+
+
 <dt>label.padding</dt>
 <dd><p>Amount of padding around label, as unit or number.
 Defaults to 0.25. (Default unit is lines, but other units can be specified
 by passing <code>unit(x, "units")</code>).</p></dd>
+
+
 <dt>point.padding</dt>
 <dd><p>Amount of padding around labeled point, as unit or
 number. Defaults to 0. (Default unit is lines, but other units can be
 specified by passing <code>unit(x, "units")</code>).</p></dd>
+
+
 <dt>label.r</dt>
 <dd><p>Radius of rounded corners, as unit or number. Defaults
 to 0.15. (Default unit is lines, but other units can be specified by
 passing <code>unit(x, "units")</code>).</p></dd>
+
+
 <dt>label.size</dt>
 <dd><p>Size of label border, in mm.</p></dd>
+
+
 <dt>min.segment.length</dt>
 <dd><p>Skip drawing segments shorter than this, as unit or
 number. Defaults to 0.5. (Default unit is lines, but other units can be
 specified by passing <code>unit(x, "units")</code>).</p></dd>
+
+
 <dt>arrow</dt>
 <dd><p>specification for arrow heads, as created by <code><a href="https://rdrr.io/r/grid/arrow.html" class="external-link">arrow</a></code></p></dd>
+
+
 <dt>force</dt>
 <dd><p>Force of repulsion between overlapping text labels. Defaults
 to 1.</p></dd>
+
+
 <dt>force_pull</dt>
 <dd><p>Force of attraction between a text label and its
 corresponding data point. Defaults to 1.</p></dd>
+
+
 <dt>max.time</dt>
 <dd><p>Maximum number of seconds to try to resolve overlaps.
 Defaults to 0.5.</p></dd>
+
+
 <dt>max.iter</dt>
 <dd><p>Maximum number of iterations to try to resolve overlaps.
 Defaults to 10000.</p></dd>
+
+
 <dt>max.overlaps</dt>
 <dd><p>Exclude text labels that overlap too many things.
 Defaults to 10.</p></dd>
+
+
 <dt>nudge_x</dt>
 <dd><p>Horizontal and vertical adjustments to nudge the
 starting position of each text label. The units for <code>nudge_x</code> and
 <code>nudge_y</code> are the same as for the data units on the x-axis and y-axis.</p></dd>
+
+
 <dt>nudge_y</dt>
 <dd><p>Horizontal and vertical adjustments to nudge the
 starting position of each text label. The units for <code>nudge_x</code> and
 <code>nudge_y</code> are the same as for the data units on the x-axis and y-axis.</p></dd>
+
+
 <dt>xlim</dt>
 <dd><p>Limits for the x and y axes. Text labels will be constrained
 to these limits. By default, text labels are constrained to the entire plot
 area.</p></dd>
+
+
 <dt>ylim</dt>
 <dd><p>Limits for the x and y axes. Text labels will be constrained
 to these limits. By default, text labels are constrained to the entire plot
 area.</p></dd>
+
+
 <dt>na.rm</dt>
 <dd><p>If <code>FALSE</code> (the default), removes missing values with
 a warning.  If <code>TRUE</code> silently removes missing values.</p></dd>
+
+
 <dt>show.legend</dt>
 <dd><p>logical. Should this layer be included in the legends?
 <code>NA</code>, the default, includes if any aesthetics are mapped.
 <code>FALSE</code> never includes, and <code>TRUE</code> always includes.</p></dd>
+
+
 <dt>direction</dt>
 <dd><p>"both", "x", or "y" -- direction in which to adjust position of labels</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>Random seed passed to <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></code>. Defaults to
 <code>NA</code>, which means that <code>set.seed</code> will not be called.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>If <code>TRUE</code>, some diagnostics of the repel algorithm are printed</p></dd>
+
+
 <dt>inherit.aes</dt>
 <dd><p>If <code>FALSE</code>, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.org/reference/borders.html" class="external-link">borders</a></code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>the return value of a <code>geom_*</code> function is not intended to be
+    
+
+<p>the return value of a <code>geom_*</code> function is not intended to be
 directly handled by users. Therefore, <code>geom_*</code> functions should never be
 executed in isolation, rather used in combination with a
 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot2::ggplot()</a></code> call.</p>
@@ -323,7 +388,7 @@ junction curves (namely <code>junction.orientation</code>, <code>junction.y.max<
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

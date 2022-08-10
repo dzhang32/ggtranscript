@@ -74,6 +74,8 @@ compare between transcript structures.</p>
     <dl><dt>exons</dt>
 <dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code> contains exons which can originate from multiple
 transcripts differentiated by <code>group_var</code>.</p></dd>
+
+
 <dt>introns</dt>
 <dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code> the intron co-ordinates corresponding to the
 input <code>exons</code>. This can be created by applying <code><a href="to_intron.html">to_intron()</a></code> to the
@@ -81,17 +83,24 @@ input <code>exons</code>. This can be created by applying <code><a href="to_intr
 differentiated using <code>group_var</code>. If a user is not using <code><a href="to_intron.html">to_intron()</a></code>,
 they must make sure intron start/ends are defined precisely as the adjacent
 exon boundaries (rather than exon end + 1 and exon start - 1).</p></dd>
+
+
 <dt>group_var</dt>
 <dd><p><code><a href="https://rdrr.io/r/base/character.html" class="external-link">character()</a></code> if input data originates from more than 1
 transcript, <code>group_var</code> must specify the column that differentiates
 transcripts (e.g. "transcript_id").</p></dd>
+
+
 <dt>target_gap_width</dt>
 <dd><p><code><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer()</a></code> the width in base pairs to shorten the
 gaps to.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code> contains the re-scaled co-ordinates of <code>introns</code> and
+    
+
+<p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame()</a></code> contains the re-scaled co-ordinates of <code>introns</code> and
 <code>exons</code> of each input transcript with shortened gaps.</p>
     </div>
     <div class="section level2">
@@ -235,7 +244,7 @@ original genomic coordinates.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>
