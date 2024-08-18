@@ -63,7 +63,7 @@
 #' # the functionality from the parameters and aesthetics in ggplot2
 #' base + geom_intron(
 #'     aes(colour = transcript_name),
-#'     size = 1
+#'     lineswidth = 1
 #' )
 #'
 #' # together, geom_range() and geom_intron() are designed to visualize
@@ -132,7 +132,7 @@ GeomIntron <- ggplot2::ggproto("GeomIntron", ggplot2::GeomSegment,
     required_aes = c("xstart", "xend", "y"),
     default_aes = aes(
         colour = "black",
-        size = 0.5,
+        linewidth = 0.5,
         linetype = 1,
         alpha = NA,
         strand = "+"

@@ -101,11 +101,11 @@
 #' # this can be useful when mapping junction thickness to their counts
 #' base + geom_junction(
 #'     data = sod1_junctions,
-#'     aes(size = mean_count),
+#'     aes(linewidth = mean_count),
 #'     junction.y.max = 0.5,
 #'     colour = "purple"
 #' ) +
-#'     scale_size(range = c(0.1, 1))
+#'     scale_linewidth(range = c(0.1, 1))
 #'
 #' # it can be useful to combine geom_junction() with geom_half_range()
 #' sod1_exons %>%
@@ -120,12 +120,12 @@
 #'     ) +
 #'     geom_junction(
 #'         data = sod1_junctions,
-#'         aes(size = mean_count),
+#'         aes(linewidth = mean_count),
 #'         junction.y.max = 0.5,
 #'         junction.orientation = "top",
 #'         colour = "purple"
 #'     ) +
-#'     scale_size(range = c(0.1, 1))
+#'     scale_linewidth(range = c(0.1, 1))
 geom_junction <- function(mapping = NULL,
                           data = NULL,
                           stat = "identity",
