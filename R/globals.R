@@ -41,7 +41,7 @@ utils::globalVariables(c(
     "x_points",
     "y_points",
     "y",
-    "y_orig",
+    "y_original",
     "position_nudge_repel",
     # add_utr(),
     "dummy_group"

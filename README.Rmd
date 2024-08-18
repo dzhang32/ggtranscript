@@ -261,4 +261,4 @@ citation("ggtranscript")
 
 ## Credits
 
-* `ggtranscript` was developed using `r BiocStyle::Biocpkg("biocthis")`.
+* `ggtranscript` was developed using `biocthis`.
