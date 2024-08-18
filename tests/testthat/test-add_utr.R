@@ -92,10 +92,10 @@ plot_before_after_rescaled <- function(cds_utr_before,
                                        add_labels = FALSE) {
     before_rescaling <- cds_utr_before %>%
         dplyr::filter(type == "CDS") %>%
-        ggplot2::ggplot(ggplot2::aes_string(
-            xstart = "start",
-            xend = "end",
-            y = group_var
+        ggplot2::ggplot(ggplot2::aes(
+            xstart = start,
+            xend = end,
+            y = .data[[group_var]]
         )) +
         geom_range() +
         geom_range(
@@ -109,10 +109,10 @@ plot_before_after_rescaled <- function(cds_utr_before,
 
     after_rescaling <- cds_utr_after %>%
         dplyr::filter(type == "CDS") %>%
-        ggplot2::ggplot(ggplot2::aes_string(
-            xstart = "start",
-            xend = "end",
-            y = group_var
+        ggplot2::ggplot(ggplot2::aes(
+            xstart = start,
+            xend = end,
+            y = .data[[group_var]]
         )) +
         geom_range() +
         geom_range(
