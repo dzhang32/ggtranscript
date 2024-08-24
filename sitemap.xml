@@ -1,66 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/ggtranscript.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_exon_number.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_utr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/geom_intron.html</loc>
-  </url>
-  <url>
-    <loc>/reference/geom_junction.html</loc>
-  </url>
-  <url>
-    <loc>/reference/geom_junction_label_repel.html</loc>
-  </url>
-  <url>
-    <loc>/reference/geom_range.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtranscript.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shorten_gaps.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sod1_annotation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sod1_junctions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/to_diff.html</loc>
-  </url>
-  <url>
-    <loc>/reference/to_intron.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/ggtranscript.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/add_exon_number.html</loc></url>
+<url><loc>/reference/add_utr.html</loc></url>
+<url><loc>/reference/geom_intron.html</loc></url>
+<url><loc>/reference/geom_junction.html</loc></url>
+<url><loc>/reference/geom_junction_label_repel.html</loc></url>
+<url><loc>/reference/geom_range.html</loc></url>
+<url><loc>/reference/ggtranscript.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/shorten_gaps.html</loc></url>
+<url><loc>/reference/sod1_annotation.html</loc></url>
+<url><loc>/reference/sod1_junctions.html</loc></url>
+<url><loc>/reference/to_diff.html</loc></url>
+<url><loc>/reference/to_intron.html</loc></url>
 </urlset>
+
