@@ -56,7 +56,7 @@ testthat::test_that(
         w_aes_param_top_junction.orientation <- test_introns_plot +
             geom_junction(
                 aes(colour = transcript_name),
-                size = 1,
+                linewidth = 1,
                 junction.orientation = "top"
             )
 
@@ -83,7 +83,7 @@ testthat::test_that(
         w_aes_param_junction.y.max_0.5 <- test_introns_plot +
             geom_junction(
                 aes(colour = transcript_name),
-                size = 1,
+                linewidth = 1,
                 junction.y.max = 0.5
             )
         w_facet_junction.y.max_0.5 <- test_introns_plot +

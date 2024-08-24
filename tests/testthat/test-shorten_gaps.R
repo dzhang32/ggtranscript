@@ -232,10 +232,10 @@ plot_rescaled_tx <- function(exons,
                              group_var,
                              add_labels = FALSE) {
     before_rescaling <- exons %>%
-        ggplot2::ggplot(ggplot2::aes_string(
-            xstart = "start",
-            xend = "end",
-            y = group_var
+        ggplot2::ggplot(ggplot2::aes(
+            xstart =  start,
+            xend = end,
+            y = .data[[group_var]]
         )) +
         geom_range() +
         geom_intron(
@@ -246,10 +246,10 @@ plot_rescaled_tx <- function(exons,
 
     after_rescaling <- rescaled_tx %>%
         dplyr::filter(type == "exon") %>%
-        ggplot2::ggplot(ggplot2::aes_string(
-            xstart = "start",
-            xend = "end",
-            y = group_var
+        ggplot2::ggplot(ggplot2::aes(
+            xstart = start,
+            xend = end,
+            y = .data[[group_var]]
         )) +
         geom_range() +
         geom_intron(
@@ -265,12 +265,12 @@ plot_rescaled_tx <- function(exons,
         for (i in seq_len(length(before_after_list))) {
             before_after_list[[i]] <- before_after_list[[i]] +
                 ggrepel::geom_label_repel(
-                    ggplot2::aes_string(
-                        x = "end",
-                        y = group_var,
-                        label = "end"
+                    ggplot2::aes(
+                        x = end,
+                        y = .data[[group_var]],
+                        label = end
                     ),
-                    size = 2,
+                    linewidth = 2,
                     min.segment.length = 0
                 )
         }

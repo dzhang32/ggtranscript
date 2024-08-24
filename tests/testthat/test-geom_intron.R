@@ -23,9 +23,9 @@ testthat::test_that(
         base_geom_intron <- test_introns_plot +
             geom_intron()
         w_param_geom_intron <- test_introns_plot +
-            geom_intron(colour = "blue", size = 2)
+            geom_intron(colour = "blue", linewidth = 2)
         w_aes_geom_intron <- test_introns_plot +
-            geom_intron(aes(colour = tx, size = c(1L, 2L)))
+            geom_intron(aes(colour = tx, linewidth = c(1L, 2L)))
         w_facet_geom_intron <- test_introns_plot +
             geom_intron() +
             ggplot2::facet_wrap(~tx)

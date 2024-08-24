@@ -101,11 +101,11 @@
 #' # this can be useful when mapping junction thickness to their counts
 #' base + geom_junction(
 #'     data = sod1_junctions,
-#'     aes(size = mean_count),
+#'     aes(linewidth = mean_count),
 #'     junction.y.max = 0.5,
 #'     colour = "purple"
 #' ) +
-#'     scale_size(range = c(0.1, 1))
+#'     scale_linewidth(range = c(0.1, 1))
 #'
 #' # it can be useful to combine geom_junction() with geom_half_range()
 #' sod1_exons %>%
@@ -120,12 +120,12 @@
 #'     ) +
 #'     geom_junction(
 #'         data = sod1_junctions,
-#'         aes(size = mean_count),
+#'         aes(linewidth = mean_count),
 #'         junction.y.max = 0.5,
 #'         junction.orientation = "top",
 #'         colour = "purple"
 #'     ) +
-#'     scale_size(range = c(0.1, 1))
+#'     scale_linewidth(range = c(0.1, 1))
 geom_junction <- function(mapping = NULL,
                           data = NULL,
                           stat = "identity",
@@ -256,7 +256,7 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
     junction_curve <- data.frame(
         x_points = c(x, curve_points$x, xend),
         y_points = c(y, curve_points$y, y),
-        y_orig = y
+        y_original = y
     ) %>%
         dplyr::rename(
             x = x_points,
@@ -282,17 +282,17 @@ GeomJunction <- ggplot2::ggproto("GeomJunction", ggplot2::GeomLine,
     # then divided by the sf, setting the max y
     if (junction.orientation == "top") {
         junctions <- junctions %>% dplyr::mutate(
-            y = ifelse(y == y_orig, y, y_orig + (y / max(y)) / sf)
+            y = ifelse(y == y_original, y, y_original + (y / max(y)) / sf)
         )
     } else if (junction.orientation == "bottom") {
         junctions <- junctions %>% dplyr::mutate(
-            y = ifelse(y == y_orig, y, y_orig - (y / max(y)) / sf)
+            y = ifelse(y == y_original, y, y_original - (y / max(y)) / sf)
         )
     } else if (junction.orientation == "alternating") {
         junctions <- junctions %>% dplyr::mutate(y = dplyr::case_when(
-            y == y_orig ~ y,
-            junction_index %% 2 == 0 ~ y_orig - (y / max(y) / sf),
-            junction_index %% 2 == 1 ~ y_orig + (y / max(y) / sf)
+            y == y_original ~ y,
+            junction_index %% 2 == 0 ~ y_original - (y / max(y) / sf),
+            junction_index %% 2 == 1 ~ y_original + (y / max(y) / sf)
         ))
     }
 

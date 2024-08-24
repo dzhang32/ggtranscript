@@ -60,14 +60,15 @@ library(ggtranscript)
 # ggtranscript includes example transcript annotation
 sod1_annotation %>% head()
 #> # A tibble: 6 × 8
-#>   seqnames  start    end strand type  gene_name transcript_name transcript_biot…
-#>   <fct>     <int>  <int> <fct>  <fct> <chr>     <chr>           <chr>           
-#> 1 21       3.17e7 3.17e7 +      gene  SOD1      <NA>            <NA>            
-#> 2 21       3.17e7 3.17e7 +      tran… SOD1      SOD1-202        protein_coding  
-#> 3 21       3.17e7 3.17e7 +      exon  SOD1      SOD1-202        protein_coding  
-#> 4 21       3.17e7 3.17e7 +      CDS   SOD1      SOD1-202        protein_coding  
-#> 5 21       3.17e7 3.17e7 +      star… SOD1      SOD1-202        protein_coding  
-#> 6 21       3.17e7 3.17e7 +      exon  SOD1      SOD1-202        protein_coding
+#>   seqnames    start      end strand type        gene_name transcript_name
+#>   <fct>       <int>    <int> <fct>  <fct>       <chr>     <chr>          
+#> 1 21       31659666 31668931 +      gene        SOD1      <NA>           
+#> 2 21       31659666 31668931 +      transcript  SOD1      SOD1-202       
+#> 3 21       31659666 31659784 +      exon        SOD1      SOD1-202       
+#> 4 21       31659770 31659784 +      CDS         SOD1      SOD1-202       
+#> 5 21       31659770 31659772 +      start_codon SOD1      SOD1-202       
+#> 6 21       31663790 31663886 +      exon        SOD1      SOD1-202       
+#> # ℹ 1 more variable: transcript_biotype <chr>
 
 # extract exons
 sod1_exons <- sod1_annotation %>% dplyr::filter(type == "exon")
@@ -96,6 +97,7 @@ allows you to hone in the differences in the exonic structure, which can
 be particularly useful if the transcript has relatively long introns.
 
 ``` r
+
 sod1_rescaled <- shorten_gaps(
   sod1_exons, 
   to_intron(sod1_exons, "transcript_name"), 
@@ -160,6 +162,7 @@ bottom of a transcript structure. One use case of `geom_half_range()` is
 to visualize the differences between transcript structure more clearly.
 
 ``` r
+
 # extract exons and cds for the two transcripts to be compared
 sod1_201_exons <- sod1_exons %>% dplyr::filter(transcript_name == "SOD1-201")
 sod1_201_cds <- sod1_cds %>% dplyr::filter(transcript_name == "SOD1-201")
@@ -207,6 +210,7 @@ and functionality of `ggplot2`. For instance, by leveraging
 `coord_cartesian()` users can zoom in on regions of interest.
 
 ``` r
+
 sod1_201_202_plot + coord_cartesian(xlim = c(31659500, 31660000))
 ```
 
@@ -218,6 +222,7 @@ adds a label to junction curves, which can often be useful to mark
 junctions with a metric of their usage such as read counts.
 
 ``` r
+
 # ggtranscript includes a set of example (unannotated) junctions
 # originating from GTEx and downloaded via the Bioconductor package snapcount
 sod1_junctions
@@ -270,6 +275,7 @@ addition, by modifying `ggplot2` scales and themes, users can easily
 create informative, publication-ready plots.
 
 ``` r
+
 sod1_201_exons %>%
   ggplot(aes(
     xstart = start,
@@ -297,6 +303,11 @@ sod1_201_exons %>%
   xlab("Genomic position (chr21)") + 
   ylab("Transcript name") + 
   theme_bw()
+#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
 ```
 
 <img src="man/figures/README-geom-junction-pub-1.png" width="100%" />
@@ -304,14 +315,16 @@ sod1_201_exons %>%
 ## Citation
 
 ``` r
+
 citation("ggtranscript")
+#> To cite package 'ggtranscript' in publications use:
 #> 
-#> Gustavsson EK, Zhang D, Reynolds RH, Garcia-Ruiz S, Ryten M (2022).
-#> "ggtranscript: an R package for the visualization and interpretation of
-#> transcript isoforms using ggplot2." _Bioinformatics_. doi:
-#> 10.1093/bioinformatics/btac409 (URL:
-#> https://doi.org/10.1093/bioinformatics/btac409), <URL:
-#> https://academic.oup.com/bioinformatics/article/38/15/3844/6617821>.
+#>   Gustavsson EK, Zhang D, Reynolds RH, Garcia-Ruiz S, Ryten M (2022).
+#>   "ggtranscript: an R package for the visualization and interpretation
+#>   of transcript isoforms using ggplot2." _Bioinformatics_.
+#>   doi:10.1093/bioinformatics/btac409
+#>   <https://doi.org/10.1093/bioinformatics/btac409>,
+#>   <https://academic.oup.com/bioinformatics/article/38/15/3844/6617821>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -327,5 +340,4 @@ citation("ggtranscript")
 
 ## Credits
 
--   `ggtranscript` was developed using
-    *[biocthis](https://bioconductor.org/packages/3.14/biocthis)*.
+- `ggtranscript` was developed using `biocthis`.

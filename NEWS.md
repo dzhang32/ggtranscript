@@ -1,3 +1,12 @@
+
+# ggtranscript 1.0.0
+
+## Fixes
+
+* Updates `geom`s to work with the latest version of `ggplot2` and `ggrepel` (R version `4.4`). 
+* Fixes all unit tests.
+* Fixes CI workflow issues and simplifies testing to linux-only.
+
 # ggtranscript 0.99.9
 
 ## NEW FEATURES

@@ -2,6 +2,7 @@
 % Please edit documentation in R/ggtranscript-package.R
 \docType{package}
 \name{ggtranscript}
+\alias{ggtranscript-package}
 \alias{ggtranscript}
 \title{\code{ggtranscript}: Visualizing transcript structure and annotation using
 \code{ggplot2}}
@@ -14,4 +15,27 @@ helper functions. As a \code{ggplot2} extension, \code{ggtranscript} inherits
 \code{ggplot2}'s familiarity and flexibility, enabling users to intuitively adjust
 aesthetics, parameters, scales etc as well as complement \code{ggtranscript} geoms
 with existing \code{ggplot2} geoms to create informative, publication-ready plots.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/dzhang32/ggtranscript}
+  \item Report bugs at \url{https://github.com/dzhang32/ggtranscript/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: David Zhang \email{dyzhang32@gmail.com} (\href{https://orcid.org/0000-0003-2382-8460}{ORCID})
+
+Authors:
+\itemize{
+  \item Emil Gustavsson \email{e.gustavsson@ucl.ac.uk} (\href{https://orcid.org/0000-0003-0541-7537}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Regina Reynolds \email{regina.reynolds.16@ucl.ac.uk} (\href{https://orcid.org/0000-0001-6470-7919}{ORCID}) [contributor]
+  \item Sonia Ruiz \email{s.ruiz@ucl.ac.uk} [contributor]
+}
+
 }

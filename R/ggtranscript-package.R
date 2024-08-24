@@ -12,7 +12,7 @@
 #'
 #' @docType package
 #' @name ggtranscript
-NULL
+"_PACKAGE"
 
 #' @importFrom rlang %||%
 #' @importFrom magrittr %>%

@@ -58,7 +58,7 @@
 #' # the functionality from the parameters and aesthetics in ggplot2
 #' base + geom_range(
 #'     aes(fill = transcript_name),
-#'     size = 1
+#'     linewidth = 1
 #' )
 #'
 #' # together, geom_range() and geom_intron() are designed to visualize
@@ -177,7 +177,7 @@ GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
     default_aes = aes(
         fill = "grey",
         colour = "black",
-        size = 0.25,
+        linewidth = 0.25,
         linetype = 1,
         alpha = NA,
         height = NA
@@ -220,7 +220,7 @@ GeomRange <- ggplot2::ggproto("GeomRange", ggplot2::GeomTile,
             gp = grid::gpar(
                 col = coords$colour,
                 fill = ggplot2::alpha(coords$fill, coords$alpha),
-                lwd = coords$size * ggplot2::.pt,
+                lwd = coords$linewidth * ggplot2::.pt,
                 lty = coords$linetype,
                 linejoin = linejoin,
                 lineend = lineend
