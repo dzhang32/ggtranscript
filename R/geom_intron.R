@@ -63,7 +63,7 @@
 #' # the functionality from the parameters and aesthetics in ggplot2
 #' base + geom_intron(
 #'     aes(colour = transcript_name),
-#'     lineswidth = 1
+#'     linewidth = 1
 #' )
 #'
 #' # together, geom_range() and geom_intron() are designed to visualize
