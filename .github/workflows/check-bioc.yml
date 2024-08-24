@@ -24,8 +24,6 @@ jobs:
       matrix:
         config:
           - { os: ubuntu-latest, r: '4.4', bioc: '3.19', cont: "bioconductor/bioconductor_docker:RELEASE_3_19", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
-          - { os: macOS-latest, r: '4.4', bioc: '3.19'}
-          - { os: windows-latest, r: '4.4', bioc: '3.19'}
           
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -85,26 +83,6 @@ jobs:
           sysreqs=$(Rscript -e 'cat("apt-get update -y && apt-get install -y", paste(gsub("apt-get install -y ", "", remotes::system_requirements("ubuntu", "20.04")), collapse = " "))')
           echo $sysreqs
           sudo -s eval "$sysreqs"
-
-      - name: Install macOS system dependencies
-        if: matrix.config.os == 'macOS-latest'
-        run: |
-          ## Enable installing XML from source if needed
-          brew install libxml2
-          echo "XML_CONFIG=/usr/local/opt/libxml2/bin/xml2-config" >> $GITHUB_ENV
-
-          ## Required to install magick as noted at
-          ## https://github.com/r-lib/usethis/commit/f1f1e0d10c1ebc75fd4c18fa7e2de4551fd9978f#diff-9bfee71065492f63457918efcd912cf2
-          brew install imagemagick@6
-
-          ## For textshaping, required by ragg, and required by pkgdown
-          brew install harfbuzz fribidi
-
-          ## For installing usethis's dependency gert
-          brew install libgit2
-
-          ## Required for tcltk
-          brew install xquartz --cask
 
       - name: Install BiocManager
         run: |
