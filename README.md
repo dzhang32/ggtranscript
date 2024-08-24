@@ -86,11 +86,6 @@ sod1_exons %>%
         data = to_intron(sod1_exons, "transcript_name"),
         aes(strand = strand)
     )
-#> Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.
-#> ℹ Please use `linewidth` in the `default_aes` field and elsewhere instead.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 ```
 
 <img src="man/figures/README-geom-range-intron-1.png" width="100%" />
